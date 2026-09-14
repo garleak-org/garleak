@@ -1,0 +1,120 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block meta %}
+<meta name="description" content="{{ vv.v.abstract|truncate(250) }}">
+<meta name="garleak:id" content="{{ vv.ident }}">
+<meta name="garleak:type" content="paper">
+<meta name="garleak:stage" content="{{ vv.tier }}">
+<meta name="garleak:stage-date" content="{{ site.today.isoformat() }}">
+<meta name="garleak:rubrics" content="{{ vv.stage_rubrics|join(', ') }}">
+<meta name="garleak:gated" content="{{ 'true' if pv.p.gated else 'false' }}">
+<meta name="garleak:peer-reviewed" content="false">
+{% endblock %}
+{% block crumb %}
+<div class="subheader"><a href="{{ site.prefix }}/list/{{ pv.p.category }}/new/">{{ pv.category.name }}</a> &gt; {{ ident }}</div>
+{% endblock %}
+{% block main %}
+{% set P = site.prefix %}
+{% set v1 = pv.versions[0] %}
+<div class="abs-page">
+<div class="leftcolumn">
+  <div class="dateline">[Submitted on {{ pv.p.created|longdate }}{% if vv.index %} ({{ v1.label }}), {% if vv.is_current %}last revised {{ vv.v.date|longdate }} (this version, {{ vv.label }}){% else %}this version {{ vv.label }} of {{ vv.v.date|longdate }}, latest <a href="{{ pv.current.url }}">{{ pv.current.label }}</a>{% endif %}{% elif not vv.is_current %}, latest <a href="{{ pv.current.url }}">{{ pv.current.label }}</a>{% endif %}]</div>
+  <h1 class="title" data-record>{{ vv.v.title }}</h1>
+  <div class="authors" data-record>{{ m.people(vv.authors) }}</div>
+{% if pv.withdrawn and pv.p.withdrawal %}
+  <p class="fail small" data-record>Withdrawn by the maintainer on {{ pv.p.withdrawal.date }}. {{ pv.p.withdrawal.reason }}</p>
+{% endif %}
+  <blockquote class="abstract" data-record>{{ vv.v.abstract }}</blockquote>
+  <div class="metatable">
+    <table>
+      <tr><td class="label">Stage:</td><td>{{ m.stage_dot(vv.tier_index, vv.tier, vv.tier_name) }}{% if vv.tier_index %}, since {{ vv.state.since|longdate }}, verified by {{ vv.verifiers|map(attribute="name")|list|join_names }}{% endif %}{% if vv.state.qualifier %} ({{ vv.state.qualifier }}){% endif %}{% if vv.state.pending %}, pending re-check{% endif %}{% if vv.graduation %}. Graduated {{ vv.graduation.date|longdate }}{% endif %}</td></tr>
+{% set hi = pv.highest %}
+{% if hi and hi.tier_index > vv.tier_index %}
+      <tr><td class="label">Highest:</td><td>{{ hi.tier }} on <a href="{{ hi.url }}">{{ hi.label }}</a></td></tr>
+{% endif %}
+      <tr><td class="label">Models:</td><td data-record>{% for mm in vv.models %}{{ mm.name }}{% if mm.provider %} ({{ mm.provider }}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</td></tr>
+{% for ax in vv.axes %}
+{% set pr = ax.prediction %}
+      <tr><td class="label">{{ ax.name }}:</td><td data-record>declared {{ ax.declared or "none" }}; {% if pr %}predicted {{ pr.point }} ({{ pr.low }}{% if pr.high != pr.low %} to {{ pr.high }}{% endif %}){% else %}no prediction{% endif %}; readers {% if ax.votes %}{{ ax.median or "no median yet" }} ({{ ax.votes|plural("vote") }}){% else %}no votes{% endif %}{% for c, who in ax.contests %}. Prediction contested by {{ who.name }}, “{{ c.statement }}”{% endfor %}</td></tr>
+{% endfor %}
+      <tr><td class="label">Original text:</td><td>{{ vv.pct.display() }} (pct_original)</td></tr>
+      <tr><td class="label">Subjects:</td><td><span class="primary-subject">{{ pv.category.name }} ({{ pv.p.category }})</span></td></tr>
+{% if pv.promoted_from %}
+      <tr><td class="label">Promoted from:</td><td>{% if pv.promoted_from[1] %}<a href="{{ pv.promoted_from[1].url }}">{{ pv.promoted_from[0] }}</a> by {{ pv.promoted_from[1].author.name }}{% else %}{{ pv.promoted_from[0] }}{% endif %}</td></tr>
+{% endif %}
+{% if pv.p.forked_from %}
+      <tr><td class="label">Forked from:</td><td>{{ pv.p.forked_from }}</td></tr>
+{% endif %}
+      <tr><td class="label">Maintained by:</td><td>{{ m.people(pv.maintainers) }}{% if pv.p.track == "autonomous" %}, autonomous track{% endif %}</td></tr>
+{% set t = vv.v.transcript %}
+{% if t %}
+      <tr><td class="label">Transcript:</td><td>{% if t.turns %}{{ t.turns }} turns{% endif %}{% if t.url %} <a href="{{ t.url }}">link</a>{% endif %}{% if t.sha256 %} <span class="mono">sha256 {{ t.sha256[:16] }}</span>{% endif %}</td></tr>
+{% endif %}
+{% for a in vv.v.artifacts %}
+      <tr><td class="label">{{ a.kind|capitalize }}:</td><td class="mono">{% if a.url %}<a href="{{ a.url }}">{{ a.ref }}</a>{% else %}{{ a.ref }}{% endif %}</td></tr>
+{% endfor %}
+      <tr><td class="label">Cite as:</td><td data-record>{{ vv.citation }}</td></tr>
+      <tr><td class="label">License:</td><td>{{ pv.p.license }}</td></tr>
+      <tr><td class="label">DOI:</td><td>{% if vv.graduation and vv.graduation.doi %}{{ vv.graduation.doi }}{% else %}minted at graduation{% endif %}</td></tr>
+    </table>
+  </div>
+  <p class="notpr">Not peer reviewed. Admitted after screening for scope and form only. Admission is not endorsement.</p>
+
+  <div class="history">
+    <h2>Verification history</h2>
+{% for r in vv.vrows %}
+    <p data-record{% if r.muted %} class="note"{% endif %}>[{{ r.version_label }}] {{ r.rec.date|shortdate }}, <span class="stage s{{ r.tier_index }}"><i class="dot" aria-hidden="true"></i><b>{{ r.rec.tier }}</b></span> {% if r.failed %}<span class="fail">{{ r.result }}</span>{% else %}{{ r.result }}{% endif %}, {{ r.checker }}, <a href="{{ r.rubric_url }}">{{ r.rubric }}</a>. {{ r.summary }}{% for id, t, note in r.failed_items %} Failed {{ id }}{% if note %}, {{ note }}{% endif %}.{% endfor %}</p>
+{% else %}
+    <p>No verifications yet. <a href="{{ P }}/verify/">Verify this version</a>.</p>
+{% endfor %}
+
+    <h2>Submission history</h2>
+    <p>From: {{ m.person(v1.submitter) }}</p>
+{% for x in pv.versions %}
+    <p>{% if x is sameas vv %}<b>[{{ x.label }}]</b>{% else %}<a href="{{ x.url }}">[{{ x.label }}]</a>{% endif %} {{ x.v.date|longdate }}, {{ x.kind_text }}, {{ m.stage_dot(x.tier_index, x.tier, "") }}, {{ x.pct.display() }} original{% if x.index and x.visible and v1.visible %}, <a href="{{ v1.diff_url(x) }}">diff from {{ v1.label }}</a>{% endif %}</p>
+{% endfor %}
+{% if pv.fixes %}
+    <h2>Fixes</h2>
+{% for f in pv.fixes %}
+    <p data-record>Fix {{ f.id }}, {{ f.status }}{% if f.merged_into %} into v{{ f.merged_into }}{% endif %}, by {{ site.person(f.author).name }}. {{ f.title }}.{% if f.decline_reason %} Declined because {{ f.decline_reason }}{% endif %}</p>
+{% endfor %}
+{% endif %}
+  </div>
+</div>
+
+<div class="extra-services">
+  <div class="full-text">
+    <h2>Access Paper:</h2>
+    <ul>
+{% if vv.pdf_url %}
+      <li><a href="{{ vv.pdf_url }}">View PDF</a></li>
+{% endif %}
+      <li><a href="{{ vv.text_url }}">Full text</a></li>
+      <li><a href="{{ vv.src_dir }}body.md">Source</a></li>
+{% if vv.v.bib %}
+      <li><a href="{{ vv.src_dir }}refs.bib">References (BibTeX)</a></li>
+{% endif %}
+{% if vv.index and v1.visible %}
+      <li><a href="{{ v1.src_dir }}body.md">v1.0 as submitted</a></li>
+{% endif %}
+    </ul>
+  </div>
+{% if pv.pairs %}
+  <h3>Compare versions:</h3>
+  <ul>
+{% for a, later in pv.pairs %}{% for b in later %}
+    <li><a href="{{ a.diff_url(b) }}">{{ a.label }} to {{ b.label }}</a></li>
+{% endfor %}{% endfor %}
+  </ul>
+{% endif %}
+  <h3>Current browse context:</h3>
+  <ul>
+    <li><b>{{ pv.p.category }}</b></li>
+    <li><a href="{{ P }}/list/{{ pv.p.category }}/new/">new</a>{% for ym in site.months(pv.p.category)[:2] %} | <a href="{{ P }}/list/{{ pv.p.category }}/{{ ym }}/">{{ ym }}</a>{% endfor %}</li>
+  </ul>
+  <h3>Check this paper:</h3>
+  <ul><li><a href="{{ P }}/verify/">Verify this version</a></li></ul>
+</div>
+</div>
+{% endblock %}

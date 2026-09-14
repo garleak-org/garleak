@@ -1,0 +1,162 @@
+name: Submit a paper
+description: Submit a full write-up with a claim and an argument. A moderator screens it before it appears.
+title: "Paper"
+labels: ["intake:paper"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and everything you enter here are public from the moment you open it, before any screening, although the site shows the paper only after a moderator merges it. See [who can see what](https://garleak.org/submit/#identity).
+
+        A paper costs 2 credits in its field; a new account can submit one before it has verified anything. v1.0 is kept exactly as you submit it, forever. Screening checks scope and form only. Admission is not endorsement, and it is not peer review. Gated categories are not accepted in Phase 1.
+
+        For a long body, drag a `.md` file into the Body field. Drag a `.bib` file into References and a `.pdf` into PDF.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - "phys.astro: Astrophysics"
+        - "phys.cond: Condensed matter"
+        - "phys.hep: High-energy physics"
+        - "phys.gen: General physics"
+        - "math.nt: Number theory"
+        - "math.co: Combinatorics"
+        - "math.pr: Probability"
+        - "math.an: Analysis"
+        - "cs.ml: Machine learning"
+        - "cs.ds: Algorithms and data structures"
+        - "cs.cl: Computation and language"
+        - "cs.cr: Cryptography and security"
+        - "bio.ge: Genomics"
+        - "bio.eco: Ecology and evolution"
+        - "bio.nc: Neuroscience"
+        - "earth.cl: Climate and atmosphere"
+        - "earth.geo: Geophysics"
+        - "econ.th: Economic theory"
+        - "econ.em: Econometrics"
+        - "hum.hist: History"
+        - "hum.phil: Philosophy"
+        - "hum.ling: Linguistics"
+        - "eng.ee: Electrical engineering"
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title
+    validations:
+      required: true
+  - type: textarea
+    id: authors
+    attributes:
+      label: Authors, as Garleak handles
+      description: One per line, in author order. Every author needs a Garleak account. Leave blank if you are the only author.
+      placeholder: mabara
+  - type: textarea
+    id: abstract
+    attributes:
+      label: Abstract
+    validations:
+      required: true
+  - type: textarea
+    id: models
+    attributes:
+      label: Models used
+      description: One per line, as name, provider, version or date.
+      placeholder: claude-opus-4, Anthropic, 2026-05
+    validations:
+      required: true
+  - type: dropdown
+    id: writing
+    attributes:
+      label: Writing (declared)
+      options:
+        - "W0: a human wrote it"
+        - "W1: a human wrote it, and a model polished it"
+        - "W2: a model drafted it, and a human edited it"
+        - "W3: a model wrote it, with light or no human edits"
+    validations:
+      required: true
+  - type: dropdown
+    id: analysis
+    attributes:
+      label: Analysis (declared)
+      description: The work behind the claims, such as calculations, code, derivations, proofs and data handling.
+      options:
+        - "A0: a human did the analysis"
+        - "A1: a model assisted, and a human checked it"
+        - "A2: a model did the analysis"
+    validations:
+      required: true
+  - type: textarea
+    id: tools
+    attributes:
+      label: Other AI tools (optional)
+      description: One per line.
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance
+      description: In a few sentences, how the paper was made and who did what.
+    validations:
+      required: true
+  - type: input
+    id: transcript
+    attributes:
+      label: Link to transcripts or logs (optional)
+  - type: checkboxes
+    id: rubric_families
+    attributes:
+      label: Rubric families
+      description: What the paper should be checked against above T1. With none, it can reach T1 and no higher.
+      options:
+        - label: computational (results that come from running code)
+        - label: mathematics (theorems with proofs)
+  - type: dropdown
+    id: license
+    attributes:
+      label: License
+      options:
+        - "CC-BY-4.0 (default)"
+        - CC-BY-SA-4.0
+        - CC0-1.0
+        - CC-BY-NC-4.0
+      default: 0
+  - type: textarea
+    id: body
+    attributes:
+      label: Body, in Markdown
+      description: Paste the text with LaTeX mathematics, or drag in a .md file.
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: References, BibTeX (optional)
+      description: Paste BibTeX or drag in a .bib file. citecheck checks that each reference exists.
+  - type: textarea
+    id: pdf
+    attributes:
+      label: PDF (optional)
+      description: Drag in a .pdf file. The site stamps every page.
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Code, data and environment (optional)
+      description: One per line, as kind, a colon, then a link. Kinds are code, data, environment and other.
+      placeholder: "code: https://github.com/you/repo/tree/v1.0"
+  - type: input
+    id: promoted_from
+    attributes:
+      label: Promoted from a scratch (optional)
+      description: The scratch this paper tests, such as scratch:8. Its author earns the promotion credit.
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: This is my own work and my own model output, and every listed author agreed to be listed.
+          required: true
+        - label: I understand that v1.0 is kept exactly as submitted, forever, and that this issue is public now.
+          required: true

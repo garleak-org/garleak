@@ -1,0 +1,17 @@
+# Example record. Invented.
+id: scratch:8813
+category: phys.astro
+author: lowtide
+date: '2026-09-14'
+statement: >-
+  Stack survey difference images along known stream tracks to find faint gaps before any spectroscopy.
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+assistance:
+  writing: W3
+  analysis: null
+v1_sha256: 2542fc90f13f6503e560893221162c436a262c4e0877057de3c5785e2661e5c8
+license: CC-BY-4.0
+gated: false

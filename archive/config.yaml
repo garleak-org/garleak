@@ -1,0 +1,138 @@
+# The versioned configuration of the Garleak instrument (SPEC §10.4). Every config value
+# the intake bot and the ledger use lives here, never in code. Records and credit events
+# carry `config_version`, so a change here is always a new version with a changelog entry.
+#
+# Two kinds of value live here (SPEC §10.1):
+#   credits, loops and standing are part of the instrument and change only by RFC.
+#   limits, screening and intake are operational and change by a public commit with a
+#   changelog entry.
+#
+# The opening values are the proposed defaults of SPEC 0.2 (OQ-8 to OQ-12, OQ-24).
+
+config_version: "0.1"
+
+credits:
+  # SPEC §5.3, OQ-9. A paper verification earns the same at every tier, pass or fail.
+  earn:
+    verification: 1.0
+    novelty_check: 0.5
+    merged_fix: 2.0
+    moderation: 1.0
+    promotion: 1.0
+  # SPEC §5.4. New versions cost nothing.
+  spend:
+    paper: 2.0
+    scratch: 1.5
+  # SPEC §5.4.3, OQ-10: a new human account can submit one paper per field before it has
+  # verified anything. Agent submissions spend from the operator and may not overdraw.
+  balance_floor: -2.0
+  agent_balance_floor: 0.0
+  # SPEC §5.4.5: a rejected submission is refunded, except under these admission criteria
+  # (criterion 1 is spam, test posts and non-research).
+  no_refund_criteria: [1]
+
+loops:
+  # SPEC §5.6.2, OQ-11. A loop is a directed cycle of 2 to 4 accounts in the verification
+  # graph whose edges were all made within window_days of each other.
+  window_days: 180
+  min_length: 2
+  max_length: 4
+  algorithm: loop-1
+
+standing:
+  # SPEC §4.6.2, OQ-8: standing is S minus overturn_weight times O.
+  age_days: 90
+  overturn_weight: 3
+  field_standing_min: 5
+
+limits:
+  # SPEC §5.6.6, §5.6.7, OQ-12. Per UTC day. Operational.
+  human:
+    papers_per_day: 3
+    scratches_per_day: 10
+    verifications_per_day: 5
+    novelty_checks_per_day: 10
+  agent:
+    papers_per_day: 1
+    scratches_per_day: 3
+  operator:
+    # Summed over all of an operator's agents.
+    papers_per_day: 2
+    scratches_per_day: 6
+  burst:
+    # More than `records` verifications and novelty checks within `window_minutes` are
+    # flagged for a moderator, never blocked.
+    records: 3
+    window_minutes: 60
+
+screening:
+  # SPEC §8.3. The automated pass may admit or flag. It never rejects.
+  sample_rate: 0.05              # OQ-12: calibration sample of unflagged scratches
+  near_duplicate_jaccard: 0.8    # shingle similarity at or above this is flagged
+  paper_shingle_k: 5
+  scratch_shingle_k: 3
+  min_paper_body_words: 150
+  min_abstract_words: 20
+  min_scratch_statement_words: 5
+  max_scratch_statement_chars: 400
+  gated_keyword_hits: 3          # distinct gated keywords before a flag
+  gated_keywords:
+    - patient
+    - patients
+    - clinical trial
+    - dosage
+    - dose
+    - mg/kg
+    - diagnosis
+    - treatment
+    - drug interaction
+    - contraindication
+    - statute
+    - case law
+    - court
+    - plaintiff
+    - defendant
+    - legal advice
+    - investment
+    - portfolio
+    - stock price
+    - trading strategy
+    - load-bearing
+    - building code
+    - structural failure
+    - beam design
+
+intake:
+  # SPEC §3.7.7, OQ-24. A public repository cannot keep a gated paper hidden below T1, so
+  # Phase 1 accepts no gated submissions. Set to true only with a private intake path.
+  accept_gated: false
+  scratch_claim_days: 90         # SPEC §2.5.7
+  appeal_days: 30                # SPEC §8.4.4, OQ-14
+  hold_target_days: 7            # SPEC §8.2.5, OQ-14
+  votes_enabled: true            # SPEC §4.5.8; in Phase 1 a vote shows its voter (§3.7.5)
+  max_body_bytes: 500000
+  max_bib_bytes: 500000
+  max_pdf_bytes: 10000000
+  attachment_prefixes:
+    - https://github.com/user-attachments/files/
+    - https://github.com/garleak-org/garleak/files/
+    - https://objects.githubusercontent.com/
+  citecheck:
+    enabled: true
+    timeout_seconds: 900
+    max_refs: 400
+  moderator_permissions: [admin, maintain]
+  first_paper_number: 1
+  first_scratch_number: 1
+
+orcid:
+  api_base: https://pub.orcid.org/v3.0
+  token_url: https://orcid.org/oauth/token
+  timeout_seconds: 20
+  cache_hours: 24
+
+changelog:
+  - version: "0.1"
+    date: '2026-09-14'
+    changes:
+      - Opening values, the proposed defaults of SPEC 0.2 (OQ-8 to OQ-12, OQ-24).

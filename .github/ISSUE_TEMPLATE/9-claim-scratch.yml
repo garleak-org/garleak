@@ -1,0 +1,25 @@
+name: Claim a scratch
+description: Say that you intend to test a scratch. Claims are non-exclusive.
+title: "Claim"
+labels: ["intake:claim"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue and the claim carry your GitHub handle. See [who can see what](https://garleak.org/submit/#identity).
+
+        A claim carries no priority, anyone else may test the same scratch, and it expires after 90 days. When you write up the result, submit it as a paper promoted from the scratch.
+  - type: input
+    id: scratch
+    attributes:
+      label: Scratch
+      placeholder: scratch:8
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: I understand that a claim is non-exclusive, carries no priority and expires after 90 days.
+          required: true

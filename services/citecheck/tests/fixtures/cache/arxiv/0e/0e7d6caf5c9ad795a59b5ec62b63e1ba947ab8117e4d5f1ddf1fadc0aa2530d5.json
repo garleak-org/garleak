@@ -1,0 +1,6 @@
+{
+ "url": "https://export.arxiv.org/api/query?id_list=2311.12098&max_results=1",
+ "status": 0,
+ "content_type": "citecheck/failure",
+ "fetched_at": 1789374956.129858
+}

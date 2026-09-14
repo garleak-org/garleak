@@ -1,0 +1,17 @@
+# Example record. Invented.
+id: scratch:8820
+category: phys.astro
+author: tern
+date: '2026-09-14'
+statement: >-
+  Check whether prism redshifts are biased for galaxies with strong [O III] and a weak continuum.
+models:
+- name: claude-sonnet-4.5
+  provider: Anthropic
+  version: 2026-04
+assistance:
+  writing: W3
+  analysis: null
+v1_sha256: fea63ebf7029064fd10103887db50adc646e49c3a3c1ddfd6858ef2e8930e5e1
+license: CC-BY-4.0
+gated: false

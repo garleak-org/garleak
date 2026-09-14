@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/verification/0.3",
+  "title": "papers/<n>/verifications/<id>.yaml: one verification of one exact version",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "tier", "rubric", "verifier", "date", "result", "summary", "items"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Unique across the archive; equals the file name"},
+    "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "kind": {"enum": ["paper", "recheck"]},
+    "tier": {"enum": ["T1", "T2", "T3", "T4"]},
+    "rubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"}
+      }
+    },
+    "verifier": {"type": "string"},
+    "date": {"type": "string", "format": "date"},
+    "result": {"enum": ["passed", "failed"]},
+    "summary": {"type": "string", "minLength": 1},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "verdict"],
+        "properties": {
+          "id": {"type": "string"},
+          "verdict": {"enum": ["pass", "fail", "na"]},
+          "note": {"type": "string"},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "automated": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tool", "version"],
+        "properties": {"tool": {"type": "string"}, "version": {"type": "string"}, "note": {"type": "string"}}
+      }
+    },
+    "time_spent_minutes": {"type": ["integer", "null"], "minimum": 0},
+    "model_use": {"type": ["string", "null"]},
+    "independent": {
+      "type": ["object", "null"],
+      "description": "Result of the conflict check (SPEC §3.6.5, §3.6.8). The held data it used stay with the moderators; only the result is recorded here.",
+      "additionalProperties": false,
+      "required": ["value", "computed_at", "sources"],
+      "properties": {
+        "value": {"type": "boolean"},
+        "computed_at": {"type": "string", "format": "date"},
+        "sources": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "conflict_flags": {
+      "type": "array",
+      "description": "Public flags stating only the type of conflict (SPEC §3.3.7, §3.6.6)",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "computed_at"],
+        "properties": {
+          "type": {"enum": ["shared affiliation", "recent co-authorship"]},
+          "computed_at": {"type": "string", "format": "date"},
+          "sources": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "loop_label": {
+      "type": ["object", "null"],
+      "description": "Usually derived at load time from the verification graph (SPEC §5.6); stored only when a moderator records one by hand",
+      "additionalProperties": false,
+      "required": ["length", "detected"],
+      "properties": {"length": {"enum": [2, 3, 4]}, "detected": {"type": "string", "format": "date"}}
+    },
+    "status": {"enum": ["active", "withdrawn", "overturned", "void"]},
+    "status_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "by", "date"],
+        "properties": {
+          "status": {"enum": ["active", "withdrawn", "overturned", "void"]},
+          "by": {"type": "string"},
+          "date": {"type": "string", "format": "date"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "t4_attestation": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["text", "date"],
+      "properties": {"text": {"type": "string"}, "date": {"type": "string", "format": "date"}}
+    },
+    "attestation": {
+      "type": ["object", "null"],
+      "description": "The verifier's statement that they did not contribute and declared every conflict they know of. T4 records carry t4_attestation instead (SPEC §3.6.9).",
+      "additionalProperties": false,
+      "required": ["text", "date"],
+      "properties": {"text": {"type": "string"}, "date": {"type": "string", "format": "date"}}
+    },
+    "intake": {
+      "type": "object",
+      "description": "How the record arrived (RFC 0001): the path, the issue number for the issue-form path, and when",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"enum": ["issue-form", "worker", "manual"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "at": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

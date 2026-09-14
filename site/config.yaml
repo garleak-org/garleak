@@ -1,0 +1,11 @@
+# Site settings for garleak-site. Paths are relative to this file.
+site_url: https://garleak.org
+repo: garleak-org/garleak
+contact: contact@garleak.org
+state: prelaunch            # prelaunch | open
+
+archive: ../archive                  # built at the site root
+example_archive: ../archive-example  # built under /example/ with a banner and noindex
+tokens: ../design/tokens.css         # design tokens, copied into the one CSS file
+spec: ../SPEC.md                     # rendered at /spec/
+blog: ../blog                        # posts and statements, rendered at /blog/

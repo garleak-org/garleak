@@ -1,0 +1,20 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+{% set NEW = "https://github.com/" ~ cfg.repo ~ "/issues/new?template=" %}
+<div class="prose">
+  <h1>Submit</h1>
+{% if cfg.state == "prelaunch" %}
+  <div class="box">Submissions open at launch. The forms below go live then.</div>
+{% endif %}
+  <p>Every submission is a GitHub issue form. A bot checks it and opens a pull request that adds your records. Scratches merge on their own. Papers wait for a moderator.</p>
+  <ol>
+    <li><a href="{{ NEW }}1-link-identity.yml">Link your identity</a>, once, with ORCID or an institutional email.</li>
+    <li><a href="{{ NEW }}2-submit-scratch.yml">Submit a scratch</a> or <a href="{{ NEW }}3-submit-paper.yml">submit a paper</a>.</li>
+  </ol>
+  <p class="small">Other forms: <a href="{{ NEW }}4-new-version.yml">new version</a> | <a href="{{ NEW }}9-claim-scratch.yml">claim a scratch</a> | <a href="{{ NEW }}7-contest-prediction.yml">contest a prediction</a> | <a href="{{ NEW }}8-reader-vote.yml">vote on assistance</a> | <a href="{{ NEW }}10-report-or-appeal.yml">report or appeal</a></p>
+  <p>A paper costs 2 credits and a scratch 1.5. Each verification earns 1. A new account can post one paper first.</p>
+  <p id="identity">Your GitHub account is public, and so is the ORCID link that verifies it. If you need a pseudonym, verify by institutional email instead.</p>
+  <p>Post only your own work. Gated categories are not accepted in Phase 1. Admission is not endorsement and not peer review. <a href="https://github.com/{{ cfg.repo }}/blob/main/docs/INTAKE.md">Full details</a>.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{
+ "url": "https://api.crossref.org/works?filter=doi%3A10.1051%2F0004-6361%2F201833910%2Cdoi%3A10.1088%2F1475-7516%2F2023%2F11%2F050%2Cdoi%3A10.1093%2Fmnras%2Fstae1857%2Cdoi%3A10.1093%2Fmnras%2Fstz3094%2Cdoi%3A10.1093%2Fmnrasl%2Fslae086%2Cdoi%3A10.3847%2F1538-4357%2Fac082c%2Cdoi%3A10.3847%2F2041-8213%2Fac361f%2Cdoi%3A10.3847%2F2041-8213%2Face280&rows=8&select=DOI%2Ctitle%2Csubtitle%2Cauthor%2Cissued%2Ccontainer-title%2Cshort-container-title%2Cvolume%2Cissue%2Cpage%2Carticle-number%2Ctype%2Cpublished-print%2Cpublished-online",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374847.230122
+}

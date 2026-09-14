@@ -1,0 +1,24 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block meta %}
+<meta name="description" content="{{ vv.v.abstract|truncate(250) }}">
+<meta name="garleak:id" content="{{ vv.ident }}">
+<meta name="garleak:type" content="paper">
+<meta name="garleak:stage" content="{{ vv.tier }}">
+<meta name="garleak:gated" content="{{ 'true' if pv.p.gated else 'false' }}">
+{% endblock %}
+{% block crumb %}
+<div class="subheader"><a href="{{ vv.url }}">{{ vv.ident }}</a> &gt; full text</div>
+{% endblock %}
+{% block main %}
+<article class="prose">
+  <h1 class="title" data-record>{{ vv.v.title }}</h1>
+  <div class="authors" data-record>{{ m.people(vv.authors) }}</div>
+  <p class="notpr">Not peer reviewed. {{ vv.ident }}, stage {{ vv.tier }} as of {{ site.today|longdate }}. Admission is not endorsement.</p>
+  <blockquote class="abstract" data-record>{{ vv.v.abstract }}</blockquote>
+  <div data-record>
+{{ body|safe }}
+  </div>
+</article>
+{% endblock %}

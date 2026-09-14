@@ -1,0 +1,6 @@
+{
+ "url": "https://api.adsabs.harvard.edu/v1/search/query?q=volume%3A%22526%22+page%3A%229912%22+year%3A2022-2024+author%3A%22%5ECastellano%22&fl=bibcode%2Ctitle%2Cauthor%2Cyear%2Cpub%2Cvolume%2Cissue%2Cpage%2Cdoi%2Cidentifier%2Cdoctype&rows=5",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374874.99792
+}

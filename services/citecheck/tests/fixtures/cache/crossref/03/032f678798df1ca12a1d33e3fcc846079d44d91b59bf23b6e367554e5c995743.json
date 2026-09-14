@@ -1,0 +1,6 @@
+{
+ "url": "https://api.crossref.org/works?query.bibliographic=Kowalczyk+Brandt+Moreau+2019+Resolved+red+giant+branch+tips+reveal+a+truncated+stellar+halo+around+M31+at+180+kpc+A%26A+627+A88&rows=5&select=DOI%2Ctitle%2Csubtitle%2Cauthor%2Cissued%2Ccontainer-title%2Cshort-container-title%2Cvolume%2Cissue%2Cpage%2Carticle-number%2Ctype%2Cpublished-print%2Cpublished-online%2Cscore",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374883.938262
+}

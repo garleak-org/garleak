@@ -1,0 +1,14 @@
+# Build output, never committed (deployed by .github/workflows/site.yml)
+_site/
+
+# Local environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+node_modules/

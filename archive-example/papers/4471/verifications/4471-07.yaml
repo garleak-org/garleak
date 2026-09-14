@@ -1,0 +1,38 @@
+id: 4471-07
+version: '3.0'
+kind: paper
+tier: T2
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: mokafor
+date: '2026-09-07'
+result: passed
+summary: >-
+  All 8 required items pass. Code runs from the stated environment and outputs match within
+  the stated 10 per cent tolerance.
+items:
+- id: comp.T2.code-available
+  verdict: pass
+- id: comp.T2.data-available
+  verdict: pass
+- id: comp.T2.env-declared
+  verdict: pass
+- id: comp.T2.code-runs
+  verdict: pass
+- id: comp.T2.methods-match
+  verdict: pass
+- id: comp.T2.tolerance-stated
+  verdict: pass
+- id: comp.T2.numbers-traceable
+  verdict: pass
+- id: comp.T2.claims-supported
+  verdict: pass
+time_spent_minutes: 240
+status: active
+independent:
+  value: true
+  computed_at: '2026-09-07'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v3.0

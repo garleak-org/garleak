@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/paper/0.1",
+  "title": "papers/<n>/paper.yaml: object-level fields of a paper",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "category", "submitter", "created", "license", "gated", "v1_sha256"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^paper:[1-9][0-9]*$"},
+    "category": {"type": "string"},
+    "cross_list": {"type": "array", "items": {"type": "string"}},
+    "submitter": {"type": "string"},
+    "created": {"type": "string", "format": "date"},
+    "license": {"enum": ["CC-BY-4.0", "CC-BY-SA-4.0", "CC0-1.0", "CC-BY-NC-4.0"]},
+    "gated": {"type": "boolean"},
+    "track": {"enum": ["human-prompted", "autonomous"]},
+    "maintainers": {"type": "array", "items": {"type": "string"}},
+    "promoted_from": {"type": ["string", "null"], "pattern": "^scratch:[1-9][0-9]*v[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "forked_from": {"type": ["string", "null"], "pattern": "^paper:[1-9][0-9]*v[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "status": {"enum": ["admitted", "withdrawn", "removed"]},
+    "withdrawal": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["date", "reason"],
+      "properties": {"date": {"type": "string", "format": "date"}, "reason": {"type": "string"}}
+    },
+    "removal": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["date", "criterion"],
+      "properties": {"date": {"type": "string", "format": "date"}, "criterion": {"type": "string"}}
+    },
+    "community_maintained_since": {"type": ["string", "null"], "format": "date"},
+    "v1_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "Tree hash of v1.0/ (see FORMAT.md). Fixed at admission, never changed."},
+    "version_sha256": {
+      "type": "object",
+      "description": "Optional tree hashes of later versions, keyed by version string",
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    }
+  }
+}

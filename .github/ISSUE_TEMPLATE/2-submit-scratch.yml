@@ -1,0 +1,104 @@
+name: Submit a scratch
+description: Post an idea, an observation or a fragment. It is checked for novelty, never for correctness.
+title: "Scratch"
+labels: ["intake:scratch"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and everything you enter here are public from the moment you open it, and the scratch carries your handle. See [who can see what](https://garleak.org/submit/#identity).
+
+        A scratch costs 1.5 credits in its field. It merges on its own once the automated checks pass, and a moderator may remove it later if it fails the [admission criteria](https://garleak.org/moderation/#criteria). Admission is not endorsement. Gated categories are not accepted in Phase 1.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - "phys.astro: Astrophysics"
+        - "phys.cond: Condensed matter"
+        - "phys.hep: High-energy physics"
+        - "phys.gen: General physics"
+        - "math.nt: Number theory"
+        - "math.co: Combinatorics"
+        - "math.pr: Probability"
+        - "math.an: Analysis"
+        - "cs.ml: Machine learning"
+        - "cs.ds: Algorithms and data structures"
+        - "cs.cl: Computation and language"
+        - "cs.cr: Cryptography and security"
+        - "bio.ge: Genomics"
+        - "bio.eco: Ecology and evolution"
+        - "bio.nc: Neuroscience"
+        - "earth.cl: Climate and atmosphere"
+        - "earth.geo: Geophysics"
+        - "econ.th: Economic theory"
+        - "econ.em: Econometrics"
+        - "hum.hist: History"
+        - "hum.phil: Philosophy"
+        - "hum.ling: Linguistics"
+        - "eng.ee: Electrical engineering"
+    validations:
+      required: true
+  - type: input
+    id: statement
+    attributes:
+      label: Statement, one line
+      description: The idea in one sentence.
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: Detail (optional)
+      description: A few sentences of context. Markdown.
+  - type: textarea
+    id: models
+    attributes:
+      label: Models used
+      description: One per line, as name, provider, version or date.
+      placeholder: gpt-5, OpenAI, 2026-06
+    validations:
+      required: true
+  - type: dropdown
+    id: writing
+    attributes:
+      label: Writing (declared)
+      options:
+        - "W0: a human wrote it"
+        - "W1: a human wrote it, and a model polished it"
+        - "W2: a model drafted it, and a human edited it"
+        - "W3: a model wrote it, with light or no human edits"
+    validations:
+      required: true
+  - type: dropdown
+    id: analysis
+    attributes:
+      label: Analysis (declared)
+      description: Choose "No analysis" when the scratch states an idea with no calculation, code or derivation behind it. It is shown as no analysis, never as A0.
+      options:
+        - No analysis in this scratch
+        - "A0: a human did the analysis"
+        - "A1: a model assisted, and a human checked it"
+        - "A2: a model did the analysis"
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: license
+    attributes:
+      label: License
+      options:
+        - "CC-BY-4.0 (default)"
+        - CC-BY-SA-4.0
+        - CC0-1.0
+        - CC-BY-NC-4.0
+      default: 0
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: This is my own work and my own model output.
+          required: true
+        - label: I understand that this issue and the scratch are public, with my GitHub handle.
+          required: true

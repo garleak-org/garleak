@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schemas/citecheck/report.v1.json",
+  "title": "citecheck report, schema version 1",
+  "description": "Output of citecheck. Version 1 is stable: later 1.x versions may add optional fields but will not remove or rename fields, and will not change the verdict enum. citecheck checks existence and metadata of references. It does not check whether a cited work supports the claim it is cited for.",
+  "type": "object",
+  "required": ["schema_version", "tool", "generated_at", "input", "settings", "summary", "references", "disclaimer"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"type": "string", "pattern": "^1\\.[0-9]+$"},
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "citecheck"},
+        "version": {"type": "string"}
+      }
+    },
+    "generated_at": {"type": "string", "format": "date-time"},
+    "elapsed_seconds": {"type": "number", "minimum": 0},
+    "input": {
+      "type": "object",
+      "required": ["kind", "source"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "How the references were obtained.",
+          "enum": ["bibtex", "bbl", "text", "latex", "latex-bbl", "latex-bib", "latex-inline",
+                   "arxiv-latex-bbl", "arxiv-latex-bib", "arxiv-latex-inline"]
+        },
+        "source": {"type": "string"},
+        "arxiv_id": {"type": "string"},
+        "files_used": {"type": "array", "items": {"type": "string"}},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "offline": {"type": "boolean"},
+        "resolvers": {"type": "array", "items": {"type": "string"}},
+        "ads_enabled": {"type": "boolean"},
+        "arxiv_search": {"type": "boolean"},
+        "max_refs": {"type": ["integer", "null"]}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["n_references", "counts", "flagged_indices", "headline", "prescreen"],
+      "properties": {
+        "n_references": {"type": "integer", "minimum": 0},
+        "n_with_identifier": {"type": "integer", "minimum": 0},
+        "counts": {
+          "type": "object",
+          "required": ["verified", "id_mismatch_real_ref", "metadata_mismatch", "unresolved", "not_checkable"],
+          "properties": {
+            "verified": {"type": "integer", "minimum": 0},
+            "id_mismatch_real_ref": {"type": "integer", "minimum": 0},
+            "metadata_mismatch": {"type": "integer", "minimum": 0},
+            "unresolved": {"type": "integer", "minimum": 0},
+            "not_checkable": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "flagged_indices": {
+          "description": "References that need a human look: unresolved or metadata_mismatch, excluding incomplete checks.",
+          "type": "array", "items": {"type": "integer"}
+        },
+        "corrected_indices": {"type": "array", "items": {"type": "integer"}},
+        "incomplete_indices": {"type": "array", "items": {"type": "integer"}},
+        "headline": {"type": "string"},
+        "prescreen": {
+          "type": "object",
+          "required": ["status", "claim_support_checked"],
+          "properties": {
+            "status": {
+              "description": "pass: nothing flagged. review: at least one reference flagged. incomplete: an unresolved verdict rests on resolver errors or cache misses.",
+              "enum": ["pass", "review", "incomplete"]
+            },
+            "scope": {"type": "string"},
+            "claim_support_checked": {"const": false}
+          }
+        }
+      }
+    },
+    "references": {"type": "array", "items": {"$ref": "#/$defs/reference_result"}},
+    "network": {
+      "type": "object",
+      "description": "Per-host request counts for this run.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "requests": {"type": "integer"},
+          "cache_hits": {"type": "integer"},
+          "errors": {"type": "integer"}
+        }
+      }
+    },
+    "disclaimer": {"type": "string"}
+  },
+  "$defs": {
+    "verdict": {
+      "description": "verified: an identifier resolves (or, with no identifier, a registry record was found) and the metadata agree. id_mismatch_real_ref: an identifier is wrong or points elsewhere, but the real work was found; corrected_ids says what to use. metadata_mismatch: the identifier resolves, but title/authors/year/venue disagree materially and no better match exists. unresolved: nothing matching was found anywhere consulted; may be fabricated, may be unindexed. not_checkable: nothing public to check (private communication, in preparation) or a kind of work the registries cover poorly.",
+      "enum": ["verified", "id_mismatch_real_ref", "metadata_mismatch", "unresolved", "not_checkable"]
+    },
+    "identifiers": {
+      "type": "object",
+      "properties": {
+        "doi": {"type": "string"},
+        "arxiv": {"type": "string"},
+        "bibcode": {"type": "string"},
+        "url": {"type": "string"},
+        "pos": {"type": "string"},
+        "openalex": {"type": "string"}
+      },
+      "additionalProperties": {"type": "string"}
+    },
+    "record": {
+      "type": ["object", "null"],
+      "required": ["source"],
+      "properties": {
+        "source": {"type": "string", "description": "Resolver that returned the record (arxiv, datacite, crossref, doi.org, openalex, ads, pos)."},
+        "ids": {"$ref": "#/$defs/identifiers"},
+        "title": {"type": ["string", "null"]},
+        "authors": {"type": "array", "items": {"type": "string"}, "description": "First ten authors."},
+        "n_authors": {"type": "integer"},
+        "year": {"type": ["integer", "null"]},
+        "container": {"type": ["string", "null"]},
+        "volume": {"type": ["string", "null"]},
+        "issue": {"type": ["string", "null"]},
+        "page": {"type": ["string", "null"]},
+        "type": {"type": ["string", "null"]},
+        "registry": {"type": ["string", "null"], "description": "DOI registration agency when known (Crossref, DataCite, mEDRA, ...)."},
+        "related_ids": {"$ref": "#/$defs/identifiers"}
+      }
+    },
+    "scores": {
+      "type": ["object", "null"],
+      "description": "Component similarities between the reference and a record. Null components could not be compared.",
+      "properties": {
+        "title": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "title_mode": {"enum": ["field", "containment", null]},
+        "author": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "first_author_match": {"type": ["boolean", "null"]},
+        "year": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "year_delta": {"type": ["integer", "null"]},
+        "venue": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "journal_agrees": {"type": ["boolean", "null"]},
+        "overall": {"type": "number", "minimum": 0, "maximum": 1},
+        "coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "agrees": {"type": "boolean"},
+        "contradicts": {"type": "boolean"},
+        "strength": {"enum": ["strong", "moderate", "weak", "none"]}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["resolver", "action", "status"],
+      "properties": {
+        "resolver": {"type": "string"},
+        "action": {"type": "string", "description": "lookup_doi, lookup_arxiv, lookup_bibcode, lookup_pos, repair_doi, confirm_correction, or search."},
+        "query": {"type": "string"},
+        "status": {"enum": ["found", "not_found", "error", "offline_miss", "skipped"]},
+        "record": {"$ref": "#/$defs/record"},
+        "scores": {"$ref": "#/$defs/scores"},
+        "note": {"type": ["string", "null"]}
+      }
+    },
+    "reference_result": {
+      "type": "object",
+      "required": ["index", "raw", "parsed", "verdict", "confidence", "confidence_label", "reason", "corrected_ids", "evidence", "incomplete"],
+      "properties": {
+        "index": {"type": "integer", "minimum": 1},
+        "key": {"type": ["string", "null"]},
+        "raw": {"type": "string", "description": "The reference as plain text."},
+        "parsed": {
+          "type": "object",
+          "properties": {
+            "key": {"type": ["string", "null"]},
+            "entry_type": {"type": ["string", "null"]},
+            "title": {"type": ["string", "null"]},
+            "title_reliable": {"type": "boolean"},
+            "authors": {"type": "array", "items": {"type": "string"}},
+            "collaboration": {"type": ["string", "null"]},
+            "year": {"type": ["integer", "null"]},
+            "journal": {"type": ["string", "null"]},
+            "volume": {"type": ["string", "null"]},
+            "page": {"type": ["string", "null"]},
+            "identifiers": {"$ref": "#/$defs/identifiers"},
+            "flags": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "verdict": {"$ref": "#/$defs/verdict"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "confidence_label": {"enum": ["high", "medium", "low"]},
+        "reason": {"type": "string"},
+        "corrected_ids": {"$ref": "#/$defs/identifiers"},
+        "matched_record": {"$ref": "#/$defs/record"},
+        "scores": {"$ref": "#/$defs/scores"},
+        "incomplete": {"type": "boolean", "description": "True when a resolver error or offline cache miss may have changed the verdict."},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+{% set P = site.prefix %}
+{% set base = "/list/" if kind == "paper" else "/scratch/list/" %}
+<h1>{{ "Papers" if kind == "paper" else "Scratches" }}</h1>
+<p class="small">See <a href="{{ P }}{{ '/scratch/list/' if kind == 'paper' else '/list/' }}">{{ "scratches" if kind == "paper" else "papers" }}</a> | <a href="{{ P }}/graduated/">Graduated papers</a></p>
+{% for f in site.fields %}
+<h2>{{ f.name }}</h2>
+<ul class="cats">
+{% for c in f.categories %}
+  <li><a href="{{ P }}{{ base }}{{ c.code }}/new/">{{ c.name }}</a> (<b>{{ c.code }}</b> <a href="{{ P }}{{ base }}{{ c.code }}/new/">new</a>{% for ym in site.months(c.code)[:1] %}, <a href="{{ P }}{{ base }}{{ c.code }}/{{ ym }}/">recent</a>{% endfor %}){% if c.gated %} gated{% endif %}</li>
+{% endfor %}
+</ul>
+{% endfor %}
+{% endblock %}

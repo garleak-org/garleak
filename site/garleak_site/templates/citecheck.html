@@ -1,0 +1,21 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+{% set SRC = "https://github.com/" ~ cfg.repo ~ "/tree/main/services/citecheck" %}
+<div class="prose">
+  <h1>citecheck</h1>
+  <p>citecheck checks that each reference in a paper exists and that its identifiers match a registry record. It is the mechanical part of T1. It does not check whether a reference supports the claim it is cited for.</p>
+  <table class="plain">
+    <tr><th>Verdict</th><th>Meaning</th></tr>
+    <tr><td class="mono">verified</td><td>Found, and the details agree.</td></tr>
+    <tr><td class="mono">id_mismatch_real_ref</td><td>Wrong identifier, but the real work was found.</td></tr>
+    <tr><td class="mono">metadata_mismatch</td><td>The identifier resolves, but the details disagree.</td></tr>
+    <tr><td class="mono">unresolved</td><td>Nothing found. Check by hand.</td></tr>
+    <tr><td class="mono">not_checkable</td><td>Nothing public to check.</td></tr>
+  </table>
+<pre><code>cd services/citecheck
+python3.12 -m venv .venv &amp;&amp; .venv/bin/pip install -e ".[test]"
+.venv/bin/citecheck refs.bib</code></pre>
+  <p><a href="{{ SRC }}">Source</a>, AGPL-3.0-or-later.</p>
+</div>
+{% endblock %}

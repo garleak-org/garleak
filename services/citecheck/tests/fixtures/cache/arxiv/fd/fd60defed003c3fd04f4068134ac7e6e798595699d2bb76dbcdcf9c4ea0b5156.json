@@ -1,0 +1,6 @@
+{
+ "url": "https://export.arxiv.org/api/query?id_list=1807.06209%2C1907.04869%2C2106.15656%2C2112.04510%2C2304.06693%2C2306.05295%2C2309.05618%2C2310.01112%2C2404.07250&max_results=9",
+ "status": 429,
+ "content_type": "citecheck/failure",
+ "fetched_at": 1789374849.8707771
+}

@@ -1,0 +1,246 @@
+# Garleak T1 citations rubric. Universal across every field and always the first tier.
+# Changes to this file go through an RFC (see ../README.md). Item ids are never
+# renumbered or reused; retire an item by setting deprecated_in.
+
+id: citations
+item_prefix: cit
+title: Citations
+field: universal
+applies_to_tiers: [T1]
+version: 1.0.0
+status: draft
+spec_version: "0.1"
+effective_date: null
+rfc: null
+maintainers:
+  - name: To be recruited
+    orcid: null
+    role: rubric maintainer
+summary: >-
+  T1 asks whether every reference exists and says what the paper claims it says.
+  Existence and metadata are checked for every reference, with help from citecheck.
+  Whether a reference supports its citing sentence is checked by a person, for every
+  reference that supports a central claim and for a random sample of the rest.
+definitions:
+  reference: >-
+    An entry in the paper's reference list, or an in-text pointer to a work that has no
+    list entry (a footnoted URL, a dataset, a code release).
+  citing sentence: The sentence or sentences in the paper that cite the reference.
+  central claim: >-
+    A result the abstract presents as the paper's main finding, or a claim the paper says
+    its main finding depends on. The verifier writes each central claim down in one
+    sentence as part of cit.T1.supports-central.
+  supporting reference: >-
+    A reference cited in support of a central claim, or of a step a central claim
+    depends on.
+changelog:
+  - version: 1.0.0
+    date: 2026-09-14
+    rfc: null
+    changes:
+      - First draft, circulated with SPEC.md 0.1 for comment.
+items:
+  - id: cit.T1.exists
+    tier: T1
+    title: Every reference exists
+    required: true
+    scope: reference
+    prompt: >-
+      For every reference, confirm that the cited work exists. Resolve its DOI, arXiv id,
+      ISBN, or URL, or find it in a bibliographic database. Start from the citecheck
+      report and confirm by hand every reference it could not resolve or resolved with
+      low confidence.
+    criteria:
+      pass: Every reference resolves to a real, identifiable work.
+      fail: >-
+        Any reference cannot be found after the search recorded in the evidence, or
+        resolves only to a work that differs from the one described (a different paper
+        behind the DOI, a URL that never held the cited item).
+      not_applicable: null
+    evidence:
+      - kind: citecheck-report
+        description: The citecheck run over the version's reference list, with its tool version.
+        required: true
+      - kind: note
+        description: >-
+          For each reference citecheck did not resolve, where you looked and what you
+          found.
+        required: true
+    automation:
+      level: partial
+      tools: [citecheck]
+      notes: >-
+        citecheck looks up each reference against Crossref and other open sources. The
+        verifier confirms unresolved and low-confidence results and owns the verdict.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: cit.T1.metadata-agree
+    tier: T1
+    title: Reference metadata agree with the record
+    required: true
+    scope: reference
+    prompt: >-
+      For every reference, compare the authors, title, year, venue, and identifiers in the
+      entry with the record the reference resolved to. Review each mismatch citecheck
+      reports and decide whether it matters.
+    criteria:
+      pass: >-
+        All entries agree with their records, or differ only in ways that would not send a
+        reader to a different work (formatting, abbreviation, diacritics, or a preprint
+        cited for a work later printed with the same content).
+      fail: >-
+        Any entry has wrong authors, a wrong title, identifiers belonging to a different
+        work, or combines details of two or more works.
+      not_applicable: null
+    evidence:
+      - kind: citecheck-report
+        description: The metadata comparison from the same citecheck run.
+        required: true
+      - kind: note
+        description: Your verdict on each flagged mismatch.
+        required: true
+    automation:
+      level: partial
+      tools: [citecheck]
+      notes: citecheck compares fields and flags mismatches. The verifier judges each flag.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: cit.T1.supports-central
+    tier: T1
+    title: References supporting a central claim say what is claimed
+    required: true
+    scope: reference
+    prompt: >-
+      Write down each central claim in one sentence. List every supporting reference.
+      For each one, read the relevant part of the cited work and confirm that it says
+      what the citing sentence says it says, at the strength the citing sentence uses.
+    criteria:
+      pass: Every supporting reference supports its citing sentence as written.
+      fail: >-
+        Any supporting reference does not contain the claimed result, contradicts it, or
+        supports only a weaker or different statement than the citing sentence makes.
+      not_applicable: >-
+        The paper cites no reference in support of any central claim (for example a
+        self-contained proof). Say so, and list the central claims anyway.
+    evidence:
+      - kind: note
+        description: The central claims, one sentence each, and the list of supporting references.
+        required: true
+      - kind: note
+        description: >-
+          For each supporting reference, the location in the cited work (page, section,
+          equation, table, or figure) and a short quotation or paraphrase of what it says.
+        required: true
+    automation:
+      level: none
+      notes: >-
+        Tools may fetch abstracts or full text to save time. Reading and judging is done
+        by the verifier.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: cit.T1.supports-sample
+    tier: T1
+    title: A random sample of the other references say what is claimed
+    required: true
+    scope: reference
+    prompt: >-
+      Check the sample of the remaining references that the platform draws for you. For
+      each, read the relevant part of the cited work and confirm that it says what the
+      citing sentence says it says.
+    criteria:
+      pass: Every sampled reference supports its citing sentence as written.
+      fail: Any sampled reference does not support its citing sentence as written.
+      not_applicable: >-
+        Every reference in the paper is a supporting reference already checked under
+        cit.T1.supports-central.
+    sampling:
+      rule: >-
+        Let N be the number of references not checked under cit.T1.supports-central.
+        The sample size is the smaller of N and the larger of 5 and ceil(0.1 N). The
+        platform draws the sample uniformly at random when the verifier starts, records
+        the seed and the list, and shows the list to the verifier. The verifier does not
+        choose the sample.
+      minimum: 5
+      fraction: 0.1
+      drawn_by: platform
+      escalation: >-
+        If any sampled reference fails, the item fails. The verifier should then check a
+        second sample of the same size and record it, so the version page shows how
+        widespread the problem is.
+    evidence:
+      - kind: sample-record
+        description: The seed and the list of sampled references, as recorded by the platform.
+        required: true
+      - kind: note
+        description: For each sampled reference, the location in the cited work and a short quotation or paraphrase.
+        required: true
+    automation:
+      level: partial
+      tools: [platform sampler]
+      notes: Only the draw is automated. The check is done by the verifier.
+    notes: >-
+      Proposed default, open for comment. SPEC.md T1 says every reference says what is
+      claimed. Existence and metadata are checked for all references. Claim support is
+      checked for all supporting references and a random sample of the rest, because
+      checking every reference by hand would make T1 too slow to be the entry tier.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: cit.T1.retractions
+    tier: T1
+    title: No retracted work supports a central claim without saying so
+    required: true
+    scope: reference
+    prompt: >-
+      Check whether any supporting reference has been retracted, or carries an expression
+      of concern or a correction that bears on what the paper cites it for.
+    criteria:
+      pass: >-
+        No supporting reference is retracted or under an expression of concern, or the
+        paper states the retraction or concern and does not rely on the retracted result.
+      fail: >-
+        A supporting reference is retracted or under an expression of concern and the
+        paper relies on it without saying so.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: The source consulted for retraction status and the date consulted.
+        required: true
+    automation:
+      level: partial
+      tools: [Crossref metadata including Retraction Watch records]
+      notes: A lookup finds candidates. The verifier reads each notice.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: cit.T1.in-text-match
+    tier: T1
+    title: In-text citations and the reference list match
+    required: false
+    scope: version
+    prompt: >-
+      Check that every in-text citation points to an entry in the reference list and that
+      every entry is cited somewhere in the text.
+    criteria:
+      pass: Citations and list entries correspond one to one.
+      fail: A citation has no list entry, or an entry is never cited.
+      not_applicable: The paper has no reference list.
+    evidence:
+      - kind: note
+        description: Any unmatched citations or entries.
+        required: true
+    automation:
+      level: partial
+      tools: [citecheck]
+      notes: Parsing finds candidates. The verifier confirms.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null

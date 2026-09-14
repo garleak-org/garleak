@@ -1,0 +1,35 @@
+id: 4356-07
+version: '4.0'
+kind: paper
+tier: T4
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: shaddad
+date: '2026-09-09'
+result: passed
+summary: >-
+  Reran the full timing pipeline on my own machines from the public light curves. Period derivative
+  -28.9 ± 1.0 ms per year.
+items:
+- id: comp.T4.independent-verifier
+  verdict: pass
+- id: comp.T4.own-infrastructure
+  verdict: pass
+- id: comp.T4.full-rerun
+  verdict: pass
+- id: comp.T4.no-contributor-help
+  verdict: pass
+time_spent_minutes: 900
+t4_attestation:
+  text: >-
+    I know of no shared affiliation, co-authorship within the window, or other close working
+    relationship with any contributor.
+  date: '2026-09-09'
+status: active
+independent:
+  value: true
+  computed_at: '2026-09-09'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v4.0

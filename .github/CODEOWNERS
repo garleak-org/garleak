@@ -1,0 +1,25 @@
+# Code owners (docs/INTAKE.md, "Repository settings"). With branch protection set to
+# "Require review from Code Owners", a moderator must approve every pull request that
+# touches these paths before it can merge.
+#
+# The team @garleak-org/moderators does not exist yet. Create it in the organization
+# (Settings, Teams), give it write access to this repository, and add the moderators.
+# Until it exists GitHub ignores these lines, and nothing requires a moderator's review.
+#
+# The last matching pattern wins. A pattern with no owner leaves those paths unowned.
+
+# Papers (screened before they appear, SPEC §8.2.1) and accounts (identity links).
+/archive/papers/                      @garleak-org/moderators
+/archive/accounts/                    @garleak-org/moderators
+
+# The instrument configuration, the category tree and the format.
+/archive/*.yaml                       @garleak-org/moderators
+/archive/FORMAT.md                    @garleak-org/moderators
+
+# Workflows, issue forms, labels and this file.
+/.github/                             @garleak-org/moderators
+
+# Verifications and assistance signals merge on the automated checks, so they have no
+# owner, even though they live under archive/papers/.
+/archive/papers/*/verifications/
+/archive/papers/*/signals/

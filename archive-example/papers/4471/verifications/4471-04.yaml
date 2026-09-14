@@ -1,0 +1,32 @@
+id: 4471-04
+version: '2.0'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: mokafor
+date: '2026-08-23'
+result: passed
+summary: >-
+  42 references exist and match. Claim support re-read for the references behind the changed
+  result.
+items:
+- id: cit.T1.exists
+  verdict: pass
+- id: cit.T1.metadata-agree
+  verdict: pass
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+time_spent_minutes: 50
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-23'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v2.0

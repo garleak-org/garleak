@@ -1,0 +1,42 @@
+# Example record. Invented.
+id: scratch:8816
+category: phys.astro
+author: fennel
+date: '2026-09-07'
+statement: >-
+  Measure the phase of the Galactic warp from Cepheid proper motions alone, with no distances.
+models:
+- name: gemini-2.5-pro
+  provider: Google
+  version: 2026-03
+assistance:
+  writing: W3
+  analysis: A1
+v1_sha256: e3cbac53dcf0786e6dd35d19ea05702fce29bac5663a6c4a2af2cc9228f1a94c
+license: CC-BY-4.0
+gated: false
+claims:
+- by: jortizbello
+  date: '2026-09-12'
+  expires: '2026-12-11'
+checks:
+- id: 8816-n1
+  outcome: N1
+  checker: shaddad
+  date: '2026-09-08'
+  summary: Warp studies found all use distances.
+  sources:
+  - ADS
+  - Semantic Scholar
+  queries:
+  - Galactic warp Cepheids proper motions
+  - warp phase kinematics without distances
+  - warp line of nodes proper motion
+  - Cepheid warp kinematic model
+- id: 8816-n3
+  outcome: N3
+  checker: mokafor
+  date: '2026-09-11'
+  tractability: >-
+    Needs about 2,000 Cepheids with DR4 proper motions and a simple warp model. Estimated
+    two weeks for one person.

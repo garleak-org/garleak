@@ -1,0 +1,35 @@
+id: 4356-04
+version: '4.0'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: mokafor
+date: '2026-08-27'
+result: passed
+summary: All 41 references exist and match their metadata.
+items:
+- id: cit.T1.exists
+  verdict: pass
+- id: cit.T1.metadata-agree
+  verdict: pass
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+time_spent_minutes: 45
+status: active
+independent:
+  value: false
+  computed_at: '2026-08-27'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v4.0
+conflict_flags:
+- type: shared affiliation
+  computed_at: '2026-08-27'
+  sources:
+  - declared affiliations, held by moderators

@@ -1,0 +1,6 @@
+{
+ "url": "https://api.openalex.org/works?filter=title.search%3ATidal+debris+streams+as+tracers+of+the+Milky+Way+dark+halo+triaxiality+beyond+60+kpc%2Cpublication_year%3A2022-2024&per-page=8&select=id%2Cdoi%2Ctitle%2Cpublication_year%2Cauthorships%2Cbiblio%2Cprimary_location%2Ctype%2Cids",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374873.989835
+}

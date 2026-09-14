@@ -1,0 +1,16 @@
+id: 12
+base_version: '1.1'
+author: aferreira
+date: '2026-08-18'
+title: Factor of two in the phase-mixing time
+rationale: >-
+  The derivation counted the phase-mixing time once for each side of the gap. Removing the
+  double count halves every lifetime, which changes the central number.
+proposed_bump: major
+status: merged
+merged_into: '2.0'
+addresses:
+- verification: 4471-03
+  item: comp.T2.numbers-traceable
+model_use:
+  used: false

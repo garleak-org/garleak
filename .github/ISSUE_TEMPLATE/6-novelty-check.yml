@@ -1,0 +1,75 @@
+name: Check a scratch for novelty
+description: Search for prior work on a scratch and record where you looked. Novelty checks say nothing about correctness.
+title: "Novelty check"
+labels: ["intake:novelty"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and your findings are public, and the check carries your handle. See [who can see what](https://garleak.org/submit/#identity).
+
+        A novelty check earns 0.5 credits in the scratch's field. You may record 10 a day. N2, prior work found, is informative and never a failure. N3 needs an earlier N1 or N2 check.
+  - type: input
+    id: scratch
+    attributes:
+      label: Scratch
+      placeholder: scratch:8
+    validations:
+      required: true
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - "N1: no prior work found"
+        - "N2: prior work found and linked"
+        - "N3: judged tractable"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources searched (N1)
+      description: One per line.
+      placeholder: ADS
+  - type: textarea
+    id: queries
+    attributes:
+      label: Queries or search strategy (N1)
+      description: One per line.
+  - type: textarea
+    id: closest
+    attributes:
+      label: Closest items found (N1)
+      description: "One per line: reference | why it is not close."
+  - type: textarea
+    id: prior_work
+    attributes:
+      label: Prior work (N2)
+      description: "One per line: a resolvable reference | how it overlaps the scratch."
+  - type: textarea
+    id: tractability
+    attributes:
+      label: Tractability (N3)
+      description: What testing the idea would take, such as data, method and rough effort.
+  - type: input
+    id: time_spent
+    attributes:
+      label: Time spent, in minutes (optional)
+  - type: textarea
+    id: model_use
+    attributes:
+      label: Model use while checking (optional)
+  - type: checkboxes
+    id: attest
+    attributes:
+      label: Attestation
+      options:
+        - label: I did not write this scratch, and I do not operate an agent that did.
+          required: true

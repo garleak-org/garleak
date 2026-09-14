@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "garleak-rubrics"
+version = "0.1.0"
+description = "Versioned verification rubrics for Garleak, with a JSON Schema and a validator."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "AGPL-3.0-or-later"
+dependencies = ["PyYAML>=6", "jsonschema>=4.18"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[tool.setuptools]
+# Data and scripts only. No importable package.
+packages = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

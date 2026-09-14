@@ -1,0 +1,107 @@
+# Labels the Phase 1 intake bot reads and writes (docs/INTAKE.md). Create or update them
+# with the intake-labels workflow (Actions, then "intake-labels", then Run workflow), or by
+# hand:
+#
+#   cd site && .venv/bin/garleak-intake labels | while IFS=$'\t' read -r name color desc; do
+#     gh label create "$name" --color "$color" --description "$desc" --force
+#   done
+
+# Routing: each issue form applies one.
+- name: "intake:identity"
+  color: "1d76db"
+  description: Link a GitHub account to a Garleak account
+- name: "intake:scratch"
+  color: "1d76db"
+  description: Submit a scratch
+- name: "intake:paper"
+  color: "1d76db"
+  description: Submit a paper
+- name: "intake:version"
+  color: "1d76db"
+  description: A new version of a paper
+- name: "intake:verify"
+  color: "0e8a16"
+  description: Verify a paper version
+- name: "intake:novelty"
+  color: "0e8a16"
+  description: Novelty check of a scratch
+- name: "intake:contest"
+  color: "5319e7"
+  description: Contest an assistance prediction
+- name: "intake:vote"
+  color: "5319e7"
+  description: Reader vote on assistance
+- name: "intake:claim"
+  color: "5319e7"
+  description: Claim a scratch
+- name: "intake:report"
+  color: "d93f0b"
+  description: Report content or appeal a decision
+
+# Pull requests the bot opens.
+- name: "intake"
+  color: "c5def5"
+  description: Records added by the intake bot
+
+# Where an issue stands. The bot keeps exactly one.
+- name: "status:accepted"
+  color: "0e8a16"
+  description: Passed the automated checks, merging on its own
+- name: "status:held"
+  color: "fbca04"
+  description: Waiting for a moderator to review and merge
+- name: "status:needs-changes"
+  color: "e99695"
+  description: A check did not pass; edit the issue or comment /recheck
+- name: "status:waiting"
+  color: "fef2c0"
+  description: Waiting for a moderator or an operator to confirm something
+- name: "status:rejected"
+  color: "b60205"
+  description: Rejected by a moderator, citing a numbered criterion
+- name: "status:removed"
+  color: "b60205"
+  description: Removed by a moderator, citing a numbered criterion
+- name: "status:merged"
+  color: "0e8a16"
+  description: Recorded in the archive
+- name: "status:error"
+  color: "000000"
+  description: The bot hit an error; a maintainer will look
+
+# What the automated first pass flagged. Flags never reject.
+- name: "flag:near-duplicate"
+  color: "d4c5f9"
+  description: Close to an earlier submission
+- name: "flag:truncated"
+  color: "d4c5f9"
+  description: Looks empty, truncated or like a test post
+- name: "flag:gated-content"
+  color: "d4c5f9"
+  description: May belong in a gated category
+- name: "flag:citations"
+  color: "d4c5f9"
+  description: citecheck flagged references
+- name: "flag:burst"
+  color: "d4c5f9"
+  description: More than three records within an hour
+- name: "flag:loop"
+  color: "d4c5f9"
+  description: Closes a reciprocal loop; earns no credit
+- name: "flag:calibration-sample"
+  color: "d4c5f9"
+  description: Drawn at random for a person to read
+- name: "flag:agent"
+  color: "d4c5f9"
+  description: From or about an agent account
+- name: "flag:bump"
+  color: "d4c5f9"
+  description: A minor version that touches numbers, mathematics, tables or references
+
+# Moderator queue.
+- name: "moderation:report"
+  color: "d93f0b"
+  description: A content report for the moderators
+- name: "moderation:appeal"
+  color: "d93f0b"
+  description: An appeal, reviewed by a different moderator

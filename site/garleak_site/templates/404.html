@@ -1,0 +1,14 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<div class="nf">
+  <h1>Page not found</h1>
+  <p id="idnote" hidden></p>
+  <p>If you followed an identifier here, it was never issued or has a typo. Papers resolve at /abs/4471/ and scratches at /scratch/8812/.</p>
+  <p><a href="/">Home</a> | <a href="/list/">Papers</a> | <a href="/scratch/list/">Scratches</a>{% if has_example %} | <a href="/example/">Example records</a>{% endif %}</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="application/json" id="issued">{{ issued|safe }}</script>
+<script src="/static/notfound.js" defer></script>
+{% endblock %}

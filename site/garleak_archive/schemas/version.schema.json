@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/version-meta/0.1",
+  "title": "papers/<n>/v<major>.<minor>/meta.yaml: one immutable version",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "authors", "abstract", "date", "change", "submitted_by", "assistance", "models"],
+  "properties": {
+    "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.(0|[1-9][0-9]*)$", "description": "Optional; must match the directory name"},
+    "title": {"type": "string", "minLength": 1},
+    "authors": {"type": "array", "minItems": 1, "items": {"type": "string"}, "description": "Account handles, in author order"},
+    "abstract": {"type": "string", "minLength": 1},
+    "date": {"type": "string", "format": "date"},
+    "change": {"enum": ["initial", "minor", "major"]},
+    "note": {"type": "string", "description": "One line on what changed"},
+    "submitted_by": {"type": "string"},
+    "assistance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["writing", "analysis"],
+      "properties": {
+        "writing": {"enum": ["W0", "W1", "W2", "W3"]},
+        "analysis": {"enum": ["A0", "A1", "A2"]}
+      }
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {"type": "string"},
+          "provider": {"type": ["string", "null"]},
+          "version": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "tools": {"type": "array", "items": {"type": "string"}},
+    "provenance": {"type": "string"},
+    "transcript": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {"type": ["string", "null"]},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "turns": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": {"enum": ["code", "data", "environment", "other"]},
+          "ref": {"type": "string"},
+          "url": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "rubric_families": {"type": "array", "items": {"type": "string"}},
+    "merged_fixes": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+    "reopens": {"type": "array", "items": {"type": "string"}, "description": "Rubric item ids this minor version reopens beyond those its merged fixes address"},
+    "intake": {
+      "type": "object",
+      "description": "How this version arrived (RFC 0001): the path, the issue number for the issue-form path, and when",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"enum": ["issue-form", "worker", "manual"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "at": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+ "url": "https://api.adsabs.harvard.edu/v1/search/query?q=title%3A%28photometric+redshifts+euclid+deep+fields+bayesian+ensemble+gradient+boosted+trees%29+author%3A%22Chen%22+year%3A2021-2023&fl=bibcode%2Ctitle%2Cauthor%2Cyear%2Cpub%2Cvolume%2Cissue%2Cpage%2Cdoi%2Cidentifier%2Cdoctype&rows=5",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374885.6180532
+}

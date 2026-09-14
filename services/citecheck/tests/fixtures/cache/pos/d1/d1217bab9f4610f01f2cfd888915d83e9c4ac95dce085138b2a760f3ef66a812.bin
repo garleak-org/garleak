@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PoS - Accelerator Conceptual Design and R&D Efforts for Super Tau-Charm Facility</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="/css/styleroot.css?v=29" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css?v=29" />
+        <link rel="schema.dctermsTERMS" href="http://purl.org/dc/terms/" />
+<link rel="schema.dcterms" href="http://purl.org/dc/elements/1.1/" />
+<meta http-equiv="content-language" content="en" />
+<meta name="dcterms.identifier" content="https://pos.sissa.it/544/001"/>
+<meta name="dcterms.type" content="proceeding"/>
+<meta name="dcterms.relation" content="43rd International Conference on High Energy Physics"/>
+<meta name="dcterms.isPartOf" content="43rd International Conference on High Energy Physics"/>
+<meta name="citation_conference_abbrev" content="ICHEP2026"/>
+<meta name="citation_conference_title" content="43rd International Conference on High Energy Physics"/>
+<meta name="citation_inbook_title" content="Proceedings of 43rd International Conference on High Energy Physics — PoS(ICHEP2026)"/>
+<meta name="citation_volume" content="544"/>
+<meta name="citation_firstpage" content="001"/>
+<meta name="citation_publisher" content="SISSA Medialab"/>
+<meta name="dcterms.title" content="Accelerator Conceptual Design and R&amp;D Efforts for Super Tau-Charm Facility"/>
+<meta name="citation_title" content="Accelerator Conceptual Design and R&amp;D Efforts for Super Tau-Charm Facility"/>
+<meta name="dcterms.creator" content="Zou, Ye"/>
+<meta name="citation_author" content="Zou, Ye"/>
+
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="top-header">
+                
+                <div class="mainlogo">
+                    <div class="gbg">
+                        <a href="/" title="PoS - Proceedings of Science"
+                        ><img src="/images/pos-logo.png?v=29"></a>
+                    </div>
+                    <img class="ovly" src="/images/pos-ovly.png?v=29">
+                </div>
+                <div id="navbar" class="loggedout">
+<ul>
+    <li><a href="/" title="Home page">Home</a></li>
+    <li><a href="/cgi-bin/reader/info.cgi?p=what" title="what's PoS">what's PoS</a></li>
+    <li><a href="/cgi-bin/reader/info.cgi?p=organisers" title="for organizers">for organizers</a></li>
+    <li><a href="/cgi-bin/reader/info.cgi?p=chairmen" title="for chairpersons">for chairpersons</a></li>
+    <li><a href="/cgi-bin/reader/info.cgi?p=authors" title="for authors">for authors</a></li>
+    <li><a href="/cgi-bin/reader/info.cgi?p=readers" title="for readers">for readers</a></li>
+    <li><a href="/cgi-bin/reader/info.cgi?p=staff" title="staff">staff</a></li>
+</ul>
+</div>
+
+                
+                
+                
+                
+            </header>
+    <script src="/js/lib.js" type="text/javascript"></script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+        });
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+
+<script>
+  // on document ready
+  // hide the coauthor list and action-wrappers
+  $(function() {
+    // start the coauthors list hidded (if necessary)
+    $('.start-hidden').hide();
+    // coauthors list in metadata on top of the page
+    $('#coauthors-toggle').click(function(){
+      $('#coauthors').toggle();
+      // change the text of the toggle button
+      if ($("#coauthors").css("display") == "none") {
+        $('#coauthors-toggle').text(" et al. (click to show)");
+      } else {
+        $('#coauthors-toggle').text(" (click to hide)");
+      }
+    });
+    // add, remove, reorder fragments
+    $('#coauthors-add-toggle').click(function(){
+      $('#coauthors-add-wrapper').toggle();
+    });
+    $('#coauthors-remove-toggle').click(function(){
+      $('#coauthors-remove-wrapper').toggle();
+    });
+    $('#coauthors-reorder-toggle').click(function(){
+      $('#coauthors-reorder-wrapper').toggle();
+    });
+  });
+</script>
+
+<div id="landing-page">
+    <div class="conference">
+        <span class="vol">Volume 544</span> -
+        <span class="conf-title"><a href="/544/">43rd International Conference on High Energy Physics
+            (ICHEP2026)</a></span> -
+        <span class="session">Session Accelerator: Physics, Performance, and R&amp;D for Future Facilities</span>
+    </div>
+    <div class="title">Accelerator Conceptual Design and R&amp;D Efforts for Super Tau-Charm Facility</div>
+    <div class="authors"><div class="list"><span class="au">Y. Zou</span>
+</div>
+</div>
+    <div class="files">
+        <div class="main">
+            <span class="label">Full text:</span>
+            <span class="content"><span class="na">Not available</span></span>
+        </div>
+        
+    </div>
+    
+    
+    
+    <div class="howtocite">
+        <span class="label">How to cite</span>
+        <p>Metadata are provided both in
+            <i><a href="/544/001/biba">article</a></i> format (very
+            similar to <a href="https://inspirehep.net/">INSPIRE</a>)
+            as this helps creating very compact bibliographies which
+            can be beneficial to authors and readers, and in
+            <i><a href="/544/001/bib">proceeding</a></i> format which
+            is more detailed and complete.</p>
+    </div>
+    <div class="license">
+        <span class="label">Open Access</span>
+        <div class="content license_2"><a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png" /></a>Copyright owned by the author(s) under the term of the <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</div>
+    </div>
+</div>
+<!-- footer -->
+<div id="footer">
+    <p>Communicate with the <a href="mailto:%70%6F%73%2D%65%6F%40%70%6F%73%2E%73%69%73%73%61%2E%69%74">PoS editorial office</a>
+        | <a href="/cgi-bin/reader/info.cgi?p=cookies" title="Cookie policy">Cookie policy</a>
+        | <a href="https://www.sissamedialab.it/privacy" title="Privacy policy">Privacy policy</a></p>
+    <p>Published by <a href="https://www.sissamedialab.it/">SISSA Medialab srl</a> | Partita IVA: IT01097780322</p>
+</div>
+<!-- /footer -->
+<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["setExcludedQueryParams", ["nonce"]]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://mtm.sissamedialab.it/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '9']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="https://mtm.sissamedialab.it/matomo.php?idsite=9&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+<!-- End Matomo Code -->
+        </div>
+    </body>
+</html>

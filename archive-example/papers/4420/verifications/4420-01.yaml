@@ -1,0 +1,31 @@
+id: 4420-01
+version: '1.0'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: shaddad
+date: '2026-08-24'
+result: passed
+summary: >-
+  12 references exist and match. The central reference says what it is cited for.
+items:
+- id: cit.T1.exists
+  verdict: pass
+- id: cit.T1.metadata-agree
+  verdict: pass
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+time_spent_minutes: 35
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-24'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.0

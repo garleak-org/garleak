@@ -1,0 +1,29 @@
+title: >-
+  Orbital decay of WASP-12b re-measured from fourteen years of transit times
+authors:
+- evarga
+- dimai
+abstract: >-
+  We fit 268 transit times and 30 occultation times of WASP-12b spanning 2008 to 2023 and
+  find that the orbital period is decreasing at 29.0 ± 1.1 ms per year. The decay implies
+  a stellar tidal quality factor of about 1.8 × 10^5.
+date: '2026-06-10'
+change: major
+note: Tests apsidal precession
+submitted_by: evarga
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+provenance: >-
+  The model drafted the text and the first timing fits; E. Varga and D. Imai rewrote the fitting
+  code and checked every number.
+artifacts:
+- kind: code
+  ref: wasp12-timing at tag v4.0
+  url: null
+rubric_families:
+- computational

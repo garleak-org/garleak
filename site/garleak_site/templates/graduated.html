@@ -1,0 +1,16 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block main %}
+<h1>Graduated papers</h1>
+<p class="small">A version graduates at T3 or T4 with two independent verifiers and no open fixes. <a href="/stages/#graduation">Help</a></p>
+{% if site.graduated %}
+<dl class="articles">
+{% for v in site.graduated %}
+{{ m.paper_entry(v, loop.index, None) }}
+{% endfor %}
+</dl>
+{% else %}
+<p>The first Graduated versions will be listed here.</p>
+{% endif %}
+{% endblock %}

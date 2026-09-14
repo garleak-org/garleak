@@ -1,0 +1,8 @@
+# Settings for the production archive. See FORMAT.md.
+name: Garleak archive
+example: false
+as_of: null            # listings use the build date
+new_listing_days: 7    # the "new" listing covers this many days
+config_version: "0.1"
+spec_version: "0.2"
+rubrics: ../packages/rubrics

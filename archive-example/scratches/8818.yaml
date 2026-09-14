@@ -1,0 +1,35 @@
+# Example record. Invented.
+id: scratch:8818
+category: phys.astro
+author: quill
+date: '2026-09-12'
+statement: >-
+  Kurtosis of pulsar timing residuals could separate a stochastic background from one loud
+  binary.
+models:
+- name: gpt-5
+  provider: OpenAI
+  version: 2026-06
+assistance:
+  writing: W3
+  analysis: null
+v1_sha256: 36c6499ef569bfb0a1ed445fd79ccb44bada4e38386e0712f009ce4982e53921
+license: CC-BY-4.0
+gated: false
+checks:
+- id: 8818-n1
+  outcome: N1
+  checker: nkarimi
+  date: '2026-09-13'
+  summary: Higher moments are used for noise, not for this separation.
+  sources:
+  - ADS
+  - Semantic Scholar
+  queries:
+  - pulsar timing kurtosis gravitational wave background
+  - non-Gaussianity PTA background
+  - single source versus background PTA statistic
+  - fourth moment timing residuals
+  - PTA anisotropy loud binary
+  - resolvable binary PTA detection statistic
+  - PTA higher order statistics

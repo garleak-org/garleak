@@ -1,0 +1,16 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<div class="prose">
+  <h1>Moderation</h1>
+  <p>Screening checks scope and form only, never quality.</p>
+  <h2 id="criteria">Admission criteria</h2>
+  <ol>
+    <li id="c1">A genuine attempt at research.</li>
+    <li id="c2">In scope and in the right category.</li>
+    <li id="c3">Gated content is filed in its gated category.</li>
+    <li id="c4">Nothing harmful, defamatory or plagiarized.</li>
+  </ol>
+  <p>Every rejection cites a criterion. Each decision can be appealed once, within 30 days, at <a href="mailto:{{ cfg.contact }}">{{ cfg.contact }}</a>. A different moderator decides the appeal.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: intake-sync
+
+# Keeps open intake pull requests mergeable (docs/INTAKE.md). After main changes, any bot
+# branch that now adds a record main already has (two runs took the same number) or no
+# longer merges cleanly is processed again from its issue, which gives it a fresh number.
+# Once a day it also rebuilds the site, because standing and listings depend on the date.
+# It reads branches as data and never runs code from them.
+
+on:
+  push:
+    branches: [main]
+    paths: ["archive/**"]
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: intake-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: write        # dispatch intake.yml and site.yml
+    env:
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch || 'main' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: site/pyproject.toml
+
+      - name: Install the archive tools
+        run: |
+          python -m venv site/.venv
+          site/.venv/bin/pip install -e site
+
+      - name: Process again every intake pull request that collides with main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 500 \
+            --json number,headRefName,body > "$RUNNER_TEMP/open-prs.json"
+          git fetch origin '+refs/heads/intake/*:refs/remotes/origin/intake/*' || true
+          site/.venv/bin/garleak-intake stale-prs --open-prs "$RUNNER_TEMP/open-prs.json" --base HEAD \
+            --out "$RUNNER_TEMP/stale.txt"
+          while read -r issue; do
+            [[ "$issue" =~ ^[0-9]+$ ]] || continue
+            gh workflow run intake.yml --repo "$GITHUB_REPOSITORY" --ref "$DEFAULT_BRANCH" -f issue="$issue"
+          done < "$RUNNER_TEMP/stale.txt"
+
+      - name: Rebuild the site once a day
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run site.yml --repo "$GITHUB_REPOSITORY" --ref "$DEFAULT_BRANCH"

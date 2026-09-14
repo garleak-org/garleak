@@ -1,0 +1,33 @@
+id: 4420-02
+version: '1.1'
+kind: paper
+tier: T2
+rubric:
+  id: mathematics
+  version: 1.0.0
+verifier: mokafor
+date: '2026-09-02'
+result: passed
+summary: >-
+  Derivation checked line by line. The impulse-approximation bound on b is stated and used
+  correctly.
+items:
+- id: math.T2.statements-precise
+  verdict: pass
+- id: math.T2.proof-line-by-line
+  verdict: pass
+- id: math.T2.cited-results-apply
+  verdict: na
+  note: >-
+    The derivation cites no external theorem; the one cited result is a standard integral,
+    rederived in the appendix.
+- id: math.T2.counterexample-search
+  verdict: pass
+time_spent_minutes: 190
+status: active
+independent:
+  value: true
+  computed_at: '2026-09-02'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.1

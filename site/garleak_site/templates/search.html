@@ -1,0 +1,10 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<h1>Search</h1>
+<div id="search"></div>
+<p id="search-note">Search needs JavaScript. You can also browse <a href="/list/">papers</a> or <a href="/scratch/list/">scratches</a>.</p>
+{% endblock %}
+{% block scripts %}
+<script src="/static/search.js" defer></script>
+{% endblock %}

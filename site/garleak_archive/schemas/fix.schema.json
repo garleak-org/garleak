@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/fix/0.1",
+  "title": "papers/<n>/fixes/<id>.yaml: a proposed change to a version",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "base_version", "author", "date", "title", "proposed_bump", "status"],
+  "properties": {
+    "id": {"type": "integer", "minimum": 1, "description": "Unique within the paper"},
+    "base_version": {"type": "string", "pattern": "^[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "author": {"type": "string"},
+    "date": {"type": "string", "format": "date"},
+    "title": {"type": "string", "minLength": 1},
+    "rationale": {"type": "string"},
+    "proposed_bump": {"enum": ["minor", "major"]},
+    "status": {"enum": ["open", "merged", "declined", "withdrawn", "superseded"]},
+    "merged_into": {"type": ["string", "null"], "pattern": "^[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "decline_reason": {"type": "string"},
+    "addresses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["verification", "item"],
+        "properties": {"verification": {"type": "string"}, "item": {"type": "string"}}
+      }
+    },
+    "model_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "used": {"type": "boolean"},
+        "models": {"type": "array", "items": {"type": "string"}},
+        "note": {"type": "string"}
+      }
+    }
+  }
+}

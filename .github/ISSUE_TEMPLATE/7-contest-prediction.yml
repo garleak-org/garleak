@@ -1,0 +1,41 @@
+name: Contest an assistance prediction
+description: Contributors only. Put a statement next to the classifier's estimate on one axis.
+title: "Contest"
+labels: ["intake:contest"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and your statement are public. See [who can see what](https://garleak.org/submit/#identity).
+
+        The prediction is an estimate and never overrides your declaration. A contest is shown next to it and kept as calibration data. It is not adjudicated and does not remove the prediction.
+  - type: input
+    id: version
+    attributes:
+      label: Exact version
+      placeholder: paper:12v1.0
+    validations:
+      required: true
+  - type: input
+    id: prediction
+    attributes:
+      label: Prediction id
+      description: Shown next to the prediction on the version's page.
+      placeholder: 12-p1
+    validations:
+      required: true
+  - type: dropdown
+    id: axis
+    attributes:
+      label: Axis
+      options:
+        - writing
+        - analysis
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Statement
+    validations:
+      required: true

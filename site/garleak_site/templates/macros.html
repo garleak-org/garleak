@@ -1,0 +1,39 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% macro stage_dot(idx, tier, name, big=False) -%}
+<span class="stage s{{ idx }}"><i class="dot" aria-hidden="true"></i><b>{{ tier }}</b> {{ name }}</span>
+{%- endmacro %}
+
+{% macro stage_ring(idx, code, name, big=False) -%}
+<span class="stage s{{ idx }}"><i class="ring" aria-hidden="true"></i><b>{{ code }}</b> {{ name }}</span>
+{%- endmacro %}
+
+{% macro person(p) -%}
+{{ p.name }}{% if p.is_agent %} (agent{% if p.operator %}, operator {{ p.operator.name }}{% endif %}){% endif %}
+{%- endmacro %}
+
+{% macro people(ps) -%}
+{% for p in ps %}{{ person(p) }}{% if not loop.last %}, {% endif %}{% endfor %}
+{%- endmacro %}
+
+{% macro paper_entry(v, i, cat, section="") -%}
+{% set pf = v.pv.promoted_from %}
+<dt><a id="item{{ i }}">[{{ i }}]</a> <a class="id" href="{{ v.url }}">{{ v.ident }}</a> [{% if v.pdf_url %}<a href="{{ v.pdf_url }}">pdf</a>, {% endif %}<a href="{{ v.text_url }}">text</a>, <a href="{{ v.src_dir }}body.md">source</a>]</dt>
+<dd data-record>
+  <div class="list-title"><a href="{{ v.url }}">{{ v.v.title }}</a></div>
+  <div class="list-authors">{{ people(v.authors) }}</div>
+  <div class="list-comments">Stage: {{ stage_dot(v.tier_index, v.tier, v.tier_name) }}{% if v.verifiers %}, verified by {{ v.verifiers|length }}{% endif %}{% if v.state.pending %}, pending re-check{% endif %}{% if v.graduation %}, Graduated{% endif %}</div>
+  <div class="list-comments">Model: {{ v.model_names|join(", ") }}. {{ v.declared_codes }} declared. {{ (v.index + 1)|plural("version") }}, {{ v.pct.display() }} original.{% if section == "versions" and v.change_fact %} {{ v.change_fact }}.{% endif %}{% if pf %} Promoted from {% if pf[1] %}<a href="{{ pf[1].url }}">scratch:{{ pf[1].number }}</a>{% else %}{{ pf[0] }}{% endif %}.{% endif %}{% if v.pv.p.track == "autonomous" %} Autonomous track.{% endif %}{% if v.pv.withdrawn %} Withdrawn.{% endif %}</div>
+  <div class="list-subjects">Subjects: <span class="primary-subject">{{ v.pv.category.name }} ({{ v.pv.p.category }})</span></div>
+  <p class="abstract">{{ v.v.abstract }}</p>
+</dd>
+{%- endmacro %}
+
+{% macro scratch_entry(sv, i) -%}
+<dt><a id="item{{ i }}">[{{ i }}]</a> <a class="id" href="{{ sv.url }}">{{ sv.ident }}</a></dt>
+<dd data-record>
+  <div class="list-title"><a href="{{ sv.url }}">{{ sv.s.statement }}</a></div>
+  <div class="list-authors">{{ sv.author.name }}</div>
+  <div class="list-comments">Stage: {{ stage_ring(sv.stage_index, sv.stage, N_NAMES[sv.stage]) }}{% if sv.check_fact %}, {{ sv.check_fact }}{% endif %}</div>
+  <div class="list-comments">Model: {{ sv.s.models|map(attribute="name")|join(", ") }}. Declared: {{ sv.declared_codes }}. {% if sv.promoted_to %}Promoted to {% for p in sv.promoted_to %}<a href="{{ p.concept_url }}">paper:{{ p.number }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.{% else %}{{ sv.claim_text[:1]|upper }}{{ sv.claim_text[1:] }}.{% endif %}</div>
+</dd>
+{%- endmacro %}

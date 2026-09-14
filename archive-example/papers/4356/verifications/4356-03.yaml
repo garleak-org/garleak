@@ -1,0 +1,40 @@
+id: 4356-03
+version: '3.0'
+kind: paper
+tier: T2
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: jlindqvist
+date: '2026-06-20'
+result: failed
+summary: >-
+  The nested-sampling run does not reproduce the stated Bayes factor from the pinned code.
+items:
+- id: comp.T2.code-available
+  verdict: pass
+- id: comp.T2.data-available
+  verdict: pass
+- id: comp.T2.env-declared
+  verdict: pass
+- id: comp.T2.code-runs
+  verdict: pass
+- id: comp.T2.methods-match
+  verdict: pass
+- id: comp.T2.tolerance-stated
+  verdict: pass
+- id: comp.T2.numbers-traceable
+  verdict: fail
+  note: >-
+    The pinned code gives a Bayes factor of 40 for decay over precession, not the 'decisive'
+    preference stated.
+- id: comp.T2.claims-supported
+  verdict: pass
+time_spent_minutes: 230
+status: active
+independent:
+  value: true
+  computed_at: '2026-06-20'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v3.0

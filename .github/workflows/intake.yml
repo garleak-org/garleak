@@ -1,0 +1,256 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: intake
+
+# Phase 1 intake (SPEC §3.7, RFC 0001, docs/INTAKE.md). Turns an issue form into a pull
+# request that adds records to archive/, and comments on the issue with what was checked.
+#
+# Issue text is untrusted input. It reaches this workflow only as files (the event payload
+# and the issue fetched with gh), which Python reads. No run: line interpolates an issue,
+# comment or label field; only numbers and values of a fixed shape pass through env.
+# The workflow runs the code on the default branch and never checks out a pull request.
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Number of the issue to process again
+        required: true
+        type: number
+
+permissions: {}
+
+concurrency:
+  group: intake-issue-${{ github.event.issue.number || inputs.issue }}
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    # Issues opened from a form, re-routed by someone other than the author, or edited;
+    # slash commands on those issues (never on pull requests, never from bots); and runs
+    # dispatched by intake-sync.yml or a maintainer.
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || (github.event_name == 'issues'
+          && contains(join(github.event.issue.labels.*.name, ' '), 'intake:')
+          && (github.event.action != 'labeled'
+              || (startsWith(github.event.label.name, 'intake:')
+                  && github.event.sender.login != github.event.issue.user.login)))
+      || (github.event_name == 'issue_comment'
+          && !github.event.issue.pull_request
+          && github.event.comment.user.type != 'Bot'
+          && startsWith(github.event.comment.body, '/')
+          && contains(join(github.event.issue.labels.*.name, ' '), 'intake:'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write        # push the bot branch, merge eligible pull requests
+      pull-requests: write   # open, edit, merge and close intake pull requests
+      issues: write          # comment on the issue and set its labels
+      actions: write         # dispatch site.yml and intake-sync.yml
+    env:
+      ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            site/pyproject.toml
+            services/citecheck/pyproject.toml
+
+      - name: Install the archive tools
+        run: |
+          python -m venv site/.venv
+          site/.venv/bin/pip install -e site
+
+      - name: Collect the issue, its comments and the open intake pull requests
+        id: context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$ISSUE_NUMBER" =~ ^[0-9]+$ ]]
+          ctx="$RUNNER_TEMP/intake"
+          mkdir -p "$ctx"
+          gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER" > "$ctx/issue.json"
+          gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments" \
+            --jq '.[] | {id, body, created_at, author_association, user: .user.login, user_type: .user.type}' \
+            > "$ctx/comments.jsonl"
+          gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 500 \
+            --json number,headRefName,body > "$ctx/open-prs.json"
+          author="$(jq -r '.user.login' "$ctx/issue.json")"
+          [[ "$author" =~ ^[A-Za-z0-9-]{1,39}$ ]] || { echo "unexpected author login"; exit 1; }
+          gh issue list --repo "$GITHUB_REPOSITORY" --author "$author" --label "intake:vote" --state all \
+            --limit 500 --json number,body,labels,createdAt > "$ctx/votes.json" || echo "[]" > "$ctx/votes.json"
+          # Repository permission of the author and of everyone who wrote a slash command.
+          { echo "$author"; jq -r 'select((.body // "") | startswith("/")) | .user' "$ctx/comments.jsonl"; } \
+            | sort -u | while read -r login; do
+              [[ "$login" =~ ^[A-Za-z0-9-]{1,39}$ ]] || continue
+              perm="$(gh api "repos/$GITHUB_REPOSITORY/collaborators/$login/permission" --jq .permission 2>/dev/null || echo none)"
+              jq -cn --arg login "$login" --arg permission "$perm" '{login: $login, permission: $permission}'
+            done > "$ctx/permissions.jsonl"
+          site/.venv/bin/garleak-intake route --issue "$ctx/issue.json" --github-output "$GITHUB_OUTPUT"
+
+      # The only step that sees the ORCID credentials. They raise the rate limit, since
+      # Actions runners share IP addresses; without them the public API is read anonymously.
+      - name: Read the public ORCID record
+        if: steps.context.outputs.kind == 'identity'
+        env:
+          ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+          ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+          ORCID_READ_PUBLIC_TOKEN: ${{ secrets.ORCID_READ_PUBLIC_TOKEN }}
+        run: |
+          ctx="$RUNNER_TEMP/intake"
+          site/.venv/bin/garleak-intake orcid-lookup --issue "$ctx/issue.json" --archive archive \
+            --out "$ctx/orcid.json"
+
+      - name: Install citecheck
+        if: steps.context.outputs.kind == 'paper' || steps.context.outputs.kind == 'version'
+        run: |
+          python -m venv services/citecheck/.venv
+          services/citecheck/.venv/bin/pip install -e services/citecheck
+
+      - name: Process the issue
+        id: process
+        run: |
+          ctx="$RUNNER_TEMP/intake"
+          site/.venv/bin/garleak-intake process --issue "$ctx/issue.json" --event "$GITHUB_EVENT_PATH" \
+            --context "$ctx" --archive archive --out "$ctx/out" --github-output "$GITHUB_OUTPUT"
+
+      - name: Check the records and the immutability guard
+        if: steps.process.outputs.action == 'pr'
+        run: |
+          site/.venv/bin/garleak-archive validate archive
+          site/.venv/bin/garleak-archive guard --base "origin/$DEFAULT_BRANCH" archive
+
+      - name: Open or update the pull request
+        id: pr
+        if: steps.process.outputs.action == 'pr'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.process.outputs.branch }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/intake/out"
+          [[ "$BRANCH" =~ ^intake/issue-[0-9]+(-[a-z]+)?$ ]]
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git add -A archive
+          git commit -s -F "$out/commit-message.txt"
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          changed=true
+          if git fetch "$remote" "refs/heads/$BRANCH:refs/remotes/intake/previous" 2>/dev/null \
+             && git diff --quiet intake/previous HEAD -- archive; then
+            echo "The branch already holds these records."
+            changed=false
+          else
+            git push --force "$remote" "HEAD:refs/heads/$BRANCH"
+          fi
+          pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$pr" ]; then
+            gh pr create --repo "$GITHUB_REPOSITORY" --base "$DEFAULT_BRANCH" --head "$BRANCH" \
+              --title "$(cat "$out/pr-title.txt")" --body-file "$out/pr-body.md"
+            pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --state open --json number --jq '.[0].number')"
+            changed=true
+          else
+            gh pr edit "$pr" --repo "$GITHUB_REPOSITORY" --title "$(cat "$out/pr-title.txt")" --body-file "$out/pr-body.md"
+          fi
+          gh pr edit "$pr" --repo "$GITHUB_REPOSITORY" --add-label intake || true
+          echo "number=$pr" >> "$GITHUB_OUTPUT"
+          if [ "$changed" = true ]; then
+            # A pull request opened with GITHUB_TOKEN starts no workflow, so run the site checks on it.
+            gh workflow run site.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH"
+          fi
+
+      - name: Comment on the issue and set its labels
+        if: always() && steps.process.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          COMMENT: ${{ steps.process.outputs.comment }}
+          CLOSE: ${{ steps.process.outputs.close }}
+          CLOSE_PR: ${{ steps.process.outputs.close_pr }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/intake/out"
+          if [[ "${PR_NUMBER:-}" =~ ^[0-9]+$ ]]; then
+            printf '\nPull request: #%s\n' "$PR_NUMBER" >> "$out/comment.md"
+          fi
+          if [ "$COMMENT" = true ]; then
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$out/comment.md"
+          fi
+          while read -r label; do
+            [[ "$label" =~ ^[a-z]+(:[a-z0-9-]+)?$ ]] || continue
+            gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$label" || true
+          done < "$out/labels-add.txt"
+          current="$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json labels --jq '.labels[].name')"
+          while read -r label; do
+            [[ "$label" =~ ^[a-z]+(:[a-z0-9-]+)?$ ]] || continue
+            if grep -qx "$label" <<<"$current"; then
+              gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --remove-label "$label" || true
+            fi
+          done < "$out/labels-remove.txt"
+          if [ "$CLOSE_PR" = true ]; then
+            pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "intake/issue-$ISSUE_NUMBER" --state open --json number --jq '.[0].number // empty')"
+            if [ -n "$pr" ]; then
+              gh pr close "$pr" --repo "$GITHUB_REPOSITORY" --delete-branch --comment "Closed, because a moderator rejected the issue."
+            fi
+          fi
+          case "$CLOSE" in
+            completed) gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason completed ;;
+            "not planned") gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --reason "not planned" ;;
+          esac
+
+      - name: Merge once the site checks pass
+        if: steps.process.outputs.automerge == 'true' && steps.pr.outputs.number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]
+          # Wait for the dispatched site checks to be reported, then for them to finish.
+          for _ in $(seq 1 40); do
+            report="$(gh pr checks "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" 2>&1 || true)"
+            grep -qi "no checks reported" <<<"$report" || break
+            sleep 15
+          done
+          gh pr checks "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --watch --fail-fast --interval 20
+          # The check made at pull request time: fail if another run took the same number meanwhile.
+          git fetch origin "$DEFAULT_BRANCH"
+          site/.venv/bin/garleak-intake check-pr --archive archive --base "origin/$DEFAULT_BRANCH"
+          gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --squash --delete-branch
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "status:merged" \
+            --remove-label "status:accepted" || true
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --body "Merged into the archive. The site shows it after the next deploy."
+          # Pushes made with GITHUB_TOKEN start no workflow: redeploy, and renumber any intake
+          # pull request that now collides with main.
+          gh workflow run site.yml --repo "$GITHUB_REPOSITORY" --ref "$DEFAULT_BRANCH"
+          gh workflow run intake-sync.yml --repo "$GITHUB_REPOSITORY" --ref "$DEFAULT_BRANCH"
+
+      - name: Say so when the bot fails
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          msg="$RUNNER_TEMP/intake-error.md"
+          {
+            echo "<!-- garleak-intake -->"
+            echo "**The intake bot hit an error.** A step of the workflow failed, and a maintainer can see which in the Actions log. If a pull request was opened, it was not merged. You do not need to do anything; comment /recheck later to try again."
+          } > "$msg"
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$msg" || true
+          gh issue edit "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "status:error" || true

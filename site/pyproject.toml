@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "garleak-site"
+version = "0.1.0"
+description = "Archive library and static-site generator for Garleak (garleak.org)"
+requires-python = ">=3.12"
+license = "AGPL-3.0-or-later"
+dependencies = [
+  "jinja2>=3.1",
+  "pyyaml>=6.0",
+  "markdown>=3.6",
+  "pypdf>=5.0",
+  "reportlab>=4.2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+garleak-site = "garleak_site.__main__:main"
+garleak-archive = "garleak_archive.__main__:main"
+garleak-intake = "garleak_intake.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["garleak_archive*", "garleak_site*", "garleak_intake*"]
+
+[tool.setuptools.package-data]
+garleak_archive = ["schemas/*.json"]
+garleak_site = ["templates/*", "templates/**/*", "static/*", "static/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

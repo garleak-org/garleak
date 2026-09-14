@@ -1,0 +1,9 @@
+# Example record. Invented.
+id: paper:4509
+category: math.nt
+submitter: gbrandt
+created: '2026-09-10'
+license: CC-BY-4.0
+gated: false
+track: human-prompted
+v1_sha256: 45d66133f88af8b2c958d9cee6e665f016ac18d0c73193e9653924e990e5af84

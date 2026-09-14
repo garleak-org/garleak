@@ -1,0 +1,40 @@
+id: 4398-02
+version: '1.0'
+kind: paper
+tier: T2
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: jlindqvist
+date: '2026-08-30'
+result: passed
+summary: >-
+  All 8 required items pass on v1.0. The periodogram code reproduces the stated periods.
+items:
+- id: comp.T2.code-available
+  verdict: pass
+- id: comp.T2.data-available
+  verdict: pass
+- id: comp.T2.env-declared
+  verdict: pass
+- id: comp.T2.code-runs
+  verdict: pass
+- id: comp.T2.methods-match
+  verdict: pass
+- id: comp.T2.tolerance-stated
+  verdict: pass
+- id: comp.T2.numbers-traceable
+  verdict: pass
+- id: comp.T2.claims-supported
+  verdict: pass
+- id: comp.T2.figures-from-code
+  verdict: pass
+  note: Figure 2 regenerated from the notebook.
+time_spent_minutes: 160
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-30'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.0

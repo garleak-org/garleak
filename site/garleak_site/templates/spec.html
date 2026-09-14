@@ -1,0 +1,10 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<div class="prose">
+  <h1>{{ spec_title }}</h1>
+  <p class="small">Draft for comment, CC0. Rendered from <a href="https://github.com/{{ cfg.repo }}/blob/main/SPEC.md">SPEC.md</a>. Comment in the <a href="https://github.com/{{ cfg.repo }}/issues">issues</a>.</p>
+  <nav aria-label="Contents">{{ toc|safe }}</nav>
+{{ spec_html|safe }}
+</div>
+{% endblock %}

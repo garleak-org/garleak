@@ -1,0 +1,36 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block main %}
+<div class="prose">
+  <h1>Help</h1>
+  <h2 id="papers">Paper stages</h2>
+  <table class="plain">
+    <tr><td>{{ m.stage_dot(0, "T0", "unverified") }}</td><td>Not checked yet.</td></tr>
+    <tr><td>{{ m.stage_dot(1, "T1", "citations checked") }}</td><td>Every reference exists and says what is claimed.</td></tr>
+    <tr><td>{{ m.stage_dot(2, "T2", "claims checked") }}</td><td>Claims checked against the field rubric.</td></tr>
+    <tr><td>{{ m.stage_dot(3, "T3", "partially reproduced") }}</td><td>Central result partly reproduced.</td></tr>
+    <tr><td>{{ m.stage_dot(4, "T4", "independently reproduced") }}</td><td>Reproduced by an independent verifier.</td></tr>
+  </table>
+  <p>A major version starts again at T0. A minor version keeps its stage.</p>
+  <h2 id="graduation">Graduation</h2>
+  <p>A version at T3 or T4 with two independent verifiers and no open fixes becomes Graduated.</p>
+  <h2 id="scratches">Scratch stages</h2>
+  <table class="plain">
+    <tr><td>{{ m.stage_ring(0, "N0", "posted") }}</td><td>Not checked yet.</td></tr>
+    <tr><td>{{ m.stage_ring(1, "N1", "no prior work found") }}</td><td>Searched, nothing close found.</td></tr>
+    <tr><td>{{ m.stage_ring(2, "N2", "prior work linked") }}</td><td>Prior work found and linked.</td></tr>
+    <tr><td>{{ m.stage_ring(3, "N3", "judged tractable") }}</td><td>Someone said how to test it.</td></tr>
+  </table>
+  <h2 id="assistance">Assistance</h2>
+  <table class="plain">
+    <tr><td class="mono">W0</td><td>Human wrote it.</td><td class="mono">A0</td><td>Human did the analysis.</td></tr>
+    <tr><td class="mono">W1</td><td>Model polished it.</td><td class="mono">A1</td><td>Model assisted, human checked.</td></tr>
+    <tr><td class="mono">W2</td><td>Model drafted, human edited.</td><td class="mono">A2</td><td>Model did the analysis.</td></tr>
+    <tr><td class="mono">W3</td><td>Model wrote it.</td><td></td><td></td></tr>
+  </table>
+  <p>Each axis shows three separate signals: declared by the submitter, predicted by a classifier, and the readers' median.</p>
+  <h2 id="pct-original">pct_original</h2>
+  <p>The share of a version's text that is still v1.0 text.</p>
+</div>
+{% endblock %}

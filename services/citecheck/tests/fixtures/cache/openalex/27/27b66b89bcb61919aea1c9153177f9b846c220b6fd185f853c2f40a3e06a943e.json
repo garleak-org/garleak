@@ -1,0 +1,6 @@
+{
+ "url": "https://api.openalex.org/works?filter=biblio.volume%3A598%2Cbiblio.first_page%3A212%2Cpublication_year%3A2020-2022&per-page=8&select=id%2Cdoi%2Ctitle%2Cpublication_year%2Cauthorships%2Cbiblio%2Cprimary_location%2Ctype%2Cids",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374890.399447
+}

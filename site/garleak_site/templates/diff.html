@@ -1,0 +1,16 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block crumb %}
+<div class="subheader"><a href="{{ pv.concept_url }}">paper:{{ pv.number }}</a> &gt; {{ a.label }} to {{ b.label }}</div>
+{% endblock %}
+{% block main %}
+<h1 class="title" data-record>{{ b.v.title }}</h1>
+<p>Changes from <a href="{{ a.url }}">{{ a.label }}</a> to <a href="{{ b.url }}">{{ b.label }}</a>. {{ added }} words added, {{ removed }} removed. {{ a.label }} is {{ a.pct.display() }} original, {{ b.label }} is {{ b.pct.display() }} original.</p>
+<h3>Title</h3>
+<div class="diffbody" data-record><p>{{ title_diff|safe }}</p></div>
+<h3>Abstract</h3>
+<div class="diffbody" data-record>{{ abstract_diff|safe }}</div>
+<h3>Body</h3>
+<div class="diffbody" data-record>{{ body_diff|safe }}</div>
+<p class="small">Other comparisons:{% for x, later in pv.pairs %}{% for y in later %}{% if not (x is sameas a and y is sameas b) %} <a href="{{ x.diff_url(y) }}">{{ x.label }} to {{ y.label }}</a>{% endif %}{% endfor %}{% endfor %}</p>
+{% endblock %}

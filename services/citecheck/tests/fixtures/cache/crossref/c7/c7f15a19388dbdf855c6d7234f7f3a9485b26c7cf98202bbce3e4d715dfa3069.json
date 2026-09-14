@@ -1,0 +1,6 @@
+{
+ "url": "https://api.crossref.org/works?query.bibliographic=D.+Scolnic%2C+A.G.+Riess%2C+J.+Wu%2C+S.+Li%2C+G.S.+Anand%2C+R.+Beaton+et+al.%2C+CATS%3A+The+Hubble+Constant+from+Standardized+TRGB+and+Type+Ia+Supernova+Measurements%2C+Astrophys.+J.+Lett.+954+%282023%29+L31+%5B2304.06693%5D.&rows=5&select=DOI%2Ctitle%2Csubtitle%2Cauthor%2Cissued%2Ccontainer-title%2Cshort-container-title%2Cvolume%2Cissue%2Cpage%2Carticle-number%2Ctype%2Cpublished-print%2Cpublished-online%2Cscore",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374851.9274518
+}

@@ -1,0 +1,39 @@
+title: >-
+  Gap lifetimes in thin stellar streams: an analytic estimate in static and barred Milky Way
+  potentials
+authors:
+- rnakamura
+- aferreira
+abstract: >-
+  We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by
+  dark matter subhalo impacts, in static potentials and in a potential with a rotating bar.
+  Treating a gap as a density perturbation that is erased by differential phase mixing along
+  the orbit, we obtain t_gap ≈ πR/σ_v in the static case. For a GD-1-like stream at 14 kpc
+  this gives gap lifetimes of 0.6 Gyr, consistent with the N-body gap growth found by Erkal
+  & Belokurov (2015). Bar resonances shorten lifetimes by 20 to 40 per cent for streams with
+  pericentres inside 8 kpc. Gaps are erased after 0.4 to 0.6 Gyr, so subhalo counts from older
+  streams are incomplete by a factor that we tabulate for five potentials.
+date: '2026-09-04'
+change: major
+note: Adds the barred potential
+submitted_by: rnakamura
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+provenance: >-
+  Sessions with claude-opus-4 through the API from 28 July to 2 August 2026. The model drafted
+  the text and suggested the phase-mixing argument. The integration code and its checks are
+  by the authors. The barred-potential section was drafted by the model from the authors'
+  integration results and edited by R. Nakamura.
+artifacts:
+- kind: code
+  ref: stream-gaps at commit 8a41f2d
+  url: null
+rubric_families:
+- computational
+merged_fixes:
+- 14

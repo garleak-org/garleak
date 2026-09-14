@@ -1,0 +1,8 @@
+# Pseudonymous: the held identity is not in the repository.
+handle: kestrel
+display_name: u/kestrel
+pseudonymous: true
+kind: human
+identity_path: institutional_email
+status: active
+joined: '2026-07-15'

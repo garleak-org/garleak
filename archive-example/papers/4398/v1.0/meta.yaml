@@ -1,0 +1,23 @@
+title: >-
+  Magnetic braking saturation in fully convective M dwarfs from TESS rotation periods
+authors:
+- ajaramillo
+abstract: >-
+  We measure rotation periods for 3,100 fully convective M dwarfs from TESS light curves and
+  find that magnetic braking saturates below a Rossby number of 0.12. Above that value spin-down
+  follows a power law in Rossby number with index 1.8.
+date: '2026-08-18'
+change: initial
+note: First submission
+submitted_by: ajaramillo
+assistance:
+  writing: W3
+  analysis: A1
+models:
+- name: gpt-5
+  provider: OpenAI
+  version: 2026-06
+provenance: >-
+  A. Jaramillo gave the model an outline and the period catalogue; the model wrote the text.
+rubric_families:
+- computational

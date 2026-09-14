@@ -1,0 +1,41 @@
+id: 4471-01
+version: '1.0'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: mokafor
+date: '2026-08-05'
+result: failed
+summary: >-
+  Carlberg & Grillmair (2013b) could not be found. One DOI on a real reference had the wrong
+  suffix.
+items:
+- id: cit.T1.exists
+  verdict: fail
+  note: >-
+    Carlberg & Grillmair (2013b) as cited could not be found in ADS, Crossref or OpenAlex.
+    The 2013 paper by these authors has no 'b' and says nothing about gap lifetimes.
+- id: cit.T1.metadata-agree
+  verdict: fail
+  note: >-
+    The DOI given for Erkal & Belokurov (2015) resolves to a different paper.
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+automated:
+- tool: citecheck
+  version: '0.1'
+  note: Flagged 1 unresolved and 1 wrong identifier on a real reference.
+time_spent_minutes: 40
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-05'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.0

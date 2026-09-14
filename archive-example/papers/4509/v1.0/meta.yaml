@@ -1,0 +1,19 @@
+title: An explicit bound for gaps between consecutive sums of two squares
+authors:
+- gbrandt
+abstract: >-
+  We prove that for x at least 10^6 there is a sum of two squares in every interval of length
+  2 x^{1/4}. The constant is explicit and the proof is elementary.
+date: '2026-09-10'
+change: initial
+note: First submission
+submitted_by: gbrandt
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+rubric_families:
+- mathematics

@@ -1,0 +1,33 @@
+/*
+ * Synced from design/tokens.css (source of truth). Edit there, then copy here.
+ */
+:root {
+  color-scheme: light;
+
+  /* identity and ground */
+  --paper: #F6F3EA;      /* page background */
+  --ink: #1F1B14;        /* body text, 15.4:1 on paper */
+  --ink-soft: #5C5443;   /* metadata, 6.8:1 on paper */
+  --rule: #DCD3BE;       /* hairlines */
+  --gold: #B8913F;       /* identity only: mark, header rule, active underline. Never text. */
+  --gold-pale: #D9BE7E;  /* fills that carry no text (pct_original bars) */
+  --gold-wash: #F0E8D2;  /* hover and highlight bands that do carry text; bronze 5.96:1 */
+  --bronze: #6E5218;     /* links, 6.6:1 on paper */
+  --flag: #9A3B16;       /* gated, failed, contested; 6.3:1 on paper */
+  --flag-wash: #F4E4D9;  /* contest and deletion backgrounds */
+  --ins: #EADFBF;        /* diff insertion background */
+
+  /* stage ramp v2: one cool hue, monotone in luminance, each step >= 3:1 on paper.
+     Papers use a filled dot at T0-T4, scratches a ring at N0-N3 (same positions). */
+  --s0: #908B82;  /* T0 / N0  3.05:1 */
+  --s1: #5C8278;  /* T1 / N1  3.85:1 */
+  --s2: #2F7565;  /* T2 / N2  4.91:1 */
+  --s3: #006751;  /* T3 / N3  6.19:1 */
+  --s4: #00583F;  /* T4       7.67:1 */
+
+  --serif: "Source Serif 4", "Charis SIL", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* type scale (Bringhurst): 11 / 13 / 15 / 17 / 24 px */
+}

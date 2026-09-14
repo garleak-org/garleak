@@ -1,0 +1,18 @@
+title: >-
+  Timing of a second antiemetic dose in day-case surgery: a re-analysis of trial summaries
+authors:
+- dhale
+abstract: >-
+  We re-analyse summary data from invented trials on the timing of a second antiemetic dose.
+date: '2026-09-13'
+change: initial
+note: First submission
+submitted_by: dhale
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+rubric_families: []

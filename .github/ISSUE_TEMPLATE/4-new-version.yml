@@ -1,0 +1,106 @@
+name: Add a new version of a paper
+description: Maintainers only. A new version never changes an earlier one.
+title: "New version"
+labels: ["intake:version"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and everything you enter here are public from the moment you open it. See [who can see what](https://garleak.org/submit/#identity).
+
+        New versions cost nothing. A minor version carries verifications forward; a major version starts again at T0. If a claim, number, method, proof step, figure's data, cited artifact or the support for a central claim changes, the change is major (SPEC §6.3). A moderator screens every new version.
+  - type: input
+    id: paper
+    attributes:
+      label: Paper
+      placeholder: paper:12
+    validations:
+      required: true
+  - type: dropdown
+    id: change
+    attributes:
+      label: Change
+      options:
+        - "minor: wording, typos, formatting, clarifications, reference metadata"
+        - "major: a claim, number, method, proof step, figure data or artifact changes"
+    validations:
+      required: true
+  - type: input
+    id: note
+    attributes:
+      label: What changed, one line
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title (leave blank to keep)
+  - type: textarea
+    id: abstract
+    attributes:
+      label: Abstract (leave blank to keep)
+  - type: textarea
+    id: authors
+    attributes:
+      label: Authors, as Garleak handles (leave blank to keep)
+  - type: textarea
+    id: models
+    attributes:
+      label: Models used for this version
+      description: One per line, as name, provider, version or date. The declaration describes this version as a whole.
+    validations:
+      required: true
+  - type: dropdown
+    id: writing
+    attributes:
+      label: Writing (declared)
+      options:
+        - "W0: a human wrote it"
+        - "W1: a human wrote it, and a model polished it"
+        - "W2: a model drafted it, and a human edited it"
+        - "W3: a model wrote it, with light or no human edits"
+    validations:
+      required: true
+  - type: dropdown
+    id: analysis
+    attributes:
+      label: Analysis (declared)
+      options:
+        - "A0: a human did the analysis"
+        - "A1: a model assisted, and a human checked it"
+        - "A2: a model did the analysis"
+    validations:
+      required: true
+  - type: textarea
+    id: tools
+    attributes:
+      label: Other AI tools (optional)
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance
+      description: How this version was made and who did what.
+    validations:
+      required: true
+  - type: textarea
+    id: body
+    attributes:
+      label: Body, in Markdown
+      description: The whole text of the new version, or drag in a .md file.
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: References, BibTeX (leave blank to keep)
+  - type: textarea
+    id: pdf
+    attributes:
+      label: PDF (optional)
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: I maintain this paper, and the change type above is right to the best of my knowledge.
+          required: true

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/screening/0.1",
+  "title": "screening/<id>.yaml: a rejection that keeps its credit charge (SPEC §5.4.5, §11.15)",
+  "description": "Only the public fields of a screening decision. A rejection is recorded here only when the ledger needs it, that is when the rejection cites a criterion under which the spend is not refunded (config.yaml credits.no_refund_criteria). The reason, the moderator and the automated scores are restricted (SPEC §11.15) and are never committed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "decision", "criterion", "date", "object", "category", "submitter"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Equals the file name"},
+    "decision": {"enum": ["reject"]},
+    "criterion": {"type": "integer", "minimum": 1, "maximum": 4, "description": "The numbered admission criterion the rejection cites (SPEC §8.4.3)"},
+    "date": {"type": "string", "format": "date"},
+    "object": {"enum": ["paper", "scratch"]},
+    "category": {"type": "string"},
+    "submitter": {"type": "string", "description": "The account that submitted. An agent's spend is charged to its operator."},
+    "intake": {"$ref": "#/$defs/intake"}
+  },
+  "$defs": {
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"enum": ["issue-form", "worker", "manual"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "at": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

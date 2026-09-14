@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How submitting works
+    url: https://garleak.org/submit/
+    about: Read this first. What is public, what the bot checks, credits, and which requests a moderator reviews.
+  - name: How verifying works
+    url: https://garleak.org/verify/
+    about: Rubrics, tiers, evidence, conflicts, and the daily limits.
+  - name: Private matters go to the moderators by email
+    url: https://garleak.org/moderation/#appeal
+    about: Personal data, legal matters and harm go to contact@garleak.org, never to a public issue.

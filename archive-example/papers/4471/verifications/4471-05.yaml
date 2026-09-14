@@ -1,0 +1,38 @@
+id: 4471-05
+version: '2.0'
+kind: paper
+tier: T2
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: jlindqvist
+date: '2026-08-28'
+result: passed
+summary: >-
+  All 8 required items pass. The corrected lifetimes trace to the code within the stated 10
+  per cent.
+items:
+- id: comp.T2.code-available
+  verdict: pass
+- id: comp.T2.data-available
+  verdict: pass
+- id: comp.T2.env-declared
+  verdict: pass
+- id: comp.T2.code-runs
+  verdict: pass
+- id: comp.T2.methods-match
+  verdict: pass
+- id: comp.T2.tolerance-stated
+  verdict: pass
+- id: comp.T2.numbers-traceable
+  verdict: pass
+- id: comp.T2.claims-supported
+  verdict: pass
+time_spent_minutes: 180
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-28'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v2.0

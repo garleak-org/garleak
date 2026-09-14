@@ -1,0 +1,6 @@
+{
+ "url": "https://api.crossref.org/works?filter=doi%3A10.1038%2Fs41586-021-09917-4%2Cdoi%3A10.1093%2Fmnras%2Fstad9912%2Cdoi%3A10.3847%2F1538-4357%2Facf3d1%2Cdoi%3A10.3847%2F2041-8213%2Fac7e2b&rows=4&select=DOI%2Ctitle%2Csubtitle%2Cauthor%2Cissued%2Ccontainer-title%2Cshort-container-title%2Cvolume%2Cissue%2Cpage%2Carticle-number%2Ctype%2Cpublished-print%2Cpublished-online",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374872.040892
+}

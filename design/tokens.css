@@ -1,0 +1,43 @@
+/* Garleak design tokens. Source of truth for the static site: the build (garleak-site build)
+   prepends this file to site/garleak_site/static/site.css and writes /static/garleak.css. Palette from DESIGN.md with the changes in
+   design/NOTES.md: white page, cream moved to --panel, stage ramp v2.
+   Contrast of every pair is recomputed by site/scripts/contrast.py; the table is in NOTES.md. */
+:root {
+  color-scheme: light;
+
+  /* ground */
+  --paper: #FFFFFF;      /* page background */
+  --panel: #F6F3EA;      /* secondary ground: masthead strip, notices, bands */
+
+  /* text */
+  --ink: #1F1B14;        /* body text */
+  --ink-soft: #5C5443;   /* metadata, secondary text */
+  --bronze: #6E5218;     /* links and interactive text */
+  --flag: #9A3B16;       /* gated, failed, contested */
+
+  /* lines */
+  --rule: #DCD3BE;       /* hairlines between rows; decorative, carries no meaning alone */
+  --rule-strong: #8C8373; /* borders of form controls, which must reach 3:1 */
+
+  /* identity and fills */
+  --gold: #B8913F;       /* identity only: mark, header rule, active underline. Never text. */
+  --gold-pale: #D9BE7E;  /* fills that carry no text (pct_original bars) */
+  --gold-wash: #F0E8D2;  /* hover and highlight bands that do carry text */
+  --flag-wash: #F4E4D9;  /* contest and deletion backgrounds */
+  --ins: #EADFBF;        /* diff insertion background */
+
+  /* stage ramp v2: one cool hue, monotone in luminance. Papers use a filled dot at T0-T4,
+     scratches a ring at N0-N3 (same positions). Labels are always set in --ink. */
+  --s0: #908B82;  /* T0 / N0. 3.05:1 on --paper, 2.8:1 on --gold-wash, accepted because the
+                     numeral and label always carry the stage (DESIGN.md, ramp v2) */
+  --s1: #5C8278;  /* T1 / N1 */
+  --s2: #2F7565;  /* T2 / N2 */
+  --s3: #006751;  /* T3 / N3 */
+  --s4: #00583F;  /* T4 */
+
+  --serif: "Source Serif 4", "Charis SIL", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* type scale (Bringhurst): 11 / 13 / 15 / 17 / 24 px */
+}

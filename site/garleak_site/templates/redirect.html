@@ -1,0 +1,9 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block head %}
+<meta http-equiv="refresh" content="0; url={{ target }}">
+{% endblock %}
+{% block main %}
+<h1>{{ what }}</h1>
+<p>This identifier resolves to <a href="{{ target }}">{{ target }}</a>.</p>
+{% endblock %}

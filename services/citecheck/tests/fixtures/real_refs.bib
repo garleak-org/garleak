@@ -1,0 +1,61 @@
+% Real references that exercise the failure classes found in the llm-in-astro-ph audit.
+% None of these should ever come out 'unresolved' or 'metadata_mismatch'.
+
+% Journal-slug typo inside the DOI ('mmnras' for 'mnras'); the work is real.
+@article{GarrisonKimmel2013,
+  author = {Garrison-Kimmel, Shea and Rocha, Miguel and Boylan-Kolchin, Michael and Bullock, James S. and Lally, Jaspreet},
+  title = {Can feedback solve the too-big-to-fail problem?},
+  journal = {\mnras},
+  year = 2013,
+  volume = 433,
+  pages = {3539-3546},
+  doi = {10.1093/mmnras/stt984}
+}
+
+% A DataCite DOI (Zenodo software record) that Crossref does not hold.
+@software{tensorflow,
+  author = {{TensorFlow Developers}},
+  title = {TensorFlow},
+  publisher = {Zenodo},
+  year = 2021,
+  doi = {10.5281/zenodo.4724125}
+}
+
+% A Proceedings of Science contribution whose DOI is not (yet) registered with doi.org
+% although the contribution is online at pos.sissa.it/544/001/.
+@inproceedings{Zou2026,
+  author = {Zou, Ye},
+  title = {Accelerator Conceptual Design and R\&D Efforts for Super Tau-Charm Facility},
+  booktitle = {43rd International Conference on High Energy Physics (ICHEP2026)},
+  series = {Proceedings of Science},
+  volume = 544,
+  pages = {001},
+  year = 2026,
+  doi = {10.22323/1.544.0001}
+}
+
+% A real journal article cited with no identifier at all.
+@article{Freedman2021noid,
+  author = {Freedman, Wendy L.},
+  title = {Measurements of the Hubble Constant: Tensions in Perspective},
+  journal = {\apj},
+  year = 2021,
+  volume = 919,
+  pages = {16}
+}
+
+% An arXiv-only citation, correct ID.
+@misc{Rubin2023,
+  author = {Rubin, David and others},
+  title = {Union Through UNITY: Cosmology with 2,000 SNe Using a Unified Bayesian Framework},
+  year = 2023,
+  eprint = {2311.12098},
+  archivePrefix = {arXiv}
+}
+
+% Nothing public to check.
+@misc{Smith_pc,
+  author = {Smith, J.},
+  note = {private communication},
+  year = 2021
+}

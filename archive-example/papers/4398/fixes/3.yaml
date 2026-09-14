@@ -1,0 +1,13 @@
+id: 3
+base_version: '1.0'
+author: ajaramillo
+date: '2026-09-06'
+title: Remove blended stars
+rationale: >-
+  A reader pointed out that bright neighbours inside two TESS pixels can supply the period.
+  Removing them changes the break and the index.
+proposed_bump: major
+status: merged
+merged_into: '2.0'
+model_use:
+  used: false

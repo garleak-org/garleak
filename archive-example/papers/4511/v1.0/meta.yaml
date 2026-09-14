@@ -1,0 +1,20 @@
+title: >-
+  Dust-to-gas ratios in low-metallicity dwarf galaxies from stacked far-infrared spectra
+authors:
+- rcastell
+abstract: >-
+  Stacking far-infrared spectra of 40 dwarf galaxies below a tenth of solar metallicity, we
+  find a dust-to-gas ratio that falls faster than linearly with metallicity.
+date: '2026-09-14'
+change: initial
+note: First submission
+submitted_by: rcastell
+assistance:
+  writing: W2
+  analysis: A2
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+rubric_families:
+- computational

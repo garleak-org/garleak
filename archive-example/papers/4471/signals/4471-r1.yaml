@@ -1,0 +1,12 @@
+id: 4471-r1
+kind: readers
+version: '3.0'
+date: '2026-09-13'
+writing:
+  W1: 2
+  W2: 8
+  W3: 4
+analysis:
+  A0: 1
+  A1: 7
+  A2: 3

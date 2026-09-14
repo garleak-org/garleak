@@ -1,0 +1,10 @@
+id: 15
+base_version: '3.0'
+author: shaddad
+date: '2026-09-12'
+title: Pericentre table units
+rationale: Table 2 gives pericentres in kpc in the header and in pc in two rows.
+proposed_bump: minor
+status: open
+model_use:
+  used: false

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/signal/0.1",
+  "title": "papers/<n>/signals/<id>.yaml: a prediction, a reader tally, a contest, or a restated declaration",
+  "description": "The three assistance signals are separate records and are never merged (SPEC §4.5.1). Each axis (writing, analysis) is kept apart inside every record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "version", "date"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "kind": {"enum": ["prediction", "readers", "contest", "declaration"]},
+    "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "date": {"type": "string", "format": "date"},
+    "classifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {"id": {"type": "string"}, "version": {"type": "string"}}
+    },
+    "reads": {"type": "string", "description": "prediction: what the classifier looked at"},
+    "writing": {
+      "description": "prediction: probability per code; readers: vote count per code; declaration: the code",
+      "type": ["object", "string"],
+      "additionalProperties": {"type": "number", "minimum": 0}
+    },
+    "analysis": {
+      "type": ["object", "string"],
+      "additionalProperties": {"type": "number", "minimum": 0}
+    },
+    "prediction": {"type": "string", "description": "contest: id of the contested prediction"},
+    "axis": {"enum": ["writing", "analysis"]},
+    "by": {"type": "string"},
+    "statement": {"type": "string"},
+    "note": {"type": "string"},
+    "intake": {
+      "type": "object",
+      "description": "How the record arrived (RFC 0001). A readers tally is updated by every vote and records the last one.",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"enum": ["issue-form", "worker", "manual"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "at": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

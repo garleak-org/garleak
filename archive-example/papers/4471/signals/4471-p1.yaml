@@ -1,0 +1,17 @@
+id: 4471-p1
+kind: prediction
+version: '3.0'
+date: '2026-09-05'
+classifier:
+  id: garleak-assist
+  version: '0.3'
+reads: the text only
+writing:
+  W0: 0.02
+  W1: 0.18
+  W2: 0.55
+  W3: 0.25
+analysis:
+  A0: 0.05
+  A1: 0.3
+  A2: 0.65

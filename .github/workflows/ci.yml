@@ -1,0 +1,85 @@
+name: ci
+
+# Tests for the standalone packages plus the DCO check. The static site is built,
+# checked, and deployed by site.yml. The retired api and web jobs are kept in
+# attic/dynamic-m0/ci-jobs.yml.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      citecheck: ${{ steps.filter.outputs.citecheck }}
+      rubrics: ${{ steps.filter.outputs.rubrics }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            citecheck:
+              - 'services/citecheck/**'
+              - '.github/workflows/ci.yml'
+            rubrics:
+              - 'packages/rubrics/**'
+              - '.github/workflows/ci.yml'
+
+  # services/citecheck is a standalone package owned by its own maintainers.
+  # Tests must pass offline: no network calls to Crossref or anywhere else in CI.
+  citecheck:
+    needs: changes
+    if: needs.changes.outputs.citecheck == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/citecheck
+    env:
+      CITECHECK_NETWORK_TESTS: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[test]"
+      - run: pytest -m "not network"
+
+  # packages/rubrics is a standalone package of versioned rubric YAML.
+  rubrics:
+    needs: changes
+    if: needs.changes.outputs.rubrics == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/rubrics
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[test]"
+      - name: Validate rubrics
+        run: python scripts/validate.py
+      - run: pytest
+
+  dco:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check Signed-off-by on every PR commit
+        run: bash .github/scripts/dco-check.sh "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"

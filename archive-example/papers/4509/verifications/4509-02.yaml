@@ -1,0 +1,31 @@
+id: 4509-02
+version: '1.0'
+kind: paper
+tier: T2
+rubric:
+  id: mathematics
+  version: 1.0.0
+verifier: shaddad
+date: '2026-09-14'
+result: failed
+summary: >-
+  Step 4 of Lemma 2 uses an inequality in the wrong direction; the stated bound does not follow.
+items:
+- id: math.T2.statements-precise
+  verdict: pass
+- id: math.T2.proof-line-by-line
+  verdict: fail
+  note: >-
+    Step 4 of Lemma 2 needs b² ≤ x - a², but the argument only gives b² ≥ x - a².
+- id: math.T2.cited-results-apply
+  verdict: pass
+- id: math.T2.counterexample-search
+  verdict: pass
+time_spent_minutes: 150
+status: active
+independent:
+  value: true
+  computed_at: '2026-09-14'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.0

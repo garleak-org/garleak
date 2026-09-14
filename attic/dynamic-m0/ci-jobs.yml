@@ -1,0 +1,59 @@
+# Jobs removed from .github/workflows/ci.yml on 2026-09-14, when the dynamic M0 stack
+# moved to attic/dynamic-m0. Kept here so the move can be reversed. This file is inert:
+# GitHub runs workflows only from .github/workflows/. Paths below are the original ones
+# (apps/api, apps/web) and must be restored with the code.
+#
+# The `changes` job also had these outputs and filters:
+#
+#   outputs:
+#     api: ${{ steps.filter.outputs.api }}
+#     web: ${{ steps.filter.outputs.web }}
+#   filters:
+#     api:
+#       - 'apps/api/**'
+#       - '.github/workflows/ci.yml'
+#     web:
+#       - 'apps/web/**'
+#       - '.github/workflows/ci.yml'
+
+jobs:
+  api:
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: apps/api/pyproject.toml
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

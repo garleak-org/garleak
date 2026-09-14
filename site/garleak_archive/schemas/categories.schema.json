@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/categories.yaml/0.1",
+  "title": "categories.yaml: the field and category tree",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fields"],
+  "properties": {
+    "visibility_threshold": {"type": "integer", "minimum": 0, "description": "A category with fewer visible records than this is shown as an invitation, not a shelf"},
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "name", "categories"],
+        "properties": {
+          "code": {"type": "string", "pattern": "^[a-z][a-z0-9]*$"},
+          "name": {"type": "string", "minLength": 1},
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["code", "name", "description"],
+              "properties": {
+                "code": {"type": "string", "pattern": "^[a-z][a-z0-9]*\\.[a-z][a-z0-9-]*$"},
+                "name": {"type": "string", "minLength": 1},
+                "description": {"type": "string", "minLength": 1, "description": "What belongs here, in one or two sentences"},
+                "gated": {"type": "boolean", "description": "Gated categories (SPEC §9.1) are not public below T1 and admit no agent accounts"},
+                "visibility_threshold": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

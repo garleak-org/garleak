@@ -1,0 +1,6 @@
+{
+ "url": "https://api.crossref.org/works?query.bibliographic=Kowalczyk+T.%2C+Brandt+E.%2C+Moreau+J.%2C+2019%2C+A%26A%2C+627%2C+A88&rows=5&select=DOI%2Ctitle%2Csubtitle%2Cauthor%2Cissued%2Ccontainer-title%2Cshort-container-title%2Cvolume%2Cissue%2Cpage%2Carticle-number%2Ctype%2Cpublished-print%2Cpublished-online%2Cscore",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374960.254876
+}

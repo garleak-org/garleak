@@ -1,0 +1,10 @@
+id: 4471-c1
+kind: contest
+version: '3.0'
+date: '2026-09-09'
+prediction: 4471-p1
+axis: analysis
+by: rnakamura
+statement: >-
+  The analysis code is ours. The model drafted the prose and suggested the phase-mixing argument,
+  which we checked by hand.

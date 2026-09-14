@@ -1,0 +1,18 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block meta %}
+<meta name="garleak:id" content="{{ ident }}">
+<meta name="garleak:gated" content="true">
+{% if pv %}
+<meta name="garleak:type" content="paper">
+<meta name="garleak:stage" content="{{ vv.tier }}">
+{% endif %}
+{% endblock %}
+{% block main %}
+<h1>{{ ident }}</h1>
+{% if pv %}
+<p>This paper is in {{ pv.category.name }}, a gated category, and is not shown below T1. It is at {{ vv.tier }} as of {{ site.today|longdate }}.</p>
+{% else %}
+<p>This scratch is in a gated category and is not shown.</p>
+{% endif %}
+{% endblock %}

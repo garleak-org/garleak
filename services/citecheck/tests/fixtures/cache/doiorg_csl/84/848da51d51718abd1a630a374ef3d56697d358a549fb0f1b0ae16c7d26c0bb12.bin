@@ -1,0 +1,25 @@
+{
+  "type": "software",
+  "id": "https://doi.org/10.5281/zenodo.4724125",
+  "author": [
+    {
+      "family": "TensorFlow Developers"
+    }
+  ],
+  "issued": {
+    "date-parts": [
+      [
+        2026,
+        3,
+        6
+      ]
+    ]
+  },
+  "abstract": "TensorFlow is an end-to-end open source platform for machine learning. It has a comprehensive, flexible ecosystem of tools, libraries, and community resources that lets researchers push the state-of-the-art in ML and developers easily build and deploy ML-powered applications.",
+  "DOI": "10.5281/ZENODO.4724125",
+  "publisher": "Zenodo",
+  "title": "TensorFlow",
+  "URL": "https://zenodo.org/doi/10.5281/zenodo.4724125",
+  "copyright": "Apache License 2.0",
+  "version": "v2.21.0"
+}

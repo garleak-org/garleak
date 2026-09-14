@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/scratch/0.3",
+  "title": "scratches/<n>.yaml: a scratch with its novelty checks and claims",
+  "description": "A scratch has one version, v1.0. Its content fields (id, author, date, statement, detail, models, assistance) are hashed into v1_sha256 and never change. Checks and claims are appended below them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "category", "author", "date", "statement", "models", "assistance", "v1_sha256"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^scratch:[1-9][0-9]*$"},
+    "category": {"type": "string"},
+    "author": {"type": "string"},
+    "date": {"type": "string", "format": "date"},
+    "statement": {"type": "string", "minLength": 1, "description": "One line"},
+    "detail": {"type": "string"},
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {"name": {"type": "string"}, "provider": {"type": ["string", "null"]}, "version": {"type": ["string", "null"]}}
+      }
+    },
+    "assistance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["writing"],
+      "properties": {
+        "writing": {"enum": ["W0", "W1", "W2", "W3"]},
+        "analysis": {"enum": ["A0", "A1", "A2", null], "description": "null or absent when the scratch contains no analysis, shown as 'no analysis', never as A0 (SPEC OQ-23)"}
+      }
+    },
+    "v1_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the canonical JSON of the content fields (see FORMAT.md). Fixed at admission."},
+    "license": {"enum": ["CC-BY-4.0", "CC-BY-SA-4.0", "CC0-1.0", "CC-BY-NC-4.0"]},
+    "gated": {"type": "boolean"},
+    "track": {"enum": ["human-prompted", "autonomous"]},
+    "status": {"enum": ["admitted", "withdrawn", "removed"]},
+    "withdrawal": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["date", "reason"],
+      "properties": {"date": {"type": "string", "format": "date"}, "reason": {"type": "string"}}
+    },
+    "removal": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["date", "criterion"],
+      "properties": {"date": {"type": "string", "format": "date"}, "criterion": {"type": "string"}}
+    },
+    "intake": {"$ref": "#/$defs/intake"},
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["by", "date"],
+        "properties": {
+          "by": {"type": "string"},
+          "date": {"type": "string", "format": "date"},
+          "expires": {"type": ["string", "null"], "format": "date"},
+          "intake": {"$ref": "#/$defs/intake"}
+        }
+      }
+    },
+    "promoted_to": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "outcome", "checker", "date"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "outcome": {"enum": ["N1", "N2", "N3"]},
+          "checker": {"type": "string"},
+          "date": {"type": "string", "format": "date"},
+          "summary": {"type": "string"},
+          "sources": {"type": "array", "items": {"type": "string"}},
+          "queries": {"type": "array", "items": {"type": "string"}},
+          "closest": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": false, "required": ["ref"], "properties": {"ref": {"type": "string"}, "why_not_close": {"type": "string"}}}
+          },
+          "prior_work": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": false, "required": ["ref", "overlap"], "properties": {"ref": {"type": "string"}, "overlap": {"type": "string"}}}
+          },
+          "tractability": {"type": "string"},
+          "status": {"enum": ["active", "withdrawn", "overturned", "void"]},
+          "time_spent_minutes": {"type": ["integer", "null"], "minimum": 0},
+          "model_use": {"type": ["string", "null"]},
+          "loop_label": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["length", "detected"],
+            "properties": {"length": {"enum": [2, 3, 4]}, "detected": {"type": "string", "format": "date"}}
+          },
+          "intake": {"$ref": "#/$defs/intake"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "intake": {
+      "type": "object",
+      "description": "How the record arrived (RFC 0001): the path, the issue number for the issue-form path, and when",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"enum": ["issue-form", "worker", "manual"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "at": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

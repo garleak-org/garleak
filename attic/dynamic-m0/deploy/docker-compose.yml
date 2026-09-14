@@ -1,0 +1,162 @@
+# Single-node Garleak stack. Run from this directory:
+#   cp .env.example .env   # then fill in the placeholders
+#   docker compose up --build
+# See README.md in this directory.
+
+name: garleak
+
+x-api-env: &api-env
+  GARLEAK_ENV: ${GARLEAK_ENV:-development}
+  GARLEAK_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+  GARLEAK_REDIS_URL: redis://redis:6379/0
+  GARLEAK_WEB_BASE_URL: ${GARLEAK_WEB_BASE_URL:-http://localhost:3000}
+  GARLEAK_SESSION_SECRET: ${GARLEAK_SESSION_SECRET}
+  GARLEAK_SESSION_COOKIE_SECURE: ${GARLEAK_SESSION_COOKIE_SECURE:-false}
+  GARLEAK_ORCID_BASE_URL: ${GARLEAK_ORCID_BASE_URL:-https://sandbox.orcid.org}
+  GARLEAK_ORCID_CLIENT_ID: ${GARLEAK_ORCID_CLIENT_ID:-}
+  GARLEAK_ORCID_CLIENT_SECRET: ${GARLEAK_ORCID_CLIENT_SECRET:-}
+  GARLEAK_ORCID_REDIRECT_URI: ${GARLEAK_ORCID_REDIRECT_URI:-http://localhost:8000/auth/orcid/callback}
+  GARLEAK_S3_ENDPOINT_URL: http://minio:9000
+  GARLEAK_S3_ACCESS_KEY: ${MINIO_ROOT_USER}
+  GARLEAK_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+  GARLEAK_S3_BUCKET: ${GARLEAK_S3_BUCKET:-garleak}
+  GARLEAK_TYPESENSE_URL: http://typesense:8108
+  GARLEAK_TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  typesense:
+    image: typesense/typesense:30.2
+    restart: unless-stopped
+    command: ["--data-dir", "/data", "--api-key", "${TYPESENSE_API_KEY}", "--enable-cors"]
+    volumes:
+      - typesense-data:/data
+    healthcheck:
+      # The image ships without curl or wget, so probe /health over bash's /dev/tcp.
+      test:
+        - CMD-SHELL
+        - >-
+          bash -c 'exec 3<>/dev/tcp/127.0.0.1/8108 &&
+          printf "GET /health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 &&
+          head -n1 <&3 | grep -q 200'
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    # MinIO stopped publishing community images to Docker Hub in late 2025. This is
+    # the last community release on quay.io. Revisit before production.
+    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ../apps/api
+    restart: unless-stopped
+    environment: *api-env
+    command:
+      - sh
+      - -c
+      - alembic upgrade head && exec uvicorn --factory garleak_api.main:create_app --host 0.0.0.0 --port 8000
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      typesense:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3).status == 200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  worker:
+    build:
+      context: ../apps/api
+    restart: unless-stopped
+    environment: *api-env
+    command: ["celery", "-A", "garleak_api.worker", "worker", "--loglevel=info"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A garleak_api.worker inspect ping -d celery@$$HOSTNAME --timeout 5"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 20s
+
+  web:
+    build:
+      context: ../apps/web
+    restart: unless-stopped
+    environment:
+      # Server-side calls from Next.js reach the API over the compose network.
+      GARLEAK_API_INTERNAL_URL: http://api:8000
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  postgres-data:
+  redis-data:
+  typesense-data:
+  minio-data:

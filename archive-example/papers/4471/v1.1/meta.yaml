@@ -1,0 +1,33 @@
+title: 'Gap lifetimes in thin stellar streams: an analytic estimate'
+authors:
+- rnakamura
+abstract: >-
+  We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by
+  dark matter subhalo impacts. Treating a gap as a density perturbation that is erased by
+  differential orbital phase mixing, we obtain t_gap ≈ 2πR/σ_v, which depends only on the
+  stream's velocity dispersion and galactocentric radius. For a GD-1-like stream at 14 kpc
+  this gives gap lifetimes of 1.2 Gyr, consistent with the N-body gap growth found by Erkal
+  & Belokurov (2015). We conclude that gaps older than 1 Gyr cannot be used to count subhalos.
+date: '2026-08-07'
+change: minor
+note: Citations fixed
+submitted_by: rnakamura
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+provenance: >-
+  Sessions with claude-opus-4 through the API from 28 July to 2 August 2026. The model drafted
+  the text and suggested the phase-mixing argument. The integration code and its checks are
+  by the authors.
+artifacts:
+- kind: code
+  ref: stream-gaps at commit 3e7b1c0
+  url: null
+rubric_families:
+- computational
+merged_fixes:
+- 11

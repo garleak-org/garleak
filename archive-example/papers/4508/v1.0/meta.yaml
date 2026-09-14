@@ -1,0 +1,20 @@
+title: >-
+  Re-deriving the Tully-Fisher zero point with a hierarchical treatment of inclination errors
+authors:
+- plindahl
+abstract: >-
+  We refit the baryonic Tully-Fisher relation with inclination errors treated hierarchically.
+  The zero point moves by 0.05 dex and the intrinsic scatter falls to 0.08 dex.
+date: '2026-09-11'
+change: initial
+note: First submission
+submitted_by: plindahl
+assistance:
+  writing: W1
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+rubric_families:
+- computational

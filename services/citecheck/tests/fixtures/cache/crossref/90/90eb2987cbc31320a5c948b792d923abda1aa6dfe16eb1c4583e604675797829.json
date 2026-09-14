@@ -1,0 +1,6 @@
+{
+ "url": "https://api.crossref.org/works?query.bibliographic=Hartwell+Okonkwo+Lindqvist+2023+Tidal+debris+streams+as+tracers+of+the+Milky+Way+dark+halo+triaxiality+beyond+60+kpc+ApJ+948+112&rows=5&select=DOI%2Ctitle%2Csubtitle%2Cauthor%2Cissued%2Ccontainer-title%2Cshort-container-title%2Cvolume%2Cissue%2Cpage%2Carticle-number%2Ctype%2Cpublished-print%2Cpublished-online%2Cscore",
+ "status": 200,
+ "content_type": "application/json",
+ "fetched_at": 1789374873.5404532
+}

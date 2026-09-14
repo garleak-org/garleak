@@ -1,0 +1,9 @@
+# Example record. Invented.
+id: paper:4512
+category: med.clinical
+submitter: dhale
+created: '2026-09-13'
+license: CC-BY-4.0
+gated: true
+track: human-prompted
+v1_sha256: 2614c5167c345e04911ebf1b9a1510a0cefb20958a0a4e464b36d40f5d4d6855

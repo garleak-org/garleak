@@ -1,0 +1,22 @@
+title: >-
+  Photometric redshift bias from unmodelled emission lines in six-band surveys
+authors:
+- jortizbello
+- htan
+abstract: >-
+  Strong emission lines that fall in a broad band bias template-fit photometric redshifts.
+  For a six-band survey we find a bias of 0.04 in redshift for galaxies with [O III] equivalent
+  widths above 300 Å.
+date: '2026-09-14'
+change: initial
+note: First submission
+submitted_by: jortizbello
+assistance:
+  writing: W1
+  analysis: A0
+models:
+- name: claude-sonnet-4.5
+  provider: Anthropic
+  version: 2026-04
+rubric_families:
+- computational

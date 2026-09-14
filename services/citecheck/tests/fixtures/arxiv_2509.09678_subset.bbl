@@ -1,0 +1,34 @@
+
+\providecommand{\href}[2]{#2}\begingroup\raggedright\begin{thebibliography}{10}
+
+\bibitem{Dodelson:2003ft}
+S.~Dodelson, \emph{{Modern Cosmology}}, Academic Press, Amsterdam (2003).
+
+\bibitem{Planck:2018vyg}
+{\scshape Planck} collaboration, \emph{{Planck 2018 results. VI. Cosmological parameters}}, \href{https://doi.org/10.1051/0004-6361/201833910}{\emph{Astron. Astrophys.} {\bfseries 641} (2020) A6} [\href{https://arxiv.org/abs/1807.06209}{{\ttfamily 1807.06209}}].
+
+\bibitem{Munoz:2024fas}
+J.B.~Mu{\~n}oz, J.~Mirocha, J.~Chisholm, S.R.~Furlanetto and C.~Mason, \emph{{Reionization after JWST: a photon budget crisis?}}, \href{https://doi.org/10.1093/mnrasl/slae086}{\emph{Mon. Not. Roy. Astron. Soc.} {\bfseries 535} (2024) L37} [\href{https://arxiv.org/abs/2404.07250}{{\ttfamily 2404.07250}}].
+
+\bibitem{simmonds2023}
+C.~Simmonds, S.~Tacchella, K.~Hainline, B.D.~Johnson, W.~McClymont, B.~Robertson et~al., \emph{Low-mass bursty galaxies in jades efficiently produce ionising photons and could represent the main drivers of reionisation},  \href{https://arxiv.org/abs/2310.01112}{{\ttfamily 2310.01112}}.
+
+\bibitem{Endsley2024}
+R.~{Endsley}, D.P.~{Stark}, L.~{Whitler}, M.W.~{Topping}, B.D.~{Johnson}, B.~{Robertson} et~al., \emph{{The star-forming and ionizing properties of dwarf z 6-9 galaxies in JADES: insights on bursty star formation and ionized bubble growth}}, \href{https://doi.org/10.1093/mnras/stae1857}{\emph{Monthly Notices of the RAS} {\bfseries 533} (2024) 1111} [\href{https://arxiv.org/abs/2306.05295}{{\ttfamily 2306.05295}}].
+
+\bibitem{Scolnic:2023pga}
+D.~Scolnic, A.G.~Riess, J.~Wu, S.~Li, G.S.~Anand, R.~Beaton et~al., \emph{{CATS: The Hubble Constant from Standardized TRGB and Type Ia Supernova Measurements}}, \href{https://doi.org/10.3847/2041-8213/ace280}{\emph{Astrophys. J. Lett.} {\bfseries 954} (2023) L31} [\href{https://arxiv.org/abs/2304.06693}{{\ttfamily 2304.06693}}].
+
+\bibitem{Riess:2021jrx}
+A.G.~Riess and et~al., \emph{{A Comprehensive Measurement of the Local Value of the Hubble Constant with 1 km s$^{-1}$ Mpc$^{-1}$ Uncertainty from the Hubble Space Telescope and the SH0ES Team}}, \href{https://doi.org/10.3847/2041-8213/ac361f}{\emph{Astrophys. J. Lett.} {\bfseries 934} (2022) L7} [\href{https://arxiv.org/abs/2112.04510}{{\ttfamily 2112.04510}}].
+
+\bibitem{Freedman:2021ahq}
+W.L.~Freedman, \emph{{Measurements of the Hubble Constant: Tensions in Perspective}}, \href{https://doi.org/10.3847/1538-4357/ac082c}{\emph{Astrophys. J.} {\bfseries 919} (2021) 16} [\href{https://arxiv.org/abs/2106.15656}{{\ttfamily 2106.15656}}].
+
+\bibitem{Freedman:2023zos}
+W.L.~Freedman and B.F.~Madore, \emph{{Progress in direct measurements of the Hubble constant}}, \href{https://doi.org/10.1088/1475-7516/2023/11/050}{\emph{JCAP} {\bfseries 11} (2023) 050} [\href{https://arxiv.org/abs/2309.05618}{{\ttfamily 2309.05618}}].
+
+\bibitem{Wong:2019kwg}
+{H0LiCOW Collaboration}, \emph{{H0LiCOW - XIII. A 2.4 per cent measurement of $H_0$ from lensed quasars: 5.3$\sigma$ tension between early- and late-Universe probes}}, \href{https://doi.org/10.1093/mnras/stz3094}{\emph{Mon. Not. Roy. Astron. Soc.} {\bfseries 498} (2020) 1420} [\href{https://arxiv.org/abs/1907.04869}{{\ttfamily 1907.04869}}].
+
+\end{thebibliography}\endgroup

@@ -1,0 +1,40 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% import "macros.html" as m %}
+{% block main %}
+{% set R = "https://github.com/" ~ cfg.repo ~ "/blob/main/packages/rubrics/" %}
+{% set G = "https://github.com/" ~ cfg.repo ~ "/issues/new?template=" %}
+{% if not example %}
+<div class="prose">
+  <h1>Verify</h1>
+  <p>Garleak needs its first five verifiers. Write to <a href="mailto:{{ cfg.contact }}">{{ cfg.contact }}</a> with your name, your field and your ORCID iD.</p>
+  <p>A verification checks one exact version against one rubric: <a href="{{ R }}citations/v1.0.0.yaml">citations 1.0.0</a> for T1, and <a href="{{ R }}computational/v1.0.0.yaml">computational 1.0.0</a> or <a href="{{ R }}mathematics/v1.0.0.yaml">mathematics 1.0.0</a> for T2 to T4. Each earns 1 credit, pass or fail.</p>
+  <p class="small">Forms, at launch: <a href="{{ G }}5-verify-paper.yml">verify a paper</a> | <a href="{{ G }}6-novelty-check.yml">check a scratch</a></p>
+</div>
+<h2 id="queue">Queue</h2>
+{% else %}
+<h1>Verification queue</h1>
+{% endif %}
+{% set q = site.queue %}
+{% if q %}
+<dl class="articles">
+{% for obj, need in q %}
+{% if obj.tier_index is defined %}
+<dt><a id="item{{ loop.index }}">[{{ loop.index }}]</a> <a href="{{ obj.url }}">{{ obj.ident }}</a></dt>
+<dd data-record>
+  <div class="list-title"><a href="{{ obj.url }}">{{ obj.v.title }}</a></div>
+  <div class="list-comments">Stage: {{ m.stage_dot(obj.tier_index, obj.tier, obj.tier_name) }}. Needs {{ need }}. {{ obj.pv.category.name }}.</div>
+</dd>
+{% else %}
+<dt><a id="item{{ loop.index }}">[{{ loop.index }}]</a> <a href="{{ obj.url }}">{{ obj.ident }}</a></dt>
+<dd data-record>
+  <div class="list-title"><a href="{{ obj.url }}">{{ obj.s.statement }}</a></div>
+  <div class="list-comments">Stage: {{ m.stage_ring(obj.stage_index, obj.stage, N_NAMES[obj.stage]) }}. Needs {{ need }}. {{ obj.category.name }}.</div>
+</dd>
+{% endif %}
+{% endfor %}
+</dl>
+{% else %}
+<p>The queue fills when submissions open.</p>
+{% endif %}
+{% endblock %}

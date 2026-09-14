@@ -1,0 +1,43 @@
+name: Report content or appeal a decision
+description: Goes to the moderators. For anything private, write to contact@garleak.org instead.
+title: "Report or appeal"
+labels: ["intake:report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This issue is public, and so is your GitHub handle.** For personal data, a legal matter, harm or a takedown, write to contact@garleak.org and do not put the details here.
+
+        An appeal is reviewed by a different moderator from the one who decided, within 30 days of the decision, once per decision. The [admission criteria](https://garleak.org/moderation/#criteria) are numbered 1 to 4.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Report content
+        - Appeal a decision
+    validations:
+      required: true
+  - type: input
+    id: subject
+    attributes:
+      label: What it is about
+      description: An identifier such as paper:12 or scratch:8, or the issue or pull request number of the decision.
+    validations:
+      required: true
+  - type: dropdown
+    id: criterion
+    attributes:
+      label: Criterion
+      options:
+        - "1: not a genuine attempt at research"
+        - "2: out of scope or in the wrong category"
+        - "3: gated content filed elsewhere"
+        - "4: harmful, defamatory, plagiarized, or posted without the right to"
+        - Not sure
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+    validations:
+      required: true

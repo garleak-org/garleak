@@ -1,0 +1,40 @@
+# Private working notes, never committed
+llm.txt
+
+# Secrets and local env
+.env
+.env.*
+!.env.example
+
+# Built site (generator output, deployed by Actions, never committed)
+_site/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Node (tooling only, for example Pagefind through npx)
+node_modules/
+npm-debug.log*
+
+# Build output left in the retired Next.js app (see attic/README.md)
+attic/**/.next/
+attic/**/out/
+attic/**/next-env.d.ts
+attic/**/*.tsbuildinfo
+attic/**/.eslintcache
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

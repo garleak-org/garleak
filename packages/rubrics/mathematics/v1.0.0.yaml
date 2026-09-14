@@ -1,0 +1,451 @@
+# Garleak mathematics rubric, tiers T2 to T4. Declare this family for any paper whose
+# central result is a theorem with a proof. Proof steps that rest on a computer
+# calculation are checked under the computational rubric too, so declare both.
+# Changes go through an RFC (see ../README.md). Item ids are never renumbered or reused.
+
+id: mathematics
+item_prefix: math
+title: Mathematical results
+field: mathematics
+applies_to_tiers: [T2, T3, T4]
+version: 1.0.0
+status: draft
+spec_version: "0.1"
+effective_date: null
+rfc: null
+maintainers:
+  - name: To be recruited
+    orcid: null
+    role: rubric maintainer
+summary: >-
+  For papers whose central result is a theorem with a proof. There is no experiment to
+  repeat, so reproduction here means independent re-verification of the argument. T2
+  checks that the statements are precise, that each proof step follows, that cited results
+  say what is claimed, and that a counterexample search found nothing. T3 is a separate
+  re-check of the central proof, written up in the verifier's own words. T4 is a complete
+  re-check of the central result and every lemma it depends on by a verifier independent
+  of every contributor. A machine-checked formalization is the strongest evidence at T3
+  and T4.
+tier_meanings:
+  T2: >-
+    Claims checked. The statements the central result depends on are precise, the proof
+    of the central result and of the paper's own lemmas has been checked line by line,
+    every cited result exists and applies as used, and a recorded counterexample search
+    found nothing.
+  T3: >-
+    Partially reproduced. For a proof, reproduction is independent re-verification of the
+    argument. A verifier re-checks the proof of the central result separately from earlier
+    records and writes a proof sketch in their own words that covers every step.
+    Supporting lemmas proved in the paper may be taken from an earlier record if that
+    record checked them line by line.
+  T4: >-
+    Independently reproduced. A verifier independent of every contributor (SPEC.md 3.6.5)
+    re-checks the central result and every lemma from the paper it depends on, line by
+    line, without help from the contributors beyond disclosed questions. Results from the
+    literature may be taken as given when T1 and T2 checked them.
+definitions:
+  central result: >-
+    The theorem or theorems the abstract presents as the paper's main result. The verifier
+    lists them in math.T2.statements-precise.
+  line by line: >-
+    Every inference in the proof is either justified by an earlier step, a stated
+    hypothesis, a definition, or a cited result, or is a routine step the verifier can
+    write out in full. A step the verifier can only fill with a new idea is a gap.
+  formalization: >-
+    A machine-checked proof in a proof assistant such as Lean, Rocq (formerly Coq), or
+    Isabelle, with the proof assistant version, the library versions, and a list of any
+    unproved placeholders (sorry, admit) and non-standard axioms.
+changelog:
+  - version: 1.0.0
+    date: 2026-09-14
+    rfc: null
+    changes:
+      - First draft, circulated with SPEC.md 0.1 for comment.
+items:
+  # ---------------------------------------------------------------- T2
+  - id: math.T2.statements-precise
+    tier: T2
+    title: Statements are precise
+    required: true
+    scope: claim
+    prompt: >-
+      List the central result and every theorem, lemma, proposition, and definition it
+      depends on. For each, check that all hypotheses are explicit, that quantifiers and
+      domains are clear, and that notation is defined before use.
+    criteria:
+      pass: Every listed statement has one reading, and that reading is the one the proof uses.
+      fail: >-
+        A statement is ambiguous in a way that changes whether it is true, or the proof
+        uses a different reading from the one stated.
+      not_applicable: null
+    evidence:
+      - kind: proof-notes
+        description: The list of statements, with any ambiguity found and how you read it.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T2.proof-line-by-line
+    tier: T2
+    title: Each proof step checked line by line
+    required: true
+    scope: claim
+    prompt: >-
+      Check the proof of the central result, and of every lemma proved in the paper that it
+      depends on, line by line. Record each step with your verdict. Write out any routine
+      step the paper skips. Mark as a gap any step you could not fill without a new idea.
+    criteria:
+      pass: Every step follows, with any routine steps you filled written out.
+      fail: >-
+        Any step does not follow and you could not fill it with a routine argument, or a
+        step is false.
+      not_applicable: null
+    evidence:
+      - kind: proof-notes
+        description: Step-by-step notes with a verdict on each step and the gaps found.
+        required: true
+    automation:
+      level: none
+    notes: A gap you can fill is worth proposing as a fix, which earns more than the verification.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T2.cited-results-apply
+    tier: T2
+    title: Cited results exist, say what is claimed, and apply as used
+    required: true
+    scope: reference
+    prompt: >-
+      For every result from the literature the proof uses, find it in the cited work,
+      confirm its statement matches what the paper says, and check that its hypotheses
+      hold where the paper applies it.
+    criteria:
+      pass: Every cited result exists as stated and its hypotheses hold at each use.
+      fail: >-
+        A cited result does not exist as stated, is stronger in the paper than in the
+        source, or is applied where its hypotheses fail.
+      not_applicable: The proof uses no result from the literature.
+    evidence:
+      - kind: note
+        description: Each cited result with its location in the source and the hypotheses checked at each use.
+        required: true
+    automation:
+      level: partial
+      tools: [citecheck]
+      notes: citecheck confirms the source exists. Matching the statement and checking hypotheses is the verifier's work.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T2.counterexample-search
+    tier: T2
+    title: A counterexample search found nothing
+    required: true
+    scope: claim
+    prompt: >-
+      Look for counterexamples to the central result and to the key lemmas. Try small
+      cases, boundary and degenerate cases, and standard examples from the area. Use a
+      computer search where the statement allows one (enumeration, computer algebra, a SAT
+      or SMT solver). Record what you tried.
+    criteria:
+      pass: The recorded search found no counterexample.
+      fail: A counterexample was found.
+      not_applicable: null
+    evidence:
+      - kind: search-record
+        description: The cases and methods tried, and their results.
+        required: true
+      - kind: link
+        description: Code for any computer search, at a pinned revision.
+        required: false
+    automation:
+      level: partial
+      tools: [computer algebra systems, SAT and SMT solvers, enumeration scripts]
+      notes: Tools run the search. Choosing what to search and reading the result is the verifier's.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T2.hypotheses-used
+    tier: T2
+    title: Each hypothesis of the central result is used
+    required: false
+    scope: claim
+    prompt: >-
+      Note where the proof uses each hypothesis of the central result. An unused
+      hypothesis often marks an error or a weaker result than claimed.
+    criteria:
+      pass: Each hypothesis is used, or the paper explains why it is kept.
+      fail: A hypothesis is never used and the paper does not say why.
+      not_applicable: The central result has no hypotheses.
+    evidence:
+      - kind: proof-notes
+        description: Each hypothesis with the step that uses it.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T2.examples-correct
+    tier: T2
+    title: Worked examples and numerical checks in the paper are correct
+    required: false
+    scope: claim
+    prompt: Check any worked examples, special cases, or numerical checks the paper gives.
+    criteria:
+      pass: Each example is correct.
+      fail: An example is wrong.
+      not_applicable: The paper gives no examples.
+    evidence:
+      - kind: note
+        description: Each example checked and the result.
+        required: true
+    automation:
+      level: partial
+      tools: [computer algebra systems]
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  # ---------------------------------------------------------------- T3
+  - id: math.T3.separate-recheck
+    tier: T3
+    title: Central proof re-checked separately, in the verifier's own words
+    required: true
+    scope: claim
+    prompt: >-
+      Re-check the proof of the central result without reading earlier verification
+      notes until you have finished. Write a proof sketch in your own words that covers
+      every step. You may take lemmas proved in the paper from an earlier record that
+      checked them line by line, if you say which.
+    criteria:
+      pass: Your sketch covers every step of the central proof and every step holds.
+      fail: A step does not hold, or you found a gap you could not fill.
+      not_applicable: null
+    evidence:
+      - kind: proof-notes
+        description: Your proof sketch.
+        required: true
+      - kind: note
+        description: Which lemmas you took from earlier records, with the record ids.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T3.dependencies-listed
+    tier: T3
+    title: Every dependency of the central proof is accounted for
+    required: true
+    scope: version
+    prompt: >-
+      List every result the central proof depends on. Mark each as checked by you, checked
+      in an earlier record (give its id), or taken from the literature (give the
+      reference).
+    criteria:
+      pass: Every dependency is listed and marked.
+      fail: A dependency is missing or unmarked.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: The dependency list.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T3.formal-partial
+    tier: T3
+    title: A key step machine-checked
+    required: false
+    scope: claim
+    prompt: >-
+      Formalize at least one key lemma or step of the central proof in a proof assistant.
+      This is the strongest T3 evidence.
+    criteria:
+      pass: The formal proof checks with no unproved placeholders in the formalized part.
+      fail: The formal proof does not check, or depends on an unproved placeholder.
+      not_applicable: null
+    evidence:
+      - kind: formal-proof
+        description: Repository, pinned revision, proof assistant and library versions, and the list of placeholders and axioms.
+        required: true
+    automation:
+      level: partial
+      tools: [Lean, Rocq, Isabelle]
+      notes: The proof assistant checks the proof. The verifier is responsible for the statement (see math.T3.formal-statement-match).
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T3.formal-statement-match
+    tier: T3
+    title: Formal statements match the paper's statements
+    required: true
+    scope: claim
+    prompt: >-
+      If you give formal evidence, show that each formal statement says the same thing as
+      the statement in the paper, including every hypothesis.
+    criteria:
+      pass: Each formal statement matches its informal counterpart.
+      fail: A formal statement is weaker, stronger, or different.
+      not_applicable: No formal evidence is given with this verification.
+    evidence:
+      - kind: note
+        description: Each informal statement next to its formal one, with any difference explained.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T3.alternative-check
+    tier: T3
+    title: A key step checked by another route
+    required: false
+    scope: claim
+    prompt: >-
+      Check a key step by a route different from the paper's, for example a different
+      argument, a computer verification of a finite case, or a numerical test.
+    criteria:
+      pass: The other route agrees.
+      fail: The other route disagrees.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: The route and its result.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  # ---------------------------------------------------------------- T4
+  - id: math.T4.independent-verifier
+    tier: T4
+    title: The verifier is independent of every contributor
+    required: true
+    scope: version
+    prompt: >-
+      Confirm the platform's conflict check shows you independent of every contributor
+      (SPEC.md 3.6.5) and make the attestation SPEC.md 3.6.9 requires.
+    criteria:
+      pass: The conflict check passes and the attestation is made.
+      fail: The check shows a conflict, or you know of one it missed.
+      not_applicable: null
+    evidence:
+      - kind: attestation
+        description: The attestation text, as recorded by the platform.
+        required: true
+    automation:
+      level: partial
+      tools: [platform conflict check]
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T4.full-recheck
+    tier: T4
+    title: Central result and every lemma it depends on re-checked in full
+    required: true
+    scope: claim
+    prompt: >-
+      Re-check, line by line, the proof of the central result and of every lemma proved
+      in the paper that it depends on. Take results from the literature as given only if
+      T1 and T2 checked them. Write up your check in your own words.
+    criteria:
+      pass: Every step of every proof in the chain holds.
+      fail: A step does not hold, or a gap remains.
+      not_applicable: null
+    evidence:
+      - kind: proof-notes
+        description: Your write-up of the full check.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T4.gaps-resolved
+    tier: T4
+    title: Gaps found in earlier records are resolved in this version
+    required: true
+    scope: version
+    prompt: >-
+      Read every earlier verification of this paper. For each gap or error they found,
+      confirm this version resolves it or show that it was not a gap.
+    criteria:
+      pass: Every earlier gap is resolved in this version or shown not to be a gap.
+      fail: An earlier gap remains.
+      not_applicable: No earlier record found a gap.
+    evidence:
+      - kind: note
+        description: Each earlier gap, with where this version resolves it.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T4.no-contributor-help
+    tier: T4
+    title: Only public materials used, and any contact disclosed
+    required: true
+    scope: version
+    prompt: >-
+      Confirm you worked from public materials only. Record any questions you asked the
+      contributors and their answers.
+    criteria:
+      pass: Only public materials were used, and any contact is disclosed. Answers to questions are allowed.
+      fail: A contributor supplied unpublished arguments or wrote part of your check.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Record of any contact with contributors, or a statement that there was none.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: math.T4.formal-full
+    tier: T4
+    title: Central result fully machine-checked
+    required: false
+    scope: claim
+    prompt: >-
+      Formalize the central result in a proof assistant, with no unproved placeholders and
+      only standard axioms, and show the formal statement matches the paper's. This is the
+      strongest T4 evidence.
+    criteria:
+      pass: The full formal proof checks, with no placeholders, only standard axioms, and a matching statement.
+      fail: The formal proof does not check, has placeholders, uses non-standard axioms, or states something different.
+      not_applicable: null
+    evidence:
+      - kind: formal-proof
+        description: Repository, pinned revision, proof assistant and library versions, and the axioms used.
+        required: true
+      - kind: note
+        description: Informal and formal statements side by side.
+        required: true
+    automation:
+      level: partial
+      tools: [Lean, Rocq, Isabelle]
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null

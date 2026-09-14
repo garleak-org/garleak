@@ -1,0 +1,18 @@
+id: 11
+base_version: '1.0'
+author: rnakamura
+date: '2026-08-06'
+title: Replace the citation that could not be found and correct one DOI
+rationale: >-
+  The 2013b citation came from the model and does not exist. The supporting statement now
+  cites the N-body work it describes.
+proposed_bump: minor
+status: merged
+merged_into: '1.1'
+addresses:
+- verification: 4471-01
+  item: cit.T1.exists
+- verification: 4471-01
+  item: cit.T1.metadata-agree
+model_use:
+  used: false

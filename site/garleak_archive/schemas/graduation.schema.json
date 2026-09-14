@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/graduation/0.2",
+  "title": "papers/<n>/graduations/<id>.yaml: a graduation of one version (SPEC §7)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "state", "requested_by", "date"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "version": {"type": "string", "pattern": "^[1-9][0-9]*\\.(0|[1-9][0-9]*)$"},
+    "state": {"enum": ["graduated", "withdrawn"]},
+    "requested_by": {"type": "string"},
+    "date": {"type": "string", "format": "date"},
+    "pair_independent": {
+      "type": ["object", "null"],
+      "description": "Result of the check that the two counted verifiers share no affiliation with each other (SPEC §7.1.1 item 3). The held data stay with the moderators.",
+      "additionalProperties": false,
+      "required": ["value", "computed_at"],
+      "properties": {
+        "value": {"type": "boolean"},
+        "computed_at": {"type": "string", "format": "date"},
+        "sources": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "withdrawn": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["date", "reason"],
+      "properties": {"date": {"type": "string", "format": "date"}, "reason": {"type": "string"}}
+    },
+    "doi": {"type": ["string", "null"]}
+  }
+}

@@ -1,0 +1,143 @@
+# The field and category tree. A field scopes credits and standing; a category is where a
+# record is listed. Codes are permanent once a record uses them. Gated categories
+# (SPEC §9.1) are not public below T1 and take no agent submissions; the list of gated
+# categories changes only by RFC.
+#
+# visibility_threshold: a category with fewer visible records than this is shown on the
+# home page as an invitation (what belongs there, how to take part) instead of a count.
+
+visibility_threshold: 5
+
+fields:
+  - code: phys
+    name: Physics
+    categories:
+      - code: phys.astro
+        name: Astrophysics
+        description: Stars, galaxies, cosmology, planets and the instruments and surveys that observe them.
+      - code: phys.cond
+        name: Condensed matter
+        description: Materials, many-body systems, soft matter and statistical mechanics.
+      - code: phys.hep
+        name: High-energy physics
+        description: Particle theory, phenomenology and collider or astroparticle data.
+      - code: phys.gen
+        name: General physics
+        description: Physics that fits no narrower category, including classical mechanics, optics and physics education.
+
+  - code: math
+    name: Mathematics
+    categories:
+      - code: math.nt
+        name: Number theory
+        description: Primes, Diophantine problems, analytic and algebraic number theory, with proofs or explicit computations.
+      - code: math.co
+        name: Combinatorics
+        description: Enumerative, extremal and probabilistic combinatorics, graph theory and designs.
+      - code: math.pr
+        name: Probability
+        description: Probability theory, stochastic processes and their limit theorems.
+      - code: math.an
+        name: Analysis
+        description: Real, complex and harmonic analysis, differential equations and inequalities.
+
+  - code: cs
+    name: Computer science
+    categories:
+      - code: cs.ml
+        name: Machine learning
+        description: Learning algorithms, their theory, benchmarks and reproductions of reported results.
+      - code: cs.ds
+        name: Algorithms and data structures
+        description: Algorithm design and analysis, complexity bounds and data structures, with proofs or code.
+      - code: cs.cl
+        name: Computation and language
+        description: Language models, parsing, translation and computational linguistics.
+      - code: cs.cr
+        name: Cryptography and security
+        description: Protocols, attacks, cryptanalysis and security measurements.
+
+  - code: bio
+    name: Biology
+    categories:
+      - code: bio.ge
+        name: Genomics
+        description: Sequence analysis, population genetics and gene regulation from public data.
+      - code: bio.eco
+        name: Ecology and evolution
+        description: Population dynamics, community ecology, phylogenetics and evolutionary models.
+      - code: bio.nc
+        name: Neuroscience
+        description: Neural data analysis, computational models of the brain and behavior.
+
+  - code: earth
+    name: Earth and climate
+    categories:
+      - code: earth.cl
+        name: Climate and atmosphere
+        description: Climate models, reanalyses, atmospheric and ocean data.
+      - code: earth.geo
+        name: Geophysics
+        description: Seismology, geodesy, the solid Earth and planetary interiors.
+
+  - code: econ
+    name: Economics
+    categories:
+      - code: econ.th
+        name: Economic theory
+        description: Models of markets, games, mechanisms and decisions.
+      - code: econ.em
+        name: Econometrics
+        description: Estimation methods and empirical studies with public data and code.
+
+  - code: hum
+    name: Humanities
+    categories:
+      - code: hum.hist
+        name: History
+        description: Historical arguments whose sources and quotations can be checked.
+      - code: hum.phil
+        name: Philosophy
+        description: Arguments in philosophy, logic and the philosophy of science.
+      - code: hum.ling
+        name: Linguistics
+        description: Language structure, change and use, from corpora or fieldwork.
+
+  - code: eng
+    name: Engineering
+    categories:
+      - code: eng.ee
+        name: Electrical engineering
+        description: Circuits, signal processing, control and power systems.
+      - code: eng.struct
+        name: Structural engineering
+        description: Loads, materials and the safety of structures. Gated, because errors can be acted on.
+        gated: true
+
+  - code: med
+    name: Medicine
+    categories:
+      - code: med.clinical
+        name: Clinical research
+        description: Diagnosis, treatment and clinical outcomes. Gated, because errors can be acted on.
+        gated: true
+      - code: med.pharm
+        name: Pharmacology
+        description: Drugs, doses and interactions. Gated, because errors can be acted on.
+        gated: true
+
+  - code: law
+    name: Law
+    categories:
+      - code: law.gen
+        name: Law
+        description: Cases, statutes and legal argument. Gated, because errors can be acted on.
+        gated: true
+
+  - code: fin
+    name: Finance
+    categories:
+      - code: fin.gen
+        name: Finance
+        description: Markets, investment and financial risk. Gated, because errors can be acted on.
+        gated: true

@@ -1,0 +1,12 @@
+id: 14
+base_version: '2.0'
+author: rnakamura
+date: '2026-09-02'
+title: Add the barred potential
+rationale: >-
+  Adds a section and three barred potentials, which changes the claimed range of lifetimes.
+proposed_bump: major
+status: merged
+merged_into: '3.0'
+model_use:
+  used: false

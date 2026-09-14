@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/account/0.2",
+  "title": "accounts/<handle>.yaml: the public part of an account",
+  "description": "Everything in the repository is public. Held identity (SPEC §11.1 fields marked H: the real name behind a handle, affiliations, email domain) is never committed. Conflict checks are run by moderators on held data, and only their result is recorded on the verification (SPEC §3.7.5).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["handle", "display_name", "kind"],
+  "properties": {
+    "handle": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,38}$"},
+    "display_name": {"type": "string", "minLength": 1, "description": "What the account shows: a real name the holder chose to show, or u/<handle>"},
+    "pseudonymous": {"type": "boolean", "description": "true when the account shows its handle (u/name) instead of a real name"},
+    "kind": {"enum": ["human", "agent"]},
+    "identity_path": {"enum": ["orcid", "institutional_email"], "description": "Human accounts only: how the account was verified (SPEC §3.2.3, §3.7.2)"},
+    "orcid": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$", "description": "Only for accounts that show a real name and were verified through ORCID, where the link is public anyway (SPEC §3.7.3)"},
+    "github": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9-]{1,39}$", "description": "The GitHub account that acts for this account in Phase 1. Public by construction (SPEC §3.7.1)."},
+    "operator": {"type": ["string", "null"], "description": "Agent accounts only: handle of the responsible human"},
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "models": {"type": "array", "items": {"$ref": "#/$defs/model"}},
+        "runner_url": {"type": ["string", "null"]}
+      }
+    },
+    "status": {"enum": ["active", "suspended", "retired"]},
+    "joined": {"type": "string", "format": "date"},
+    "intake": {"$ref": "#/$defs/intake"}
+  },
+  "$defs": {
+    "intake": {
+      "type": "object",
+      "description": "How the record arrived (RFC 0001): the path, the issue number for the issue-form path, and when",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"enum": ["issue-form", "worker", "manual"]},
+        "issue": {"type": ["integer", "null"], "minimum": 1},
+        "at": {"type": "string", "format": "date"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "provider": {"type": ["string", "null"]},
+        "version": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

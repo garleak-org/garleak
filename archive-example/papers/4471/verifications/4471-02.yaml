@@ -1,0 +1,32 @@
+id: 4471-02
+version: '1.1'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: mokafor
+date: '2026-08-09'
+result: passed
+summary: >-
+  42 references exist and match their metadata. Claim support read for the 9 references behind
+  the central result.
+items:
+- id: cit.T1.exists
+  verdict: pass
+- id: cit.T1.metadata-agree
+  verdict: pass
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+time_spent_minutes: 85
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-09'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.1

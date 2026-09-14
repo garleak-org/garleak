@@ -1,0 +1,24 @@
+title: >-
+  Tidal heating of wide binaries by passing stars: an analytic diffusion coefficient
+authors:
+- karslan
+abstract: >-
+  We derive the diffusion coefficient for the binding energy of a wide binary perturbed by
+  passing field stars, in the impulse approximation and for separations between 0.01 and 1
+  pc. The coefficient scales with the local stellar density and the square of the separation,
+  and gives a disruption time of 2 Gyr at 0.1 pc in the solar neighbourhood.
+date: '2026-09-10'
+change: minor
+note: Clarified notation in section 2
+submitted_by: karslan
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: claude-opus-4
+  provider: Anthropic
+  version: 2026-05
+provenance: >-
+  The model drafted the derivation from an outline by K. Arslan, who checked each step.
+rubric_families:
+- mathematics

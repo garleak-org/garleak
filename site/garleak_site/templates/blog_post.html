@@ -1,0 +1,21 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block meta %}
+<meta name="description" content="{{ (post.summary or post.title)|truncate(200) }}">
+{% endblock %}
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="Garleak blog" href="/blog/feed.xml">
+{% endblock %}
+{% block crumb %}
+<div class="subheader"><a href="/blog/">Blog</a> &gt; {{ post.kind_label }}</div>
+{% endblock %}
+{% block main %}
+<article class="prose">
+  <div class="dateline">[{{ post.kind_label }}, {{ post.date|longdate }}]</div>
+  <h1 class="title">{{ post.title }}</h1>
+  <div class="authors">{{ post.author }}</div>
+  <div class="blogbody">
+{{ body|safe }}
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/rubric/1.0.0",
+  "title": "Garleak rubric file",
+  "description": "One version of one rubric. A verification records the rubric id and version it used (SPEC.md section 10.3). Item ids are stable across versions and are never renumbered or reused; unwanted items are deprecated.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "item_prefix",
+    "title",
+    "field",
+    "applies_to_tiers",
+    "version",
+    "status",
+    "spec_version",
+    "maintainers",
+    "summary",
+    "changelog",
+    "items"
+  ],
+  "properties": {
+    "id": {
+      "description": "Stable rubric id. Equal to the directory the file lives in.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "item_prefix": {
+      "description": "Prefix shared by every item id in this rubric, for example 'comp'.",
+      "type": "string",
+      "pattern": "^[a-z]+$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "field": {
+      "description": "Rubric family this file covers, or 'universal' for the T1 citations rubric.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "applies_to_tiers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/tier" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "version": { "$ref": "#/$defs/semver" },
+    "status": {
+      "description": "draft: circulated for comment, not yet usable for verifications. active: the version new verifications must use. deprecated or superseded: kept for records made under it.",
+      "enum": ["draft", "active", "deprecated", "superseded"]
+    },
+    "spec_version": {
+      "description": "Version of SPEC.md this rubric was written against.",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "effective_date": {
+      "description": "Date from which new verifications must use this version. Null while draft.",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "rfc": {
+      "description": "RFC that accepted this version, for example '0003'. Null while draft.",
+      "type": ["string", "null"],
+      "pattern": "^[0-9]{4}$"
+    },
+    "maintainers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "orcid": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$"
+          },
+          "role": { "type": "string" }
+        }
+      }
+    },
+    "summary": { "type": "string", "minLength": 1 },
+    "tier_meanings": {
+      "description": "What each tier means for this rubric family, where the general definition needs interpreting (for example, reproduction of a proof).",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/tier" },
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "definitions": {
+      "description": "Terms used in item prompts, defined once.",
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "changelog": {
+      "description": "Newest first. The first entry's version equals the file's version.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "date", "changes"],
+        "properties": {
+          "version": { "$ref": "#/$defs/semver" },
+          "date": { "type": "string", "format": "date" },
+          "rfc": { "type": ["string", "null"], "pattern": "^[0-9]{4}$" },
+          "changes": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/item" }
+    }
+  },
+  "$defs": {
+    "tier": { "enum": ["T1", "T2", "T3", "T4"] },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "tier",
+        "title",
+        "required",
+        "prompt",
+        "criteria",
+        "evidence",
+        "automation",
+        "added_in"
+      ],
+      "properties": {
+        "id": {
+          "description": "Stable item id: <prefix>.<tier>.<slug>, for example comp.T2.env-declared.",
+          "type": "string",
+          "pattern": "^[a-z]+\\.T[1-4]\\.[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "tier": { "$ref": "#/$defs/tier" },
+        "title": { "type": "string", "minLength": 1 },
+        "required": {
+          "description": "Required items decide pass or fail. Advisory items are recorded and shown but do not decide the outcome (SPEC.md 4.2.5).",
+          "type": "boolean"
+        },
+        "scope": {
+          "description": "What the item is checked over. Used to decide which items a minor version re-opens (SPEC.md 6.3.3).",
+          "enum": ["version", "reference", "claim", "artifact"]
+        },
+        "prompt": {
+          "description": "What the verifier is asked to do, in the second person.",
+          "type": "string",
+          "minLength": 1
+        },
+        "criteria": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pass", "fail", "not_applicable"],
+          "properties": {
+            "pass": { "type": "string", "minLength": 1 },
+            "fail": { "type": "string", "minLength": 1 },
+            "not_applicable": {
+              "description": "When the verifier may mark the item not applicable. Null means never.",
+              "type": ["string", "null"]
+            }
+          }
+        },
+        "evidence": {
+          "description": "What the verifier must attach with the verdict.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "description", "required"],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "link",
+                  "doi",
+                  "commit",
+                  "environment",
+                  "command",
+                  "log",
+                  "output",
+                  "file",
+                  "note",
+                  "search-record",
+                  "citecheck-report",
+                  "sample-record",
+                  "proof-notes",
+                  "formal-proof",
+                  "attestation"
+                ]
+              },
+              "description": { "type": "string", "minLength": 1 },
+              "required": { "type": "boolean" }
+            }
+          }
+        },
+        "automation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["level"],
+          "properties": {
+            "level": {
+              "description": "none: human only. partial: a tool does part of the work and the human verifier checks and owns every verdict. No item is fully automated (SPEC.md 4.2.6).",
+              "enum": ["none", "partial"]
+            },
+            "tools": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "notes": { "type": "string" }
+          },
+          "if": { "properties": { "level": { "const": "partial" } } },
+          "then": { "required": ["level", "tools"], "properties": { "tools": { "minItems": 1 } } }
+        },
+        "sampling": {
+          "description": "For items checked over a sample rather than every case.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule", "minimum", "fraction", "drawn_by"],
+          "properties": {
+            "rule": { "type": "string", "minLength": 1 },
+            "minimum": { "type": "integer", "minimum": 1 },
+            "fraction": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "drawn_by": { "enum": ["platform", "verifier"] },
+            "escalation": { "type": "string" }
+          }
+        },
+        "added_in": { "$ref": "#/$defs/semver" },
+        "deprecated_in": {
+          "anyOf": [{ "$ref": "#/$defs/semver" }, { "type": "null" }]
+        },
+        "replaced_by": {
+          "type": ["string", "null"],
+          "pattern": "^[a-z]+\\.T[1-4]\\.[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

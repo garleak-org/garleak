@@ -1,0 +1,31 @@
+id: 4471-08
+version: '3.0'
+kind: paper
+tier: T3
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: shaddad
+date: '2026-09-11'
+result: passed
+summary: >-
+  Reran the gap-lifetime integrations for 3 of 5 potentials. Lifetimes agree with Table 2
+  to within 8 per cent.
+items:
+- id: comp.T3.central-rerun
+  verdict: pass
+- id: comp.T3.scope-stated
+  verdict: pass
+- id: comp.T3.other-seed
+  verdict: na
+  note: The integrations are deterministic; no random seed enters the result.
+- id: comp.T3.discrepancies-recorded
+  verdict: pass
+time_spent_minutes: 420
+status: active
+independent:
+  value: true
+  computed_at: '2026-09-11'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v3.0

@@ -1,0 +1,30 @@
+id: 4398-01
+version: '1.0'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: mokafor
+date: '2026-08-22'
+result: passed
+summary: All 31 references exist and match their metadata.
+items:
+- id: cit.T1.exists
+  verdict: pass
+- id: cit.T1.metadata-agree
+  verdict: pass
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+time_spent_minutes: 45
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-22'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.0

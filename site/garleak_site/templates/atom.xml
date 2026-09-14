@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Garleak, {{ cat.name }} {{ 'papers' if kind == 'paper' else 'scratches' }}</title>
+  <subtitle>Admitted after screening for scope and form only. Not peer reviewed.</subtitle>
+  <id>{{ cfg.site_url }}{{ base }}{{ cat.code }}/feed.xml</id>
+  <link rel="self" href="{{ cfg.site_url }}{{ base }}{{ cat.code }}/feed.xml"/>
+  <link rel="alternate" type="text/html" href="{{ cfg.site_url }}{{ base }}{{ cat.code }}/new/"/>
+  <updated>{{ updated }}</updated>
+  <author><name>Garleak</name></author>
+{% for e in entries %}
+  <entry>
+{% if kind == 'paper' %}
+    <title>{{ e.v.title }} ({{ e.ident }})</title>
+    <id>{{ cfg.site_url }}{{ e.url }}</id>
+    <link href="{{ cfg.site_url }}{{ e.url }}"/>
+    <updated>{{ e.v.date.isoformat() }}T00:00:00Z</updated>
+    <summary>Stage {{ e.tier }}, {{ e.tier_name }}. {{ e.declared_codes }} declared. {{ e.pct.display() }} original. Not peer reviewed. {{ e.v.abstract }}</summary>
+{% else %}
+    <title>{{ e.s.statement }} ({{ e.ident }})</title>
+    <id>{{ cfg.site_url }}{{ e.url }}</id>
+    <link href="{{ cfg.site_url }}{{ e.url }}"/>
+    <updated>{{ e.s.date.isoformat() }}T00:00:00Z</updated>
+    <summary>Idea record, not a result. Stage {{ e.stage }}, {{ N_NAMES[e.stage] }}. {{ e.declared_codes }} declared.</summary>
+{% endif %}
+  </entry>
+{% endfor %}
+</feed>

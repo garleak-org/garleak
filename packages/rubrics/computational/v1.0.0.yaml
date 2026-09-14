@@ -1,0 +1,596 @@
+# Garleak computational rubric, tiers T2 to T4. Declare this family for any paper whose
+# central result comes from running code. Changes go through an RFC (see ../README.md).
+# Item ids are never renumbered or reused; retire an item by setting deprecated_in.
+
+id: computational
+item_prefix: comp
+title: Computational results
+field: computational
+applies_to_tiers: [T2, T3, T4]
+version: 1.0.0
+status: draft
+spec_version: "0.1"
+effective_date: null
+rfc: null
+maintainers:
+  - name: To be recruited
+    orcid: null
+    role: rubric maintainer
+summary: >-
+  For papers whose central result comes from running code. T2 checks that the code and
+  data exist, that the environment is declared, that the code runs, and that the numbers
+  in the paper come from it. T3 re-runs the part of the pipeline that produces the central
+  result. T4 is a full re-run by a verifier independent of every contributor, on
+  infrastructure the verifier controls.
+tier_meanings:
+  T2: >-
+    Claims checked. The code and data behind the central result are available and
+    declared, the code runs, the methods in the text match the code, and every number
+    supporting a central claim traces to a code output within tolerance.
+  T3: >-
+    Partially reproduced. The verifier re-executes, from inputs, at least the part of the
+    pipeline that produces one headline number or figure of the central result, and gets
+    it within tolerance. Earlier steps may be taken from shipped intermediate products if
+    the verifier says which.
+  T4: >-
+    Independently reproduced. A verifier independent of every contributor (SPEC.md 3.6.5)
+    re-runs the full pipeline for the central result from the rawest public inputs, on
+    infrastructure they control, with no help from the contributors beyond disclosed
+    questions.
+definitions:
+  central result: >-
+    The numbers, figures, or tables that carry the paper's central claims, as listed by
+    the verifier in comp.T2.numbers-traceable.
+  tolerance: >-
+    The agreement a re-run is expected to reach, as stated by the paper or repository.
+    For a deterministic result with no stated tolerance, it is half a unit in the last
+    digit the paper reports.
+  artifact: Code, data, trained model weights, container images, or configuration files the result depends on.
+  pinned revision: A commit hash, or an archived release with a DOI or content hash.
+changelog:
+  - version: 1.0.0
+    date: 2026-09-14
+    rfc: null
+    changes:
+      - First draft, circulated with SPEC.md 0.1 for comment.
+items:
+  # ---------------------------------------------------------------- T2
+  - id: comp.T2.code-available
+    tier: T2
+    title: Code for the central result is available at a pinned revision
+    required: true
+    scope: artifact
+    prompt: >-
+      Find the code that produces the central result. Confirm it is at a public, lasting
+      location and that the version cites a pinned revision of it.
+    criteria:
+      pass: The code is public and the version names a pinned revision you could retrieve.
+      fail: >-
+        The code is missing, private, available only on request, or cited without a
+        pinned revision (a branch name alone is not enough).
+      not_applicable: null
+    evidence:
+      - kind: link
+        description: Repository or archive URL.
+        required: true
+      - kind: commit
+        description: The pinned revision you retrieved.
+        required: true
+    automation:
+      level: partial
+      tools: [repository and archive resolvers]
+      notes: A tool can confirm the revision resolves. The verifier confirms it is the code the paper describes.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.data-available
+    tier: T2
+    title: Input data are available or their access path is documented
+    required: true
+    scope: artifact
+    prompt: >-
+      Confirm that the input data for the central result are public, or that restricted
+      data have a documented access procedure a qualified outsider could follow.
+    criteria:
+      pass: The data are retrievable, or the restricted-access procedure is documented and real.
+      fail: The data are missing, available only on request with no procedure, or the stated location does not hold them.
+      not_applicable: >-
+        The central result uses no external input data (for example a simulation run
+        entirely from parameters stated in the paper).
+    evidence:
+      - kind: link
+        description: Data location, or the access procedure.
+        required: true
+      - kind: note
+        description: For restricted data, what the procedure requires.
+        required: false
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.env-declared
+    tier: T2
+    title: The software environment is declared
+    required: true
+    scope: artifact
+    prompt: >-
+      Check that the environment is declared well enough to rebuild it. Look for language
+      and interpreter versions, pinned dependency versions (a lock file, environment file,
+      or container image digest), random seeds for stochastic steps, and hardware
+      requirements where they matter (GPU type, memory, core count).
+    criteria:
+      pass: You could rebuild the environment from the declaration alone.
+      fail: >-
+        Dependencies are unpinned or missing, a required system library or hardware
+        requirement is undeclared, or stochastic steps have no stated seed or spread.
+      not_applicable: null
+    evidence:
+      - kind: environment
+        description: The lock file, environment file, or image digest you used.
+        required: true
+    automation:
+      level: partial
+      tools: [dependency resolvers, container build]
+      notes: A tool can attempt the build. The verifier judges whether the declaration is complete.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.code-runs
+    tier: T2
+    title: The code runs in the declared environment
+    required: true
+    scope: artifact
+    prompt: >-
+      Build the declared environment and run the code, at least through the documented
+      smoke test or the smallest documented configuration, without undocumented manual
+      steps.
+    criteria:
+      pass: The code runs to completion in the declared environment using only documented steps.
+      fail: >-
+        The code fails, needs undocumented steps or files, or runs only after changes you
+        had to make (record them, and consider proposing a fix).
+      not_applicable: null
+    evidence:
+      - kind: commit
+        description: The revision you ran.
+        required: true
+      - kind: command
+        description: The exact commands.
+        required: true
+      - kind: log
+        description: The run log.
+        required: true
+    automation:
+      level: partial
+      tools: [continuous integration runners]
+      notes: A runner can execute the documented commands. The verifier reads the log and owns the verdict.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.methods-match
+    tier: T2
+    title: The code does what the methods section says
+    required: true
+    scope: claim
+    prompt: >-
+      For each method step the central result depends on, find the code that implements
+      it and confirm it does what the text says (the model, the selection cuts, the
+      parameter values, the statistical test).
+    criteria:
+      pass: Every such step is implemented as described.
+      fail: >-
+        Any step the central result depends on is implemented differently from the text
+        in a way that could change the result.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Each method step with the file and line range that implements it.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.tolerance-stated
+    tier: T2
+    title: The expected agreement of a re-run is stated
+    required: true
+    scope: claim
+    prompt: >-
+      Find the tolerance within which a re-run should match each central number. For
+      deterministic results the default in the definitions applies. Stochastic results
+      need a stated spread (for example across seeds) from the paper or repository.
+    criteria:
+      pass: >-
+        Every central number has a stated tolerance, or is deterministic and takes the
+        default.
+      fail: A stochastic central number has no stated spread.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Each central number with its tolerance and where it is stated.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.numbers-traceable
+    tier: T2
+    title: Numbers supporting central claims trace to code outputs within tolerance
+    required: true
+    scope: claim
+    prompt: >-
+      List the numbers, figures, and tables that carry the central claims. For each,
+      find the code output or stated calculation it comes from, using shipped outputs or
+      the documented quick path, and confirm the paper reports it within tolerance.
+    criteria:
+      pass: Every listed number traces to an output and matches within tolerance.
+      fail: >-
+        Any listed number has no traceable source, or its source disagrees with the paper
+        by more than the tolerance.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Table of central numbers with reported value, source output, and difference.
+        required: true
+      - kind: output
+        description: The outputs you compared against.
+        required: true
+    automation:
+      level: partial
+      tools: [output comparison scripts]
+      notes: A script can compare values once the verifier has mapped each number to its output.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.claims-supported
+    tier: T2
+    title: The conclusions follow from the outputs
+    required: true
+    scope: claim
+    prompt: >-
+      Read the conclusions against the outputs. Check that no central claim goes beyond
+      what the numbers show, for example significance asserted without a test,
+      extrapolation outside the tested range, or a comparison with an unstated baseline.
+    criteria:
+      pass: Each central claim is supported by the reported outputs at the strength stated.
+      fail: A central claim is stronger than, or different from, what the outputs support.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Each central claim with the outputs that support it, and any overreach found.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.figures-from-code
+    tier: T2
+    title: Figures that carry central claims are made by the code
+    required: false
+    scope: artifact
+    prompt: Check that each figure supporting a central claim is produced by a script in the repository.
+    criteria:
+      pass: Each such figure has a script that regenerates it.
+      fail: A figure supporting a central claim has no generating script.
+      not_applicable: No figure supports a central claim.
+    evidence:
+      - kind: note
+        description: Figure numbers with the script that makes each.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T2.license
+    tier: T2
+    title: The code license allows inspection and re-running
+    required: false
+    scope: artifact
+    prompt: Check that the code carries a license that permits reading, running, and modifying it for verification.
+    criteria:
+      pass: A license permits verification use.
+      fail: There is no license, or the license forbids verification use.
+      not_applicable: null
+    evidence:
+      - kind: link
+        description: The license file.
+        required: true
+    automation:
+      level: partial
+      tools: [license detectors]
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  # ---------------------------------------------------------------- T3
+  - id: comp.T3.central-rerun
+    tier: T3
+    title: Part of the central result re-run from inputs
+    required: true
+    scope: claim
+    prompt: >-
+      Re-execute, from inputs, the part of the pipeline that produces at least one
+      headline number or figure of the central result, in the declared environment.
+      Compare what you get with the paper.
+    criteria:
+      pass: The re-run values match the paper within tolerance.
+      fail: Any re-run value for the central result differs from the paper by more than the tolerance.
+      not_applicable: null
+    evidence:
+      - kind: commit
+        description: The revision you ran.
+        required: true
+      - kind: environment
+        description: Environment file or image digest.
+        required: true
+      - kind: command
+        description: The exact commands.
+        required: true
+      - kind: log
+        description: The run log.
+        required: true
+      - kind: output
+        description: Re-run values next to reported values, with differences.
+        required: true
+    automation:
+      level: partial
+      tools: [continuous integration runners, output comparison scripts]
+      notes: Execution and comparison can be scripted. Choosing what to re-run and judging the result is the verifier's.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T3.scope-stated
+    tier: T3
+    title: What was re-run and what was taken as given is stated
+    required: true
+    scope: version
+    prompt: >-
+      State which steps you re-ran from inputs and which you took from shipped
+      intermediate products, and why (usually compute cost).
+    criteria:
+      pass: The boundary between re-run and taken-as-given is stated for every step of the central pipeline.
+      fail: The statement is missing or does not cover every step.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Step list, each marked re-run or taken as given.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T3.other-seed
+    tier: T3
+    title: Stochastic results hold under another seed
+    required: true
+    scope: claim
+    prompt: Re-run the stochastic steps you re-ran with at least one seed other than the paper's.
+    criteria:
+      pass: The results with the new seed fall within the stated spread.
+      fail: The results with the new seed fall outside the stated spread.
+      not_applicable: The part you re-ran is deterministic.
+    evidence:
+      - kind: output
+        description: Results for each seed used.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T3.discrepancies-recorded
+    tier: T3
+    title: Every discrepancy found is recorded
+    required: true
+    scope: version
+    prompt: >-
+      Record every difference you found between your re-run and the paper, including those
+      within tolerance, with magnitudes, and any change you had to make to get the code to
+      run.
+    criteria:
+      pass: Discrepancies and changes are recorded (an empty list is a valid record).
+      fail: Known discrepancies or changes are left out.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: The list of discrepancies and changes.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T3.compute-recorded
+    tier: T3
+    title: Compute used is recorded
+    required: false
+    scope: version
+    prompt: Record the hardware and wall time of your re-run.
+    criteria:
+      pass: Hardware and wall time are recorded.
+      fail: Not recorded.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Hardware description and wall time.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T3.sensitivity
+    tier: T3
+    title: One key choice perturbed
+    required: false
+    scope: claim
+    prompt: >-
+      Change one analysis choice the central result may depend on (a cut, a
+      hyperparameter, a prior) by a reasonable amount and record how the central result
+      responds.
+    criteria:
+      pass: The perturbation and the response are recorded.
+      fail: Not recorded.
+      not_applicable: The central result has no free analysis choices.
+    evidence:
+      - kind: output
+        description: The perturbed setting and the resulting values.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  # ---------------------------------------------------------------- T4
+  - id: comp.T4.independent-verifier
+    tier: T4
+    title: The verifier is independent of every contributor
+    required: true
+    scope: version
+    prompt: >-
+      Confirm the platform's conflict check shows you independent of every contributor
+      (SPEC.md 3.6.5) and make the attestation SPEC.md 3.6.9 requires.
+    criteria:
+      pass: The conflict check passes and the attestation is made.
+      fail: The check shows a conflict, or you know of one it missed.
+      not_applicable: null
+    evidence:
+      - kind: attestation
+        description: The attestation text, as recorded by the platform.
+        required: true
+    automation:
+      level: partial
+      tools: [platform conflict check]
+      notes: The platform refuses a T4 record from a verifier who is not independent (SPEC.md 2.4.7).
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T4.own-infrastructure
+    tier: T4
+    title: The re-run used infrastructure the verifier controls
+    required: true
+    scope: artifact
+    prompt: >-
+      Run on hardware and accounts you control, with an environment you built from the
+      declared specification. If you used an image the contributors built, record that
+      and rebuild it from its recipe.
+    criteria:
+      pass: The run used your own infrastructure and an environment built from the declaration.
+      fail: The run used contributors' machines, accounts, or an unrebuilt image they supplied.
+      not_applicable: null
+    evidence:
+      - kind: environment
+        description: How you built the environment, and the resulting digest.
+        required: true
+      - kind: note
+        description: Hardware used.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T4.full-rerun
+    tier: T4
+    title: The full pipeline for the central result re-run from raw public inputs
+    required: true
+    scope: claim
+    prompt: >-
+      Re-run the whole pipeline behind the central result, starting from the rawest
+      public inputs, and compare every central number with the paper.
+    criteria:
+      pass: Every central number matches within tolerance.
+      fail: Any central number differs from the paper by more than the tolerance.
+      not_applicable: null
+    evidence:
+      - kind: commit
+        description: The revision you ran.
+        required: true
+      - kind: command
+        description: The exact commands.
+        required: true
+      - kind: log
+        description: The run log.
+        required: true
+      - kind: output
+        description: Every central number, reproduced next to reported, with differences.
+        required: true
+    automation:
+      level: partial
+      tools: [continuous integration runners, output comparison scripts]
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T4.no-contributor-help
+    tier: T4
+    title: Only public materials used, and any contact disclosed
+    required: true
+    scope: version
+    prompt: >-
+      Confirm you used only public materials. Record any questions you asked the
+      contributors and their answers.
+    criteria:
+      pass: >-
+        Only public materials were used, and any contact is disclosed. Answers to
+        questions are allowed.
+      fail: A contributor ran code for you, or supplied unpublished material or results.
+      not_applicable: null
+    evidence:
+      - kind: note
+        description: Record of any contact with contributors, or a statement that there was none.
+        required: true
+    automation:
+      level: none
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null
+
+  - id: comp.T4.reimplementation
+    tier: T4
+    title: Core computation reimplemented
+    required: false
+    scope: claim
+    prompt: >-
+      Reimplement the core computation behind the central result without reusing the
+      contributors' code, and compare.
+    criteria:
+      pass: The reimplementation reproduces the central result within tolerance.
+      fail: The reimplementation disagrees by more than the tolerance.
+      not_applicable: null
+    evidence:
+      - kind: link
+        description: Your reimplementation, at a pinned revision.
+        required: true
+      - kind: output
+        description: Its results next to the paper's.
+        required: true
+    automation:
+      level: none
+    notes: The strongest T4 evidence for a computational result.
+    added_in: 1.0.0
+    deprecated_in: null
+    replaced_by: null

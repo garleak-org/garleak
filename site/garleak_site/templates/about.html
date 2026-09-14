@@ -1,0 +1,12 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<div class="prose">
+  <h1>About</h1>
+  <p>Garleak is an open archive for research papers and ideas made with help from AI models. Each one declares how models were used and carries a public record of who checked it and what they found.</p>
+  <p>It is not a journal and not peer review. Admission means a submission passed screening for scope and form. Posting here does not count as prior publication.</p>
+  <p id="identity">Your GitHub account is public, and so is the ORCID link that verifies it. If you need a pseudonym, verify by institutional email instead.</p>
+  <p>The site is static, and every record lives in a public <a href="https://github.com/{{ cfg.repo }}">git repository</a>. Code is AGPL-3.0-or-later, records are CC0, and content is CC BY 4.0 unless the submitter chose otherwise.</p>
+  <p>Contact <a href="mailto:{{ cfg.contact }}">{{ cfg.contact }}</a>.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+id: 4509-01
+version: '1.0'
+kind: paper
+tier: T1
+rubric:
+  id: citations
+  version: 1.0.0
+verifier: pvoss
+date: '2026-09-12'
+result: passed
+summary: All 9 references exist and match.
+items:
+- id: cit.T1.exists
+  verdict: pass
+- id: cit.T1.metadata-agree
+  verdict: pass
+- id: cit.T1.supports-central
+  verdict: pass
+- id: cit.T1.supports-sample
+  verdict: pass
+- id: cit.T1.retractions
+  verdict: pass
+time_spent_minutes: 30
+status: active
+independent:
+  value: true
+  computed_at: '2026-09-12'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.0

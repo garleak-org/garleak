@@ -1,0 +1,23 @@
+title: >-
+  Stellar stream widths as a probe of dark subhalo abundance inside 20 kpc
+authors:
+- lmbeki
+abstract: >-
+  We model the width of thin stellar streams as a function of galactocentric radius under
+  heating by dark subhalos. Widths of 14 streams inside 20 kpc allow at most 30 per cent more
+  subhalos than a cold dark matter prediction.
+date: '2026-09-14'
+change: initial
+note: First submission
+submitted_by: lmbeki
+assistance:
+  writing: W3
+  analysis: A1
+models:
+- name: gpt-5
+  provider: OpenAI
+  version: 2026-06
+provenance: >-
+  L. Mbeki gave the model an outline; the model wrote the text and the width model.
+rubric_families:
+- computational

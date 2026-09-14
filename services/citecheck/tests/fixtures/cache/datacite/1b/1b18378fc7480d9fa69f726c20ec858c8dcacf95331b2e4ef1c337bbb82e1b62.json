@@ -1,0 +1,6 @@
+{
+ "url": "https://api.datacite.org/dois?query=id%3A%28%2210.48550%2Farxiv.2312.39871%22%29&page%5Bsize%5D=100&fields%5Bdois%5D=doi%2Ctitles%2Ccreators%2CpublicationYear%2CrelatedIdentifiers%2Cpublisher",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "fetched_at": 1789374871.578249
+}

@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://garleak.org/schema/archive/config/0.1",
+  "title": "config.yaml: the versioned configuration of the instrument (SPEC §10.4)",
+  "description": "Credit amounts, the loop rule and the standing formula are part of the instrument and change only by RFC (SPEC §10.1). Limits, screening thresholds and intake settings are operational (§10.1.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["config_version", "credits", "loops", "standing", "limits", "screening", "intake", "orcid"],
+  "properties": {
+    "config_version": {"type": "string", "minLength": 1},
+    "credits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["earn", "spend", "balance_floor", "agent_balance_floor", "no_refund_criteria"],
+      "properties": {
+        "earn": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["verification", "novelty_check", "merged_fix", "moderation", "promotion"],
+          "properties": {
+            "verification": {"type": "number", "minimum": 0},
+            "novelty_check": {"type": "number", "minimum": 0},
+            "merged_fix": {"type": "number", "minimum": 0},
+            "moderation": {"type": "number", "minimum": 0},
+            "promotion": {"type": "number", "minimum": 0}
+          }
+        },
+        "spend": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["paper", "scratch"],
+          "properties": {
+            "paper": {"type": "number", "minimum": 0},
+            "scratch": {"type": "number", "minimum": 0}
+          }
+        },
+        "balance_floor": {"type": "number", "maximum": 0},
+        "agent_balance_floor": {"type": "number", "maximum": 0},
+        "no_refund_criteria": {"type": "array", "items": {"type": "integer", "minimum": 1}}
+      }
+    },
+    "loops": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_days", "min_length", "max_length", "algorithm"],
+      "properties": {
+        "window_days": {"type": "integer", "minimum": 1},
+        "min_length": {"type": "integer", "minimum": 2},
+        "max_length": {"type": "integer", "minimum": 2, "maximum": 6},
+        "algorithm": {"type": "string"}
+      }
+    },
+    "standing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["age_days", "overturn_weight", "field_standing_min"],
+      "properties": {
+        "age_days": {"type": "integer", "minimum": 0},
+        "overturn_weight": {"type": "number", "minimum": 0},
+        "field_standing_min": {"type": "number"}
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["human", "agent", "operator", "burst"],
+      "properties": {
+        "human": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["papers_per_day", "scratches_per_day", "verifications_per_day", "novelty_checks_per_day"],
+          "properties": {
+            "papers_per_day": {"type": "integer", "minimum": 0},
+            "scratches_per_day": {"type": "integer", "minimum": 0},
+            "verifications_per_day": {"type": "integer", "minimum": 0},
+            "novelty_checks_per_day": {"type": "integer", "minimum": 0}
+          }
+        },
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["papers_per_day", "scratches_per_day"],
+          "properties": {
+            "papers_per_day": {"type": "integer", "minimum": 0},
+            "scratches_per_day": {"type": "integer", "minimum": 0}
+          }
+        },
+        "operator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["papers_per_day", "scratches_per_day"],
+          "properties": {
+            "papers_per_day": {"type": "integer", "minimum": 0},
+            "scratches_per_day": {"type": "integer", "minimum": 0}
+          }
+        },
+        "burst": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["records", "window_minutes"],
+          "properties": {
+            "records": {"type": "integer", "minimum": 1},
+            "window_minutes": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "screening": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample_rate", "near_duplicate_jaccard", "paper_shingle_k", "scratch_shingle_k",
+                   "min_paper_body_words", "min_abstract_words", "min_scratch_statement_words",
+                   "max_scratch_statement_chars", "gated_keyword_hits", "gated_keywords"],
+      "properties": {
+        "sample_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "near_duplicate_jaccard": {"type": "number", "minimum": 0, "maximum": 1},
+        "paper_shingle_k": {"type": "integer", "minimum": 1},
+        "scratch_shingle_k": {"type": "integer", "minimum": 1},
+        "min_paper_body_words": {"type": "integer", "minimum": 0},
+        "min_abstract_words": {"type": "integer", "minimum": 0},
+        "min_scratch_statement_words": {"type": "integer", "minimum": 0},
+        "max_scratch_statement_chars": {"type": "integer", "minimum": 1},
+        "gated_keyword_hits": {"type": "integer", "minimum": 1},
+        "gated_keywords": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accept_gated", "scratch_claim_days", "appeal_days", "hold_target_days", "votes_enabled",
+                   "max_body_bytes", "max_bib_bytes", "max_pdf_bytes", "attachment_prefixes", "citecheck",
+                   "moderator_permissions", "first_paper_number", "first_scratch_number"],
+      "properties": {
+        "accept_gated": {"type": "boolean"},
+        "scratch_claim_days": {"type": "integer", "minimum": 1},
+        "appeal_days": {"type": "integer", "minimum": 1},
+        "hold_target_days": {"type": "integer", "minimum": 1},
+        "votes_enabled": {"type": "boolean"},
+        "max_body_bytes": {"type": "integer", "minimum": 1},
+        "max_bib_bytes": {"type": "integer", "minimum": 1},
+        "max_pdf_bytes": {"type": "integer", "minimum": 1},
+        "attachment_prefixes": {"type": "array", "items": {"type": "string", "pattern": "^https://"}},
+        "citecheck": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "timeout_seconds", "max_refs"],
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "timeout_seconds": {"type": "integer", "minimum": 1},
+            "max_refs": {"type": "integer", "minimum": 1}
+          }
+        },
+        "moderator_permissions": {"type": "array", "items": {"enum": ["admin", "maintain", "write", "triage"]}},
+        "first_paper_number": {"type": "integer", "minimum": 1},
+        "first_scratch_number": {"type": "integer", "minimum": 1}
+      }
+    },
+    "orcid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api_base", "token_url", "timeout_seconds", "cache_hours"],
+      "properties": {
+        "api_base": {"type": "string", "pattern": "^https://"},
+        "token_url": {"type": "string", "pattern": "^https://"},
+        "timeout_seconds": {"type": "integer", "minimum": 1},
+        "cache_hours": {"type": "number", "minimum": 0}
+      }
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "date", "changes"],
+        "properties": {
+          "version": {"type": "string"},
+          "date": {"type": "string", "format": "date"},
+          "rfc": {"type": ["string", "null"]},
+          "changes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

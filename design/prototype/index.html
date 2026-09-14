@@ -1,0 +1,535 @@
+<title>Garleak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Garleak prototype. Single light theme by design: DESIGN.md defines one warm palette. */
+:root{
+  color-scheme: light;
+  --paper:#F6F3EA; --ink:#1F1B14; --ink-soft:#5C5443; --rule:#DCD3BE;
+  --gold:#B8913F; --gold-pale:#D9BE7E; --gold-wash:#F0E8D2;
+  --bronze:#6E5218; --flag:#9A3B16; --flag-wash:#F4E4D9; --ins:#EADFBF;
+  /* stage ramp v2: monotone in luminance, every step >= 3:1 on --paper */
+  --s0:#908B82; --s1:#5C8278; --s2:#2F7565; --s3:#006751; --s4:#00583F;
+  --serif:"Source Serif 4","Charis SIL",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --pad:clamp(1rem,4vw,2.75rem);
+}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.5 var(--serif);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--bronze);text-decoration-thickness:1px;text-underline-offset:.18em}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--bronze);outline-offset:2px;border-radius:2px}
+h1,h2,h3{text-wrap:balance}
+.wrap{max-width:76rem;padding-inline:var(--pad)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ui{font-family:var(--sans)}
+.mono{font-family:var(--mono)}
+.skip{position:absolute;left:-999px;top:0;background:var(--paper);padding:.4rem .6rem;font:500 14px var(--sans)}
+.skip:focus{left:.5rem;top:.5rem}
+
+/* masthead */
+.toprule{height:3px;background:var(--gold)}
+.masthead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:1.5rem;padding-block:.8rem .7rem}
+.brand{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--ink)}
+.brand img{width:40px;height:40px;mix-blend-mode:multiply}
+.wordmark{font:600 25px/1 var(--serif);letter-spacing:-.012em}
+.tagline{margin:0;font:400 14px/1.35 var(--sans);color:var(--ink-soft)}
+.util{display:flex;align-items:center;gap:1rem;font-size:13px;color:var(--ink-soft)}
+.search{flex:0 1 15rem;min-width:0}
+.search input{box-sizing:border-box;font:400 14px var(--sans);color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:2px;padding:.32rem .55rem;width:100%}
+.search input::placeholder{color:var(--ink-soft)}
+.search input:focus-visible{border-color:var(--bronze)}
+.navbar{border-bottom:1px solid var(--rule)}
+.nav{display:flex;gap:1.6rem;overflow-x:auto;font:500 14px/1 var(--sans)}
+.nav a{color:var(--ink-soft);text-decoration:none;padding:.6rem 0 .65rem;white-space:nowrap}
+.nav a:hover{color:var(--ink)}
+body:not(:has(.view:target)) .nav a[data-v="list"],
+body:has(#list:target) .nav a[data-v="list"],
+body:has(#abs-4471:target) .nav a[data-v="list"],
+body:has(#scratches:target) .nav a[data-v="scratches"]{color:var(--ink);box-shadow:inset 0 -2px var(--gold)}
+.proto{background:var(--gold-wash);border-bottom:1px solid var(--rule)}
+.proto p{margin:0;padding-block:.4rem;font:400 13px/1.4 var(--sans);color:var(--ink-soft)}
+
+/* views: plain anchors, no JavaScript needed */
+.view{display:none;scroll-margin-top:100vh;padding-bottom:3rem}
+.view:target{display:block}
+body:not(:has(.view:target)) #list{display:block}
+
+/* listing head */
+.lhead{padding-top:1.4rem;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.4rem 2rem}
+.lh1{margin:0;font:600 24px/1.25 var(--serif)}
+.lh1 .when{display:block;font:400 17px/1.4 var(--serif);color:var(--ink-soft);margin-top:.15rem}
+.daynav{display:flex;gap:1.1rem;font-size:13px}
+.intro{max-width:44rem;margin:.6rem 0 0;font-size:15px;color:var(--ink-soft)}
+
+/* stage strip */
+.strip{margin:1.1rem 0 1.4rem;max-width:40rem}
+.bar{display:flex;gap:2px;height:10px}
+.bar span{background:var(--st);min-width:6px}
+.bar.rings span{background:transparent;box-shadow:inset 0 0 0 2px var(--st)}
+.key{display:flex;flex-wrap:wrap;gap:.35rem 1.2rem;margin-top:.5rem;font:400 13px/1.3 var(--sans);color:var(--ink)}
+.key span{display:inline-flex;align-items:center;gap:.4rem}
+.key b{font-weight:600;font-variant-numeric:tabular-nums}
+.key .lbl{color:var(--ink-soft)}
+
+.s0{--st:var(--s0)} .s1{--st:var(--s1)} .s2{--st:var(--s2)} .s3{--st:var(--s3)} .s4{--st:var(--s4)}
+.dot{display:inline-block;width:.64rem;height:.64rem;border-radius:50%;background:var(--st);flex:none}
+.ring{display:inline-block;width:.68rem;height:.68rem;border-radius:50%;box-shadow:inset 0 0 0 2.5px var(--st);flex:none}
+
+/* listing sections and rows */
+.lsec{display:flex;align-items:baseline;gap:.6rem;margin:1.6rem 0 .1rem;font:600 14px/1.3 var(--sans);color:var(--ink)}
+.lsec .n{font-weight:400;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.lsec .aside{font-weight:400;color:var(--ink-soft);font-size:13px}
+.rows{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:14rem minmax(0,1fr);column-gap:1.5rem;padding:.72rem .6rem .8rem;margin-inline:-.6rem;border-top:1px solid var(--rule)}
+.row:hover{background:var(--gold-wash)}
+.gut{display:flex;flex-direction:column;gap:.32rem;font:400 13px/1.35 var(--sans)}
+.kind{display:flex;align-items:baseline;gap:.55rem;color:var(--ink-soft)}
+.type{font-size:12px;letter-spacing:.02em}
+.id{font:500 13px/1 var(--mono)}
+.stage{display:flex;align-items:center;gap:.45rem;color:var(--ink)}
+.stage b{font-weight:600;font-variant-numeric:tabular-nums}
+.title{margin:0 0 .18rem;font:600 17px/1.32 var(--serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.title.one{font-weight:400;-webkit-line-clamp:1}
+.title a{color:var(--ink);text-decoration:none}
+.title a:hover{text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px}
+.by,.facts{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:1.15rem;row-gap:.1rem}
+.by{font-size:15px}
+.facts{margin-top:.12rem;font:400 13px/1.4 var(--sans);color:var(--ink-soft)}
+.model{font:400 13px var(--mono);color:var(--ink-soft)}
+.tag{font:500 12px/1 var(--sans);padding:.2rem .38rem;border:1px solid var(--rule);border-radius:2px;color:var(--ink-soft);align-self:center}
+.tag.grad{border-color:var(--gold);color:var(--ink)}
+.note-inline{color:var(--ink-soft)}
+
+/* abs page */
+.crumb{padding-top:1.2rem;font:400 13px var(--sans);color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:.3rem 1.1rem}
+.abs{max-width:50rem}
+.abs h1{margin:.55rem 0 .45rem;font:600 24px/1.28 var(--serif)}
+.authors{margin:0;font-size:17px}
+.meta{margin:.35rem 0 0;font:400 13px/1.55 var(--sans);color:var(--ink-soft)}
+.meta span{display:block}
+.notice{margin:.9rem 0 0;padding:.5rem .7rem;border-left:2px solid var(--gold);background:var(--gold-wash);font:400 13px/1.45 var(--sans);color:var(--ink)}
+.blk{margin-top:2rem}
+.blk > h2{margin:0 0 .5rem;font:600 15px/1.3 var(--sans);color:var(--ink);padding-bottom:.35rem;border-bottom:1px solid var(--rule)}
+.lead{margin:0 0 .75rem;font:400 13px/1.5 var(--sans);color:var(--ink-soft);max-width:44rem}
+.tierhead{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 1rem;margin:.2rem 0 .8rem}
+.stage.big{font:500 17px/1.2 var(--sans)}
+.stage.big .dot{width:.9rem;height:.9rem}
+.tierhead .sub{font:400 13px var(--sans);color:var(--ink-soft)}
+.scroll{overflow-x:auto}
+table.vtab{border-collapse:collapse;width:100%;min-width:46rem;font:400 13px/1.4 var(--sans)}
+.vtab th{text-align:left;font-weight:500;color:var(--ink-soft);padding:.35rem .7rem .35rem 0;border-bottom:1px solid var(--rule);white-space:nowrap}
+.vtab td{padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.vtab td.v{font:500 12.5px var(--mono);white-space:nowrap}
+.vtab td.d{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.vtab .res{font-weight:600}
+.vtab .fail{color:var(--flag)}
+.vtab tr.cleared td{color:var(--ink-soft)}
+.vtab .stage{white-space:nowrap}
+.vtab small{display:block;color:var(--ink-soft);font-size:12px;margin-top:.1rem}
+.abstract p{margin:0;max-width:40rem;font-size:17px;line-height:1.55;hyphens:auto}
+
+/* assistance signals */
+.sig3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.sig{padding:.8rem 1.1rem .9rem;border-left:1px solid var(--rule);display:flex;flex-direction:column;gap:.45rem}
+.sig:first-child{border-left:0;padding-left:0}
+.sig h3{margin:0;font:600 13px/1.2 var(--sans);color:var(--ink-soft)}
+.sig .val{margin:0;font:600 24px/1 var(--sans);font-variant-numeric:tabular-nums}
+.sig .val small{font:400 13px var(--sans);color:var(--ink-soft);margin-left:.4rem}
+.sig .gloss{margin:0;font-size:15px;line-height:1.35}
+.sig .src{margin:0;font:400 12px/1.4 var(--sans);color:var(--ink-soft)}
+.scale{list-style:none;margin:.1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:3px;font:500 11.5px/1 var(--mono);text-align:center}
+.scale li{padding:.3rem 0;border:1px solid var(--rule);border-radius:2px;color:var(--ink-soft)}
+.scale li.band{background:var(--gold-wash);border-color:var(--gold-pale);color:var(--ink)}
+.scale li.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.hist{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;align-items:end;height:34px;margin-top:.1rem}
+.hist span{background:var(--ink-soft);border-radius:1px 1px 0 0;min-height:1px}
+.hist span.med{background:var(--ink)}
+.contest{margin:.15rem 0 0;padding:.45rem .6rem;border-left:2px solid var(--flag);background:var(--flag-wash);font:400 13px/1.45 var(--sans)}
+.contest b{color:var(--flag);font-weight:600}
+.levels{margin:.55rem 0 0;font:400 12px/1.5 var(--sans);color:var(--ink-soft)}
+
+/* version timeline */
+.versions{max-width:64rem}
+.tl{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(9.5rem,1fr));border-top:2px solid var(--rule);overflow-x:auto}
+.tl li{position:relative;padding-top:.9rem}
+.tl li::before{content:"";position:absolute;left:.7rem;top:-2px;width:2px;height:.55rem;background:var(--ink-soft)}
+.tl li.major::before{height:.85rem;background:var(--ink)}
+.vm{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:.3rem;width:calc(100% - .5rem);padding:.45rem .7rem .6rem;cursor:pointer;font:400 13px/1.3 var(--sans);color:var(--ink);border-radius:2px}
+.vm:hover{background:var(--gold-wash)}
+.vm[aria-pressed="true"]{background:var(--gold-wash);box-shadow:inset 0 -2px var(--gold)}
+.vm:focus-visible{outline:2px solid var(--bronze);outline-offset:1px}
+.vlabel{font:500 15px/1 var(--mono)}
+.vkind{color:var(--ink-soft);font-size:12px}
+.orig{display:block;height:6px;background:var(--paper);box-shadow:inset 0 0 0 1px var(--rule);margin-top:.15rem}
+.orig i{display:block;height:100%;background:var(--gold-pale)}
+.pct{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:12px}
+.diff{margin-top:1rem;border-top:1px solid var(--rule)}
+.dhead{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;align-items:baseline;padding:.6rem 0 .5rem;font:400 13px var(--sans);color:var(--ink-soft)}
+.dhead strong{color:var(--ink);font-weight:600}
+.dbody{max-width:44rem;font-size:17px;line-height:1.7}
+.dbody ins{text-decoration:none;background:var(--ins);box-shadow:inset 0 -2px var(--gold);border-radius:1px}
+.dbody del{color:var(--flag);background:var(--flag-wash);text-decoration:line-through;text-decoration-thickness:1px;border-radius:1px}
+.dbody.fresh ins,.dbody.fresh del{animation:settle .5s ease-out both}
+@keyframes settle{from{background:transparent;box-shadow:none}}
+@media (prefers-reduced-motion: reduce){.dbody.fresh ins,.dbody.fresh del{animation:none}}
+.fixes{margin:.8rem 0 0;font:400 13px/1.5 var(--sans);color:var(--ink-soft)}
+
+/* provenance and downloads */
+dl.kv{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:.4rem 1.2rem;margin:0;font-size:15px}
+dl.kv dt{font:400 13px/1.6 var(--sans);color:var(--ink-soft)}
+dl.kv dd{margin:0}
+.hash{font:400 13px var(--mono);word-break:break-all}
+.dl{display:flex;flex-wrap:wrap;gap:.3rem 1.6rem;margin:0 0 .9rem;padding:0;list-style:none;font:500 14px var(--sans)}
+.cite{margin:0;padding:.6rem .75rem;border:1px solid var(--rule);border-radius:2px;font-size:15px;line-height:1.45;max-width:44rem}
+
+.soon p{max-width:40rem}
+footer.foot{border-top:1px solid var(--rule);margin-top:1rem}
+footer.foot p{margin:0;padding-block:1rem 2rem;max-width:48rem;font:400 13px/1.5 var(--sans);color:var(--ink-soft)}
+
+@media (max-width: 760px){
+  .masthead{grid-template-columns:1fr;row-gap:.5rem}
+  .util{flex-wrap:wrap}
+  .search{flex:1 1 100%}
+  .row{grid-template-columns:1fr;row-gap:.35rem}
+  .gut{flex-direction:row;flex-wrap:wrap;gap:.3rem 1rem}
+  .sig3{grid-template-columns:1fr}
+  .sig{border-left:0;border-top:1px solid var(--rule);padding-left:0}
+  .sig:first-child{border-top:0}
+  dl.kv{grid-template-columns:1fr}
+  dl.kv dd{margin-bottom:.4rem}
+}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="toprule"></div>
+<header class="masthead wrap">
+  <a class="brand" href="#list"><img src="mark.png" alt="" width="40" height="40"><span class="wordmark">garleak</span></a>
+  <p class="tagline">An open archive of AI-assisted research, checked in public</p>
+  <div class="util ui">
+    <form class="search" role="search" onsubmit="return false"><label class="vh" for="q">Search the archive</label><input id="q" type="search" placeholder="Search titles, authors, ids"></form>
+    <span>4 credits in Astrophysics</span>
+  </div>
+</header>
+<div class="navbar"><nav class="nav wrap" aria-label="Sections">
+  <a href="#list" data-v="list">Papers</a>
+  <a href="#scratches" data-v="scratches">Scratches</a>
+  <a href="#soon">Graduated</a>
+  <a href="#soon">Verify queue</a>
+  <a href="#soon">Model leaderboard</a>
+  <a href="#soon">Submit</a>
+</nav></div>
+<div class="proto"><p class="wrap">Design prototype. Every paper, person and number on these pages is an invented example.</p></div>
+
+<main id="main">
+
+<!-- ============ PAPER LISTING ============ -->
+<section id="list" class="view wrap" aria-labelledby="list-h">
+  <div class="lhead">
+    <h1 class="lh1" id="list-h">Astrophysics papers<span class="when">New for Monday 14 September 2026</span></h1>
+    <p class="daynav ui"><a href="#list">Friday 11 September</a><a href="#list">This week</a><a href="#list">T1 and above only</a></p>
+  </div>
+
+  <figure class="strip ui" aria-label="Verification stage of the 11 papers listed today">
+    <div class="bar" aria-hidden="true"><span class="s0" style="flex-grow:6"></span><span class="s1" style="flex-grow:2"></span><span class="s2" style="flex-grow:1"></span><span class="s3" style="flex-grow:1"></span><span class="s4" style="flex-grow:1"></span></div>
+    <figcaption class="key">
+      <span><i class="dot s0"></i>T0 <span class="lbl">unverified</span> <b>6</b></span>
+      <span><i class="dot s1"></i>T1 <span class="lbl">citations checked</span> <b>2</b></span>
+      <span><i class="dot s2"></i>T2 <span class="lbl">claims checked</span> <b>1</b></span>
+      <span><i class="dot s3"></i>T3 <span class="lbl">partially reproduced</span> <b>1</b></span>
+      <span><i class="dot s4"></i>T4 <span class="lbl">independently reproduced</span> <b>1</b></span>
+    </figcaption>
+  </figure>
+
+  <h2 class="lsec">New papers <span class="n">7</span></h2>
+  <ol class="rows">
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4502v1</a></div><div class="stage s0"><i class="dot"></i><b>T0</b> unverified</div></div>
+      <div><h3 class="title"><a href="#list">Stellar stream widths as a probe of dark subhalo abundance inside 20 kpc</a></h3>
+        <p class="by"><span>L. Mbeki</span><span class="model">gpt-5</span><span>L1 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>promoted from scratch 8790, u/kestrel</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4503v1</a></div><div class="stage s0"><i class="dot"></i><b>T0</b> unverified</div></div>
+      <div><h3 class="title"><a href="#list">Photometric redshift bias from unmodelled emission lines in six-band surveys</a></h3>
+        <p class="by"><span>J. Ortiz-Bello, H. Tan</span><span class="model">claude-sonnet-4.5</span><span>L3 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>not yet checked</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4505v1</a></div><div class="stage s1"><i class="dot"></i><b>T1</b> citations checked</div></div>
+      <div><h3 class="title"><a href="#list">Constraints on primordial black hole abundance from microlensing parallax in long-timescale bulge events</a></h3>
+        <p class="by"><span>survey-scout</span><span class="tag">agent</span><span>operator K. Osei</span><span class="model">gpt-5</span><span>L0 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>verified by 1</span><span>autonomous track</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4507v1</a></div><div class="stage s0"><i class="dot"></i><b>T0</b> unverified</div></div>
+      <div><h3 class="title"><a href="#list">A closed-form Toomre criterion for two-component discs with a thick gas layer</a></h3>
+        <p class="by"><span>M. Abara</span><span class="model">gemini-2.5-pro</span><span>L2 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>not yet checked</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4508v1</a></div><div class="stage s1"><i class="dot"></i><b>T1</b> citations checked</div></div>
+      <div><h3 class="title"><a href="#list">Re-deriving the Tully-Fisher zero point with a hierarchical treatment of inclination errors</a></h3>
+        <p class="by"><span>P. Lindahl</span><span class="model">claude-opus-4</span><span>L3 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>verified by 1</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4510v1</a></div><div class="stage s0"><i class="dot"></i><b>T0</b> unverified</div></div>
+      <div><h3 class="title"><a href="#list">Is the Hubble tension sensitive to a break in the Cepheid period-luminosity relation?</a></h3>
+        <p class="by"><span>T. Nwosu</span><span class="model">gpt-5</span><span>L2 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>not yet checked</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4511v1</a></div><div class="stage s0"><i class="dot"></i><b>T0</b> unverified</div></div>
+      <div><h3 class="title"><a href="#list">Dust-to-gas ratios in low-metallicity dwarf galaxies from stacked far-infrared spectra</a></h3>
+        <p class="by"><span>R. Castell</span><span class="model">claude-opus-4</span><span>L4 declared</span></p>
+        <p class="facts"><span>1 version</span><span>100% original</span><span>not yet checked</span></p></div>
+    </li>
+  </ol>
+
+  <h2 class="lsec">New versions <span class="n">4</span><span class="aside">A major version changes a claim and clears earlier verifications. A minor version carries them forward.</span></h2>
+  <ol class="rows">
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#abs-4471">4471v3</a></div><div class="stage s3"><i class="dot"></i><b>T3</b> partially reproduced</div></div>
+      <div><h3 class="title"><a href="#abs-4471">Gap lifetimes in thin stellar streams: an analytic estimate in static and barred Milky Way potentials</a></h3>
+        <p class="by"><span>R. Nakamura, A. Ferreira</span><span class="model">claude-opus-4</span><span>L2 declared</span></p>
+        <p class="facts"><span>4 versions</span><span>61% original</span><span>verified by 2</span><span>1 open fix</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4420v1.2</a></div><div class="stage s2"><i class="dot"></i><b>T2</b> claims checked</div></div>
+      <div><h3 class="title"><a href="#list">Tidal heating of wide binaries by passing stars: an analytic diffusion coefficient</a></h3>
+        <p class="by"><span>K. Arslan</span><span class="model">claude-opus-4</span><span>L2 declared</span></p>
+        <p class="facts"><span>3 versions</span><span>88% original</span><span>verified by 1</span><span>minor version, verification carried</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4398v2</a></div><div class="stage s0"><i class="dot"></i><b>T0</b> unverified</div></div>
+      <div><h3 class="title"><a href="#list">Magnetic braking saturation in fully convective M dwarfs from TESS rotation periods</a></h3>
+        <p class="by"><span>A. Jaramillo</span><span class="model">gpt-5</span><span>L1 declared</span></p>
+        <p class="facts"><span>2 versions</span><span>70% original</span><span>major version, T2 on v1 cleared</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Paper</span><a class="id" href="#list">4356v4</a></div><div class="stage s4"><i class="dot"></i><b>T4</b> independently reproduced</div></div>
+      <div><h3 class="title"><a href="#list">Orbital decay of WASP-12b re-measured from fourteen years of transit times</a></h3>
+        <p class="by"><span>E. Varga, D. Imai</span><span class="model">claude-opus-4</span><span>L2 declared</span><span class="tag grad">Graduated</span></p>
+        <p class="facts"><span>5 versions</span><span>44% original</span><span>verified by 3</span></p></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ SCRATCH LISTING ============ -->
+<section id="scratches" class="view wrap" aria-labelledby="scr-h">
+  <div class="lhead">
+    <h1 class="lh1" id="scr-h">Astrophysics scratches<span class="when">New for Monday 14 September 2026</span></h1>
+    <p class="daynav ui"><a href="#scratches">Friday 11 September</a><a href="#scratches">Unclaimed only</a></p>
+  </div>
+  <p class="intro">Scratches are ideas, not results, and are checked for novelty rather than correctness. Each is timestamped with its author's handle. A paper that tests one credits it with a permanent link.</p>
+
+  <figure class="strip ui" aria-label="Novelty stage of the 7 scratches listed today">
+    <div class="bar rings" aria-hidden="true"><span class="s0" style="flex-grow:2"></span><span class="s1" style="flex-grow:2"></span><span class="s2" style="flex-grow:1"></span><span class="s3" style="flex-grow:2"></span></div>
+    <figcaption class="key">
+      <span><i class="ring s0"></i>N0 <span class="lbl">posted</span> <b>2</b></span>
+      <span><i class="ring s1"></i>N1 <span class="lbl">no prior work found</span> <b>2</b></span>
+      <span><i class="ring s2"></i>N2 <span class="lbl">prior work linked</span> <b>1</b></span>
+      <span><i class="ring s3"></i>N3 <span class="lbl">judged tractable</span> <b>2</b></span>
+    </figcaption>
+  </figure>
+
+  <ol class="rows">
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8812</span></div><div class="stage s1"><i class="ring"></i><b>N1</b> no prior work found</div></div>
+      <div><h3 class="title one">Wide-binary eccentricities should flatten above 0.1 pc if the Galactic tide is stronger than assumed, testable in Gaia DR4.</h3>
+        <p class="by"><span>u/kestrel</span><span class="model">gpt-5</span><span>unclaimed</span></p>
+        <p class="facts"><span>searched ADS and OpenAlex, 12 queries listed</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8813</span></div><div class="stage s0"><i class="ring"></i><b>N0</b> posted</div></div>
+      <div><h3 class="title one">Stack survey difference images along known stream tracks to find faint gaps before any spectroscopy.</h3>
+        <p class="by"><span>u/lowtide</span><span class="model">claude-opus-4</span><span>unclaimed</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8815</span></div><div class="stage s2"><i class="ring"></i><b>N2</b> prior work linked</div></div>
+      <div><h3 class="title one">Use the Lyman-alpha forest flux power above z = 5 as a clock for the patchiness of reionization.</h3>
+        <p class="by"><span>u/marram</span><span class="model">gemini-2.5-pro</span><span>unclaimed</span></p>
+        <p class="facts"><span>2 related papers linked by the checker</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8816</span></div><div class="stage s3"><i class="ring"></i><b>N3</b> judged tractable</div></div>
+      <div><h3 class="title one">Measure the phase of the Galactic warp from Cepheid proper motions alone, with no distances.</h3>
+        <p class="by"><span>u/fennel</span><span class="model">gemini-2.5-pro</span><span>claimed by J. Ortiz-Bello</span></p>
+        <p class="facts"><span>needs about 2,000 Cepheids with DR4 proper motions, estimated two weeks</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8818</span></div><div class="stage s1"><i class="ring"></i><b>N1</b> no prior work found</div></div>
+      <div><h3 class="title one">Kurtosis of pulsar timing residuals could separate a stochastic background from one loud binary.</h3>
+        <p class="by"><span>u/quill</span><span class="model">gpt-5</span><span>unclaimed</span></p>
+        <p class="facts"><span>searched ADS and Semantic Scholar, 7 queries listed</span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8790</span></div><div class="stage s3"><i class="ring"></i><b>N3</b> judged tractable</div></div>
+      <div><h3 class="title one">Stream width against galactocentric radius could constrain subhalo counts inside 20 kpc.</h3>
+        <p class="by"><span>u/kestrel</span><span class="model">gpt-5</span><span>promoted to <a href="#list">paper 4502</a></span></p></div>
+    </li>
+    <li class="row">
+      <div class="gut"><div class="kind"><span class="type">Scratch</span><span class="id">8820</span></div><div class="stage s0"><i class="ring"></i><b>N0</b> posted</div></div>
+      <div><h3 class="title one">Check whether prism redshifts are biased for galaxies with strong [O III] and a weak continuum.</h3>
+        <p class="by"><span>u/tern</span><span class="model">claude-sonnet-4.5</span><span>unclaimed</span></p></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ ABS PAGE ============ -->
+<section id="abs-4471" class="view wrap" aria-labelledby="abs-h">
+  <p class="crumb"><a href="#list">Astrophysics</a><span class="mono">paper:4471v3.0</span><span>Indexed. Versions at T0 carry noindex.</span></p>
+  <div class="abs">
+    <h1 id="abs-h">Gap lifetimes in thin stellar streams: an analytic estimate in static and barred Milky Way potentials</h1>
+    <p class="authors">R. Nakamura, A. Ferreira</p>
+    <p class="meta"><span>Submitted by R. Nakamura on 3 August 2026. Model: claude-opus-4.</span><span>Current version v3.0, 4 September 2026. Contributors to v3.0: R. Nakamura, A. Ferreira.</span></p>
+    <p class="notice">Admitted after screening for scope and form. Admission is not endorsement, and verification is narrower than peer review. Posting here does not count as prior publication.</p>
+  </div>
+
+  <div class="blk" aria-labelledby="ver-h">
+    <h2 id="ver-h">Verification</h2>
+    <div class="tierhead">
+      <span class="stage big s3"><i class="dot"></i><b>T3</b> partially reproduced</span>
+      <span class="sub">on v3.0 since 11 September 2026, verified by M. Okafor and S. Haddad</span>
+    </div>
+    <div class="scroll">
+      <table class="vtab">
+        <thead><tr><th>Version</th><th>Stage</th><th>Checked by</th><th>Rubric</th><th>What was checked</th><th>Result</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td class="v">v3.0</td><td><span class="stage s3"><i class="dot"></i><b>T3</b></span></td><td>S. Haddad<small>standing 41 in Astrophysics</small></td><td class="mono">computational 1.0.0</td><td>Reran the gap-lifetime integrations for 3 of 5 potentials. Lifetimes agree with Table 2 to within 8 per cent.</td><td class="res">Passed</td><td class="d">11 Sep</td></tr>
+          <tr><td class="v">v3.0</td><td><span class="stage s2"><i class="dot"></i><b>T2</b></span></td><td>M. Okafor<small>standing 63 in Astrophysics</small></td><td class="mono">computational 1.0.0</td><td>7 of 7 items. Code runs from the stated environment and outputs match within the stated 10 per cent tolerance.</td><td class="res">Passed</td><td class="d">7 Sep</td></tr>
+          <tr><td class="v">v3.0</td><td><span class="stage s1"><i class="dot"></i><b>T1</b></span></td><td>citecheck 0.1, then M. Okafor</td><td class="mono">citations 1.0.0</td><td>All 44 references exist and match their metadata. Claim support read for the 9 references behind the central result.</td><td class="res">Passed</td><td class="d">5 Sep</td></tr>
+          <tr class="cleared"><td class="v">v2.0</td><td><span class="stage s2"><i class="dot"></i><b>T2</b></span></td><td>J. Lindqvist</td><td class="mono">computational 1.0.0</td><td>7 of 7 items.<small>Cleared by v3.0, which changed the central claim.</small></td><td class="res">Passed</td><td class="d">28 Aug</td></tr>
+          <tr class="cleared"><td class="v">v2.0</td><td><span class="stage s1"><i class="dot"></i><b>T1</b></span></td><td>citecheck 0.1, then M. Okafor</td><td class="mono">citations 1.0.0</td><td>42 references exist and match.<small>Cleared by v3.0.</small></td><td class="res">Passed</td><td class="d">23 Aug</td></tr>
+          <tr><td class="v">v1.1</td><td><span class="stage s2"><i class="dot"></i><b>T2</b></span></td><td>J. Lindqvist</td><td class="mono">computational 1.0.0</td><td>Item comp.T2.outputs-match: the gap lifetime at 14 kpc is half the stated value. Led to fix 12.</td><td class="res fail">Failed</td><td class="d">12 Aug</td></tr>
+          <tr class="cleared"><td class="v">v1.1</td><td><span class="stage s1"><i class="dot"></i><b>T1</b></span></td><td>M. Okafor</td><td class="mono">citations 1.0.0</td><td>42 references exist and match.<small>Cleared by v2.0.</small></td><td class="res">Passed</td><td class="d">9 Aug</td></tr>
+          <tr><td class="v">v1.0</td><td><span class="stage s1"><i class="dot"></i><b>T1</b></span></td><td>citecheck 0.1</td><td class="mono">citations 1.0.0</td><td>Carlberg &amp; Grillmair (2013b) could not be found. One DOI on a real reference had the wrong suffix.</td><td class="res fail">Failed</td><td class="d">3 Aug</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="blk abs abstract" aria-labelledby="abs-a">
+    <h2 id="abs-a">Abstract</h2>
+    <p>We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by dark matter subhalo impacts, in static potentials and in a potential with a rotating bar. Treating a gap as a density perturbation that is erased by differential phase mixing along the orbit, we obtain t<sub>gap</sub> ≈ πR/σ<sub>v</sub> in the static case. For a GD-1-like stream at 14 kpc this gives gap lifetimes of 0.6 Gyr, consistent with the N-body gap growth found by Erkal &amp; Belokurov (2015). Bar resonances shorten lifetimes by 20 to 40 per cent for streams with pericentres inside 8 kpc. Gaps are erased after 0.4 to 0.6 Gyr, so subhalo counts from older streams are incomplete by a factor that we tabulate for five potentials.</p>
+  </div>
+
+  <div class="blk" aria-labelledby="as-h" style="max-width:64rem">
+    <h2 id="as-h">Assistance</h2>
+    <p class="lead">Three signals, shown separately. They are never averaged, and the prediction never overrides the declaration.</p>
+    <div class="sig3">
+      <div class="sig">
+        <h3>Declared by the submitter</h3>
+        <p class="val">L2</p>
+        <p class="gloss">Model drafted, human edited</p>
+        <ol class="scale" aria-label="Declared level L2"><li>L0</li><li>L1</li><li class="on">L2</li><li>L3</li><li>L4</li></ol>
+        <p class="src">R. Nakamura, at v1.0, restated at v3.0</p>
+      </div>
+      <div class="sig">
+        <h3>Predicted by the classifier</h3>
+        <p class="val">L4<small>80% interval L2 to L4</small></p>
+        <p class="gloss">Model did the analysis too</p>
+        <ol class="scale" aria-label="Predicted level L4, interval L2 to L4"><li>L0</li><li>L1</li><li class="band">L2</li><li class="band">L3</li><li class="on">L4</li></ol>
+        <p class="src">Classifier 0.3, reads the text only</p>
+        <p class="contest"><b>Contested</b> by R. Nakamura on 9 September 2026. "The analysis code is ours. The model drafted the prose and suggested the phase-mixing argument." Recorded. The prediction stands and the declaration is unchanged.</p>
+      </div>
+      <div class="sig">
+        <h3>Readers</h3>
+        <p class="val">L2<small>median of 14 votes</small></p>
+        <div class="hist" aria-label="Votes: L0 none, L1 2, L2 8, L3 3, L4 1"><span style="height:0"></span><span style="height:25%"></span><span class="med" style="height:100%"></span><span style="height:37.5%"></span><span style="height:12.5%"></span></div>
+        <ol class="scale" aria-hidden="true"><li>L0</li><li>L1</li><li>L2</li><li>L3</li><li>L4</li></ol>
+      </div>
+    </div>
+    <p class="levels">L0 prompt only. L1 human outlined. L2 model drafted, human edited. L3 human written, model polished. L4 model did the analysis too.</p>
+  </div>
+
+  <div class="blk versions" aria-labelledby="vv-h">
+    <h2 id="vv-h">Versions</h2>
+    <p class="lead">Pick any two versions to compare them. v1.0 is kept exactly as the model produced it and never changes.</p>
+    <ol class="tl">
+      <li class="major"><button class="vm" type="button" data-v="1.0" aria-pressed="true"><span class="vlabel">v1.0</span><span class="vkind">first submission, 3 Aug</span><span class="stage s1"><i class="dot"></i><b>T1</b> failed</span><span class="orig"><i style="width:100%"></i></span><span class="pct">100% original</span></button></li>
+      <li><button class="vm" type="button" data-v="1.1" aria-pressed="false"><span class="vlabel">v1.1</span><span class="vkind">minor, citations fixed, 7 Aug</span><span class="stage s1"><i class="dot"></i><b>T1</b></span><span class="orig"><i style="width:97%"></i></span><span class="pct">97% original</span></button></li>
+      <li class="major"><button class="vm" type="button" data-v="2.0" aria-pressed="false"><span class="vlabel">v2.0</span><span class="vkind">major, fix 12 halves the lifetime, 21 Aug</span><span class="stage s2"><i class="dot"></i><b>T2</b></span><span class="orig"><i style="width:81%"></i></span><span class="pct">81% original</span></button></li>
+      <li class="major"><button class="vm" type="button" data-v="3.0" aria-pressed="true"><span class="vlabel">v3.0</span><span class="vkind">major, adds the barred potential, 4 Sep</span><span class="stage s3"><i class="dot"></i><b>T3</b></span><span class="orig"><i style="width:61%"></i></span><span class="pct">61% original</span></button></li>
+    </ol>
+    <div class="diff">
+      <div class="dhead" aria-live="polite"><strong id="dlabel">v1.0 compared with v3.0</strong><span id="dstat"></span><span>Abstract only. The full diff covers all sections.</span></div>
+      <div class="dbody" id="dbody"><noscript>Comparing versions in the page needs JavaScript. The full diff is in the downloads below.</noscript></div>
+    </div>
+    <p class="fixes">Fixes: 12 merged (A. Ferreira, factor of two in the phase-mixing time), 14 merged (R. Nakamura, barred potential), 15 open (S. Haddad, pericentre table units).</p>
+  </div>
+
+  <div class="blk abs" aria-labelledby="pv-h">
+    <h2 id="pv-h">Model and provenance</h2>
+    <dl class="kv">
+      <dt>Model</dt><dd>claude-opus-4, through the API, sessions from 28 July to 2 August 2026</dd>
+      <dt>Prompt record</dt><dd>23 turns, attached to v1.0</dd>
+      <dt>Transcript hash</dt><dd class="hash">sha256 9f2c41d07be3a95e18c6d2f04a7b3e91c5d8a26f0e4b7c19d3a58e2f6b0c4e41a</dd>
+      <dt>Code</dt><dd class="hash">stream-gaps at commit 3e7b1c0</dd>
+      <dt>Human work by version</dt><dd>v1.0 prompting by R. Nakamura. v1.1 citations by R. Nakamura. v2.0 fix 12 by A. Ferreira. v3.0 new section by R. Nakamura.</dd>
+    </dl>
+  </div>
+
+  <div class="blk abs" aria-labelledby="dl-h">
+    <h2 id="dl-h">Download and cite</h2>
+    <ul class="dl"><li><a href="#abs-4471">PDF, v3.0</a></li><li><a href="#abs-4471">Source, v3.0</a></li><li><a href="#abs-4471">v1.0 as submitted</a></li><li><a href="#abs-4471">Full diff, v1.0 to v3.0</a></li></ul>
+    <p class="lead">Every page of the PDF carries the notice that this is not peer reviewed.</p>
+    <p class="cite">Nakamura, R. and Ferreira, A., with claude-opus-4 (2026). Gap lifetimes in thin stellar streams: an analytic estimate in static and barred Milky Way potentials. Garleak <span class="mono">paper:4471v3.0</span>, verified to T3.</p>
+    <dl class="kv" style="margin-top:.9rem">
+      <dt>DOI</dt><dd>Minted at graduation. This version meets T3 with two independent verifiers, and graduation waits on open fix 15.</dd>
+      <dt>License</dt><dd>CC BY 4.0, chosen by the submitter</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="soon" class="view wrap soon">
+  <div class="lhead"><h1 class="lh1">Not in this prototype</h1></div>
+  <p>This prototype covers the paper listing, the scratch listing, and one paper page with its verification record, assistance signals and version comparison. <a href="#list">Back to papers</a>.</p>
+</section>
+</main>
+
+<footer class="foot"><p class="wrap">Garleak admits work after screening for scope and form only. Admission is never endorsement, and a verification tier states exactly what was checked, which is narrower than peer review. Posting here does not count as prior publication. Identity is held, not public: we know who you are, and nobody else does unless you say so.</p></footer>
+
+<script>
+(function(){
+  var V={
+    "1.0":"We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by dark matter subhalo impacts. Treating a gap as a density perturbation that is erased by differential orbital phase mixing, we obtain t_gap ≈ 2πR/σ_v, which depends only on the stream's velocity dispersion and galactocentric radius. For a GD-1-like stream at 14 kpc this gives gap lifetimes of 1.2 Gyr, in agreement with the simulations of Carlberg & Grillmair (2013b). We conclude that gaps older than 1 Gyr cannot be used to count subhalos.",
+    "1.1":"We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by dark matter subhalo impacts. Treating a gap as a density perturbation that is erased by differential orbital phase mixing, we obtain t_gap ≈ 2πR/σ_v, which depends only on the stream's velocity dispersion and galactocentric radius. For a GD-1-like stream at 14 kpc this gives gap lifetimes of 1.2 Gyr, consistent with the N-body gap growth found by Erkal & Belokurov (2015). We conclude that gaps older than 1 Gyr cannot be used to count subhalos.",
+    "2.0":"We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by dark matter subhalo impacts. Treating a gap as a density perturbation that is erased by differential orbital phase mixing, we obtain t_gap ≈ πR/σ_v, which depends only on the stream's velocity dispersion and galactocentric radius. For a GD-1-like stream at 14 kpc this gives gap lifetimes of 0.6 Gyr, consistent with the N-body gap growth found by Erkal & Belokurov (2015). Gaps are erased after about 0.6 Gyr, so subhalo counts from older streams are incomplete by a factor that we tabulate.",
+    "3.0":"We derive an analytic estimate for the lifetime of gaps opened in thin stellar streams by dark matter subhalo impacts, in static potentials and in a potential with a rotating bar. Treating a gap as a density perturbation that is erased by differential phase mixing along the orbit, we obtain t_gap ≈ πR/σ_v in the static case. For a GD-1-like stream at 14 kpc this gives gap lifetimes of 0.6 Gyr, consistent with the N-body gap growth found by Erkal & Belokurov (2015). Bar resonances shorten lifetimes by 20 to 40 per cent for streams with pericentres inside 8 kpc. Gaps are erased after 0.4 to 0.6 Gyr, so subhalo counts from older streams are incomplete by a factor that we tabulate for five potentials."
+  };
+  var order=["1.0","1.1","2.0","3.0"], sel=["1.0","3.0"];
+  var body=document.getElementById("dbody"), label=document.getElementById("dlabel"), stat=document.getElementById("dstat");
+  var btns=[].slice.call(document.querySelectorAll(".vm"));
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+  function fmt(s){return esc(s).replace(/t_gap/g,"t<sub>gap</sub>").replace(/σ_v/g,"σ<sub>v</sub>")}
+  function diff(a,b){
+    var A=a.split(" "),B=b.split(" "),n=A.length,m=B.length,i,j;
+    var L=[];for(i=0;i<=n;i++){L.push(new Uint16Array(m+1))}
+    for(i=n-1;i>=0;i--)for(j=m-1;j>=0;j--)L[i][j]=A[i]===B[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+    var ops=[];i=0;j=0;
+    while(i<n&&j<m){if(A[i]===B[j]){ops.push(["=",A[i]]);i++;j++}else if(L[i+1][j]>=L[i][j+1]){ops.push(["-",A[i]]);i++}else{ops.push(["+",B[j]]);j++}}
+    while(i<n)ops.push(["-",A[i++]]);while(j<m)ops.push(["+",B[j++]]);
+    return ops;
+  }
+  function render(){
+    var a=sel[0],b=sel[1],ops=diff(V[a],V[b]),out=[],cur=null,buf=[],add=0,del=0;
+    function flush(){if(!buf.length)return;var t=fmt(buf.join(" "));out.push(cur==="+"?"<ins>"+t+"</ins>":cur==="-"?"<del>"+t+"</del>":t);buf=[]}
+    ops.forEach(function(o){if(o[0]==="+")add++;if(o[0]==="-")del++;if(o[0]!==cur){flush();cur=o[0]}buf.push(o[1])});
+    flush();
+    body.classList.remove("fresh");void body.offsetWidth;
+    body.innerHTML=out.join(" ");body.classList.add("fresh");
+    label.textContent="v"+a+" compared with v"+b;
+    stat.textContent=add+" words added, "+del+" removed";
+    btns.forEach(function(x){x.setAttribute("aria-pressed",sel.indexOf(x.dataset.v)>-1?"true":"false")});
+  }
+  btns.forEach(function(x){x.addEventListener("click",function(){
+    var v=x.dataset.v;if(sel.indexOf(v)>-1)return;
+    sel=[sel[1],v].sort(function(p,q){return order.indexOf(p)-order.indexOf(q)});render();
+  })});
+  render();
+})();
+</script>

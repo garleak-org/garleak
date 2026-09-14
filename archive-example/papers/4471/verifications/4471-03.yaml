@@ -1,0 +1,41 @@
+id: 4471-03
+version: '1.1'
+kind: paper
+tier: T2
+rubric:
+  id: computational
+  version: 1.0.0
+verifier: jlindqvist
+date: '2026-08-12'
+result: failed
+summary: >-
+  The gap lifetime at 14 kpc is half the stated value when the stated code is run. Led to
+  fix 12.
+items:
+- id: comp.T2.code-available
+  verdict: pass
+- id: comp.T2.data-available
+  verdict: pass
+- id: comp.T2.env-declared
+  verdict: pass
+- id: comp.T2.code-runs
+  verdict: pass
+- id: comp.T2.methods-match
+  verdict: pass
+- id: comp.T2.tolerance-stated
+  verdict: pass
+- id: comp.T2.numbers-traceable
+  verdict: fail
+  note: >-
+    Running the integration at the pinned commit gives 0.6 Gyr at 14 kpc, not 1.2 Gyr. The
+    factor of two comes from counting the phase-mixing time twice.
+- id: comp.T2.claims-supported
+  verdict: pass
+time_spent_minutes: 210
+status: active
+independent:
+  value: true
+  computed_at: '2026-08-12'
+  sources:
+  - declared affiliations, held by moderators
+  - contributor list of v1.1

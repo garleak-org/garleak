@@ -1,0 +1,123 @@
+name: Verify a paper version
+description: Check one exact version at one tier against one rubric, with a verdict and evidence for every item.
+title: "Verify"
+labels: ["intake:verify"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and your verdicts are public, and the verification record carries your handle. See [who can see what](https://garleak.org/submit/#identity).
+
+        A verification earns 1 credit in the paper's field whether it passes or fails, and a failed one is listed in exactly the same way. You may record 5 paper verifications a day. T1 to T3 merge on their own once the checks pass. T4 waits for the moderators' conflict check. Rubrics: [citations](https://github.com/garleak-org/garleak/blob/main/packages/rubrics/citations/v1.0.0.yaml), [computational](https://github.com/garleak-org/garleak/blob/main/packages/rubrics/computational/v1.0.0.yaml), [mathematics](https://github.com/garleak-org/garleak/blob/main/packages/rubrics/mathematics/v1.0.0.yaml).
+  - type: input
+    id: version
+    attributes:
+      label: Exact version
+      placeholder: paper:12v1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Tier
+      options:
+        - "T1: citations checked"
+        - "T2: claims checked"
+        - "T3: partially reproduced"
+        - "T4: independently reproduced"
+    validations:
+      required: true
+  - type: dropdown
+    id: rubric
+    attributes:
+      label: Rubric
+      options:
+        - "citations (T1, every field)"
+        - "computational (T2 to T4)"
+        - "mathematics (T2 to T4)"
+    validations:
+      required: true
+  - type: input
+    id: rubric_version
+    attributes:
+      label: Rubric version
+      description: The current version of the rubric. The bot refuses an older one.
+      value: 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Full verification
+        - Re-check of reopened items only
+      default: 0
+  - type: textarea
+    id: items
+    attributes:
+      label: Item verdicts
+      description: "One line per item: item id | pass, fail or na | evidence links or commit hashes | note. A pass or fail needs evidence; na needs a reason in the note, and only some items allow it. Lines starting with # are ignored."
+      value: |
+        # Required at T1 (citations 1.0.0): cit.T1.exists, cit.T1.metadata-agree,
+        #   cit.T1.supports-central, cit.T1.supports-sample, cit.T1.retractions. Advisory: cit.T1.in-text-match
+        # Required at T2 (computational 1.0.0): comp.T2.code-available, comp.T2.data-available,
+        #   comp.T2.env-declared, comp.T2.code-runs, comp.T2.methods-match, comp.T2.tolerance-stated,
+        #   comp.T2.numbers-traceable, comp.T2.claims-supported
+        # Required at T3 (computational 1.0.0): comp.T3.central-rerun, comp.T3.scope-stated,
+        #   comp.T3.other-seed, comp.T3.discrepancies-recorded
+        # Required at T4 (computational 1.0.0): comp.T4.independent-verifier, comp.T4.own-infrastructure,
+        #   comp.T4.full-rerun, comp.T4.no-contributor-help
+        # Required at T2 (mathematics 1.0.0): math.T2.statements-precise, math.T2.proof-line-by-line,
+        #   math.T2.cited-results-apply, math.T2.counterexample-search
+        # Required at T3 (mathematics 1.0.0): math.T3.separate-recheck, math.T3.dependencies-listed,
+        #   math.T3.formal-statement-match
+        # Required at T4 (mathematics 1.0.0): math.T4.independent-verifier, math.T4.full-recheck,
+        #   math.T4.gaps-resolved, math.T4.no-contributor-help
+        # Example:
+        # cit.T1.exists | pass | https://example.org/citecheck-report.json | 42 of 42 resolved
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What you checked, in a sentence or two.
+    validations:
+      required: true
+  - type: textarea
+    id: automated
+    attributes:
+      label: Automated reports (optional)
+      description: "One per line: tool | version | link. An automated report is evidence, never a verification by itself."
+      placeholder: citecheck | 0.1.0 | https://example.org/report.json
+  - type: input
+    id: time_spent
+    attributes:
+      label: Time spent, in minutes (optional)
+  - type: textarea
+    id: model_use
+    attributes:
+      label: Model use while verifying (optional)
+  - type: dropdown
+    id: conflicts
+    attributes:
+      label: Conflicts with any contributor
+      description: Shared affiliation or co-authorship within 48 months. Allowed below T4 and shown as a flag that names no party.
+      options:
+        - None that I know of
+        - Shared affiliation with a contributor
+        - Recent co-authorship with a contributor
+        - Both
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: attest
+    attributes:
+      label: Attestation
+      options:
+        - label: I did not contribute to this version or an earlier one, and I do not operate an agent that did.
+          required: true
+        - label: I declared every shared affiliation, recent co-authorship or close working relationship with a contributor that I know of.
+          required: true

@@ -1,0 +1,37 @@
+# Example record. Invented.
+id: scratch:8790
+category: phys.astro
+author: kestrel
+date: '2026-08-28'
+statement: >-
+  Stream width against galactocentric radius could constrain subhalo counts inside 20 kpc.
+models:
+- name: gpt-5
+  provider: OpenAI
+  version: 2026-06
+assistance:
+  writing: W3
+  analysis: null
+v1_sha256: b3a5e89d6dd3366d606fd183351f025fed79b907a123253cbe9beb15ccd15971
+license: CC-BY-4.0
+gated: false
+promoted_to:
+- 4502
+checks:
+- id: 8790-n1
+  outcome: N1
+  checker: shaddad
+  date: '2026-08-30'
+  summary: Width is used for single streams, not as a function of radius.
+  sources:
+  - ADS
+  queries:
+  - stream width subhalo heating radius
+  - stellar stream thickness dark matter substructure
+  - stream width galactocentric radius
+- id: 8790-n3
+  outcome: N3
+  checker: jlindqvist
+  date: '2026-09-02'
+  tractability: >-
+    Needs published widths for about a dozen streams and a heating model. A few weeks.

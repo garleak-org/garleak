@@ -1,0 +1,18 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="Garleak blog" href="/blog/feed.xml">
+{% endblock %}
+{% block main %}
+<h1>Blog</h1>
+<p class="small">Posts and statements from Garleak. <a href="/blog/feed.xml">feed</a></p>
+{% if posts %}
+<ul class="posts">
+{% for p in posts %}
+  <li>{{ p.date|longdate }}, <a href="{{ p.url }}">{{ p.title }}</a>{% if p.kind == "statement" %} (statement){% endif %}{% if p.summary %}<br><span class="small">{{ p.summary }}</span>{% endif %}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No posts yet.</p>
+{% endif %}
+{% endblock %}

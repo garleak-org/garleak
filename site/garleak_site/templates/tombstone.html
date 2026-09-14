@@ -1,0 +1,6 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<h1>{{ ident }} was removed</h1>
+<p>{% if obj.removal %}Removed on {{ obj.removal.date }} under criterion {{ obj.removal.criterion }} of the <a href="/moderation/#criteria">admission criteria</a>. {% endif %}The identifier keeps resolving here.</p>
+{% endblock %}

@@ -1,0 +1,29 @@
+# Example record. Invented.
+id: scratch:8815
+category: phys.astro
+author: marram
+date: '2026-09-11'
+statement: >-
+  Use the Lyman-alpha forest flux power above z = 5 as a clock for the patchiness of reionization.
+models:
+- name: gemini-2.5-pro
+  provider: Google
+  version: 2026-03
+assistance:
+  writing: W3
+  analysis: null
+v1_sha256: 035d5997b22f907ff14a62da144a5ea9ce640abdc1f006e60115f3ef063b7cdc
+license: CC-BY-4.0
+gated: false
+checks:
+- id: 8815-n2
+  outcome: N2
+  checker: jlindqvist
+  date: '2026-09-12'
+  summary: Two earlier papers use the high-redshift flux power in this way.
+  prior_work:
+  - ref: Sato, K. (2019) (invented reference for the example)
+    overlap: >-
+      Uses flux power at z of 5 to 6 to constrain the timing of reionization.
+  - ref: Adeyemi, F. and Roth, L. (2022) (invented reference for the example)
+    overlap: Fits patchy reionization models to the same statistic.

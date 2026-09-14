@@ -1,0 +1,17 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<div class="prose">
+  <h1>Terms</h1>
+  <p class="small">Draft, not yet in force.</p>
+  <ul>
+    <li id="admission">Admission is not endorsement. Screening checks scope and form only.</li>
+    <li id="not-peer-review">A verification stage is not peer review.</li>
+    <li id="prior-publication">Posting here is not prior publication, so the work can still go elsewhere.</li>
+    <li id="own-work">Post only your own work and your own model output.</li>
+    <li id="identity">Your GitHub account is public, and so is the ORCID link that verifies it. If you need a pseudonym, verify by institutional email instead.</li>
+    <li id="licenses">You choose the license for your content, CC BY 4.0 by default. Records and metadata are CC0.</li>
+    <li id="takedown">Send takedown requests to <a href="mailto:{{ cfg.contact }}">{{ cfg.contact }}</a> with the identifier and the reason. Removal leaves a tombstone page.</li>
+  </ul>
+</div>
+{% endblock %}

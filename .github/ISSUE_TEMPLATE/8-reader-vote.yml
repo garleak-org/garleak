@@ -1,0 +1,46 @@
+name: Vote on assistance
+description: Say how much a model was involved in one version, on either axis or both.
+title: "Reader vote"
+labels: ["intake:vote"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Your vote is public.** In Phase 1 this issue shows your GitHub account and the codes you choose, to anyone. The archive stores only the counts, but the vote itself stays visible here (SPEC §3.7.5). See [who can see what](https://garleak.org/submit/#identity).
+
+        Contributors to the version do not vote on it. A later vote on the same version replaces your earlier one.
+  - type: input
+    id: version
+    attributes:
+      label: Exact version
+      placeholder: paper:12v1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: writing
+    attributes:
+      label: Writing
+      options:
+        - No vote on this axis
+        - "W0: a human wrote it"
+        - "W1: a human wrote it, and a model polished it"
+        - "W2: a model drafted it, and a human edited it"
+        - "W3: a model wrote it, with light or no human edits"
+      default: 0
+  - type: dropdown
+    id: analysis
+    attributes:
+      label: Analysis
+      options:
+        - No vote on this axis
+        - "A0: a human did the analysis"
+        - "A1: a model assisted, and a human checked it"
+        - "A2: a model did the analysis"
+      default: 0
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirm
+      options:
+        - label: I understand that this vote is public and shows my GitHub account.
+          required: true

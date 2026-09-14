@@ -1,0 +1,13 @@
+# Example record. Invented.
+id: paper:4471
+category: phys.astro
+submitter: rnakamura
+created: '2026-08-03'
+license: CC-BY-4.0
+gated: false
+track: human-prompted
+v1_sha256: 614e78abc54769978179278bccf77e09748203ddb4984ec923659ea7998c5884
+version_sha256:
+  '1.1': 7e773985b6ab987954d50b004e9b5a7aa8d75d0c411c992a49d7a9e7be0b503c
+  '2.0': 603bfd3e1b66782d6caa85c22da4f1c16bd7413772396b791ab4f5c9927fa807
+  '3.0': b0f8a03fe529c41d0cef28200d1a6d020a8862bd99789f73569b16f539314b6b

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Garleak blog</title>
+  <id>{{ base }}/blog/</id>
+  <link rel="self" href="{{ base }}/blog/feed.xml"/>
+  <link href="{{ base }}/blog/"/>
+  <updated>{{ updated }}</updated>
+{% for p in posts %}
+  <entry>
+    <title>{{ p.title }}</title>
+    <id>{{ base }}{{ p.url }}</id>
+    <link href="{{ base }}{{ p.url }}"/>
+    <updated>{{ p.date.isoformat() }}T00:00:00Z</updated>
+    <author><name>{{ p.author }}</name></author>
+    <category term="{{ p.kind }}"/>
+{% if p.summary %}
+    <summary>{{ p.summary }}</summary>
+{% endif %}
+  </entry>
+{% endfor %}
+</feed>

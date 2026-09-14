@@ -1,0 +1,20 @@
+title: >-
+  Is the Hubble tension sensitive to a break in the Cepheid period-luminosity relation?
+authors:
+- tnwosu
+abstract: >-
+  We allow a break in the Cepheid period-luminosity relation at 10 days and refit the distance
+  ladder. The Hubble constant changes by less than 0.5 km/s/Mpc.
+date: '2026-09-14'
+change: initial
+note: First submission
+submitted_by: tnwosu
+assistance:
+  writing: W2
+  analysis: A1
+models:
+- name: gpt-5
+  provider: OpenAI
+  version: 2026-06
+rubric_families:
+- computational

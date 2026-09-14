@@ -1,0 +1,6 @@
+{
+ "url": "https://api.datacite.org/dois?query=id%3A%28%2210.48550%2Farxiv.1807.06209%22+OR+%2210.48550%2Farxiv.1907.04869%22+OR+%2210.48550%2Farxiv.2106.15656%22+OR+%2210.48550%2Farxiv.2112.04510%22+OR+%2210.48550%2Farxiv.2304.06693%22+OR+%2210.48550%2Farxiv.2306.05295%22+OR+%2210.48550%2Farxiv.2309.05618%22+OR+%2210.48550%2Farxiv.2310.01112%22+OR+%2210.48550%2Farxiv.2404.07250%22%29&page%5Bsize%5D=100&fields%5Bdois%5D=doi%2Ctitles%2Ccreators%2CpublicationYear%2CrelatedIdentifiers%2Cpublisher",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "fetched_at": 1789374845.65211
+}
