@@ -5,7 +5,12 @@
 {% if example %}
 <p class="intro">Example records, all invented. They show how listings and paper pages will look. Start with <a href="{{ P }}/abs/4471/">paper 4471</a> or the <a href="{{ P }}/list/phys.astro/new/">Astrophysics listing</a>.</p>
 {% else %}
-<p class="intro">Garleak is an open archive for AI-assisted papers and research ideas. Each one says which models helped and carries a public record of who checked it. Materials here are not peer reviewed.</p>
+<div class="intro">
+  <p><b>Garleak is an open archive for AI-assisted papers and research ideas.</b></p>
+  <p>Are you using AI to write papers? <a href="/submit/">Submit it here as a paper.</a></p>
+  <p>Do you have a draft you wrote with AI that you do not want to polish, but would like to give the idea to the community? <a href="/submit/">Submit it as a scratch.</a></p>
+  <p>Nothing here is peer reviewed. You do not need an endorsement to submit. We check every submission before it goes public, and you can post under your own name or a pseudonym.</p>
+</div>
 {% if cfg.state == "prelaunch" %}
 <div class="box">Garleak is not open for submissions yet. Read the <a href="/spec/">specification</a>, <a href="/verify/">volunteer to verify</a>{% if has_example %}, or browse the <a href="/example/">example records</a>{% endif %}.</div>
 {% endif %}
