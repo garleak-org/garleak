@@ -84,7 +84,9 @@ first, not a code change.
 1. **v1 is immutable forever and hash-guarded.** Every version, once created, is
    immutable too. No change may edit or delete an existing version file. Each version
    record stores its content hash, and CI recomputes every hash and fails on any
-   mismatch. Never rewrite the history of `main`, and never add a script or workflow
+   mismatch. The git guard runs over `archive/`, the real records.
+   `archive-example/` is invented fixture data, regenerated when the example
+   changes, and its hashes are checked by `validate` alone. Never rewrite the history of `main`, and never add a script or workflow
    that works around the guard.
 2. **Verifications attach to an exact version**, never to a paper or sketch.
 3. **Assistance axes and signals are never merged.** Writing (W0 to W3) and analysis

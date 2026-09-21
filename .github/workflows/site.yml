@@ -46,13 +46,15 @@ jobs:
       - name: Validate both archives
         run: .venv/bin/garleak-archive validate ../archive ../archive-example
 
+      # The guard protects real records. archive-example is invented fixture data that is
+      # regenerated when the example changes, so it is checked by validate, not by the guard.
       - name: Immutability guard against the base branch
         if: github.event_name == 'pull_request'
-        run: .venv/bin/garleak-archive guard --base "origin/${{ github.base_ref }}" ../archive ../archive-example
+        run: .venv/bin/garleak-archive guard --base "origin/${{ github.base_ref }}" ../archive
 
       - name: Immutability guard against the previous commit
         if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
-        run: .venv/bin/garleak-archive guard --base "${{ github.event.before }}" ../archive ../archive-example
+        run: .venv/bin/garleak-archive guard --base "${{ github.event.before }}" ../archive
 
       - name: Tests
         run: .venv/bin/pytest -q

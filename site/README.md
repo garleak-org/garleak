@@ -25,7 +25,7 @@ Use the venv in this directory, not a shared one.
 ```sh
 .venv/bin/pytest                                             # all tests
 .venv/bin/garleak-archive validate ../archive ../archive-example
-.venv/bin/garleak-archive guard --base origin/main ../archive ../archive-example
+.venv/bin/garleak-archive guard --base origin/main ../archive
 .venv/bin/garleak-archive hash ../archive-example/papers/4471/v1.0
 
 .venv/bin/garleak-site build --out _site                     # build the site
