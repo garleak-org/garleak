@@ -1,14 +1,14 @@
-name: Submit a scratch
+name: Submit a sketch
 description: Post an idea, an observation or a fragment. It is checked for novelty, never for correctness.
-title: "Scratch"
-labels: ["intake:scratch"]
+title: "Sketch"
+labels: ["intake:sketch"]
 body:
   - type: markdown
     attributes:
       value: |
-        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and everything you enter here are public from the moment you open it, and the scratch carries your handle. See [who can see what](https://garleak.org/submit/#identity).
+        **Your GitHub handle is public.** In Phase 1 this issue, your GitHub account and everything you enter here are public from the moment you open it, and the sketch carries your handle. See [who can see what](https://garleak.org/submit/#identity).
 
-        A scratch costs 1.5 credits in its field. It merges on its own once the automated checks pass, and a moderator may remove it later if it fails the [admission criteria](https://garleak.org/moderation/#criteria). Admission is not endorsement. Gated categories are not accepted in Phase 1.
+        A sketch costs 1.5 credits in its field. It merges on its own once the automated checks pass, and a moderator may remove it later if it fails the [admission criteria](https://garleak.org/moderation/#criteria). Admission is not endorsement. Gated categories are not accepted in Phase 1.
   - type: dropdown
     id: category
     attributes:
@@ -74,9 +74,9 @@ body:
     id: analysis
     attributes:
       label: Analysis (declared)
-      description: Choose "No analysis" when the scratch states an idea with no calculation, code or derivation behind it. It is shown as no analysis, never as A0.
+      description: Choose "No analysis" when the sketch states an idea with no calculation, code or derivation behind it. It is shown as no analysis, never as A0.
       options:
-        - No analysis in this scratch
+        - No analysis in this sketch
         - "A0: a human did the analysis"
         - "A1: a model assisted, and a human checked it"
         - "A2: a model did the analysis"
@@ -100,5 +100,5 @@ body:
       options:
         - label: This is my own work and my own model output.
           required: true
-        - label: I understand that this issue and the scratch are public, with my GitHub handle.
+        - label: I understand that this issue and the sketch are public, with my GitHub handle.
           required: true

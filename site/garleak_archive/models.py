@@ -330,7 +330,7 @@ class Claim:
 
 
 @dataclass
-class Scratch:
+class Sketch:
     number: int
     path: Path
     category: str
@@ -355,11 +355,11 @@ class Scratch:
 
     @property
     def id(self) -> Identifier:
-        return Identifier("scratch", self.number)
+        return Identifier("sketch", self.number)
 
     @property
     def exact_id(self) -> Identifier:
-        return Identifier("scratch", self.number, 1, 0)
+        return Identifier("sketch", self.number, 1, 0)
 
 
 @dataclass
@@ -371,7 +371,7 @@ class ScreeningRecord:
     decision: str  # reject
     criterion: int
     date: dt.date
-    object: str  # paper | scratch
+    object: str  # paper | sketch
     category: str
     submitter: str
     path: Path | None = None
@@ -385,7 +385,7 @@ class Archive:
     name: str = "Garleak archive"
     example: bool = False
     as_of: dt.date | None = None
-    new_listing_days: int = 7
+    recent_count: int = 50
     config_version: str = "0.1"
     spec_version: str = "0.2"
     threshold: int = 5
@@ -393,7 +393,7 @@ class Archive:
     categories: dict[str, Category] = field(default_factory=dict)
     accounts: dict[str, Account] = field(default_factory=dict)
     papers: dict[int, Paper] = field(default_factory=dict)
-    scratches: dict[int, Scratch] = field(default_factory=dict)
+    sketches: dict[int, Sketch] = field(default_factory=dict)
     rubrics: RubricSet = field(default_factory=lambda: RubricSet([]))
     issues: list[Issue] = field(default_factory=list)
     config: dict | None = None  # config.yaml, the versioned instrument configuration (SPEC §10.4)

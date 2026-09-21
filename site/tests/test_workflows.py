@@ -112,7 +112,7 @@ def test_codeowners():
     assert owners["/archive/papers/"] == ["@garleak-org/moderators"]
     assert owners["/archive/accounts/"] == ["@garleak-org/moderators"]
     assert owners["/archive/papers/*/verifications/"] == [] and owners["/archive/papers/*/signals/"] == []
-    assert "/archive/scratches/" not in owners  # scratches merge on the automated checks
+    assert "/archive/sketches/" not in owners  # sketches merge on the automated checks
 
 
 @pytest.mark.skipif(shutil.which("actionlint") is None, reason="actionlint is not installed")

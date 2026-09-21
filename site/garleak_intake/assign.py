@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Identifier assignment.
 
-Paper and scratch numbers are separate sequences of positive integers, never reused
+Paper and sketch numbers are separate sequences of positive integers, never reused
 (SPEC §2.3.1). A number proposed in an open pull request is reserved, so two open requests
 never propose the same number. If one still collides at merge time (two runs at once), the
 collision check in `gitcheck` stops the merge and the sync workflow reprocesses the later

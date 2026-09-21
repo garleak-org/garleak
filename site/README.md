@@ -50,14 +50,14 @@ the paths to the two archives, the tokens and SPEC.md).
 |---|---|
 | `/` | What Garleak is and is not, the category tree with counts or invitations |
 | `/list/<cat>/new/`, `/list/<cat>/<yyyy-mm>/` | Paper listings, new papers and new versions |
-| `/scratch/list/<cat>/new/`, `/scratch/list/<cat>/<yyyy-mm>/` | Scratch listings |
+| `/sketch/list/<cat>/new/`, `/sketch/list/<cat>/<yyyy-mm>/` | Sketch listings |
 | `/abs/<n>/`, `/abs/<n>v<M>/`, `/abs/<n>v<M>.<m>/` | A paper: current, series and exact versions |
 | `/abs/paper:<id>/` | Redirects for the identifier form SPEC.md prints in citations |
 | `/diff/<n>/<a>..<b>/` | A word diff for every pair of visible versions |
 | `/text/<n>v<M>.<m>/`, `/src/<n>v<M>.<m>/`, `/pdf/<n>v<M>.<m>.pdf` | Full text, source files, stamped PDF |
-| `/scratch/<n>/` | A scratch, with `/scratch/<n>v1.0/` redirecting to it |
+| `/sketch/<n>/` | A sketch, with `/sketch/<n>v1.0/` redirecting to it |
 | `/stages/`, `/about/`, `/spec/`, `/verify/`, `/submit/`, `/citecheck/`, `/terms/`, `/moderation/`, `/search/`, `/graduated/` | Content pages |
-| `/list/<cat>/feed.xml`, `/scratch/list/<cat>/feed.xml` | Atom feeds, real archive only |
+| `/list/<cat>/feed.xml`, `/sketch/list/<cat>/feed.xml` | Atom feeds, real archive only |
 | `/sitemap.xml`, `/robots.txt`, `/404.html`, `/CNAME` | |
 | `/example/...` | The example archive, with a banner and `noindex, nofollow` on every page |
 

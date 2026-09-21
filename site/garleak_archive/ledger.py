@@ -27,7 +27,7 @@ from .models import Archive, NoveltyCheck, Verification
 from .stages import contributors
 
 EARN_KINDS = ("earn_verification", "earn_novelty", "earn_fix", "earn_moderation", "earn_promotion")
-SPEND_KINDS = ("spend_paper", "spend_scratch")
+SPEND_KINDS = ("spend_paper", "spend_sketch")
 
 
 class LedgerError(RuntimeError):
@@ -79,7 +79,7 @@ class Pending:
     """A submission or record in an open pull request that is not merged yet. The intake
     check counts it so that several open requests cannot overdraw a balance or a quota."""
 
-    kind: str  # paper | scratch | version | verification | novelty | claim | contest | vote | identity
+    kind: str  # paper | sketch | version | verification | novelty | claim | contest | vote | identity
     account: str
     field: str | None
     date: dt.date
@@ -138,7 +138,7 @@ def events(archive: Archive, pending: Iterable[Pending] = ()) -> list[CreditEven
                 n = int(p.promoted_from.split(":", 1)[1].split("v", 1)[0])
             except (IndexError, ValueError):
                 n = None
-            s = archive.scratches.get(n) if n else None
+            s = archive.sketches.get(n) if n else None
             if s and is_human(archive, s.author):
                 add("earn_promotion", s.author, fld, earn["promotion"], ref, p.created)
                 if p.status == "removed":
@@ -170,17 +170,17 @@ def events(archive: Archive, pending: Iterable[Pending] = ()) -> list[CreditEven
                 reverse("earn_fix", fx.author, fld, earn["merged_fix"], fref, ver.date,
                         f"reciprocal loop of length {labels[fref].length}, earns nothing (§5.6.3)")
 
-    for s in archive.scratches.values():
+    for s in archive.sketches.values():
         fld = archive.field_of(s.category)
         if fld is None:
             continue
-        ref = f"scratch:{s.number}"
+        ref = f"sketch:{s.number}"
         who = responsible(archive, s.author)
-        add("spend_scratch", who, fld, -spend["scratch"], ref, s.date)
+        add("spend_sketch", who, fld, -spend["sketch"], ref, s.date)
         crit = _criterion(s.removal)
         if s.status == "removed" and crit not in no_refund:
             when = dt.date.fromisoformat(str(s.removal["date"])[:10]) if s.removal else s.date
-            reverse("spend_scratch", who, fld, -spend["scratch"], ref, when,
+            reverse("spend_sketch", who, fld, -spend["sketch"], ref, when,
                     f"removed under criterion {crit}, refunded (§5.4.5)")
         for ch in s.checks:
             if not is_human(archive, ch.checker):
@@ -208,7 +208,7 @@ def events(archive: Archive, pending: Iterable[Pending] = ()) -> list[CreditEven
             add("earn_moderation", r.moderator, fld, earn["moderation"], f"screening:{r.id}", r.date)
 
     for i, pd in enumerate(pending):
-        if pd.spend and pd.field and pd.kind in ("paper", "scratch"):
+        if pd.spend and pd.field and pd.kind in ("paper", "sketch"):
             add(f"spend_{pd.kind}", responsible(archive, pd.account), pd.field, -pd.spend,
                 f"pending:{pd.issue or i}", pd.date, reason="open pull request, not merged yet")
     return out
@@ -300,7 +300,7 @@ def graph_actions(archive: Archive) -> list[Action]:
             merger, author = responsible(archive, ver.submitted_by), responsible(archive, fx.author)
             if merger != author:
                 acts.append(Action(f"fix:{p.number}-{fx.id}", merger, author, ver.date))
-    for s in archive.scratches.values():
+    for s in archive.sketches.values():
         author = responsible(archive, s.author)
         for ch in s.checks:
             frm = responsible(archive, ch.checker)
@@ -390,7 +390,7 @@ def apply_loop_labels(archive: Archive) -> dict[str, LoopLabel]:
             lab = labels.get(f"verification:{v.id}")
             if lab and v.loop_label is None:
                 v.loop_label = lab.as_record()
-    for s in archive.scratches.values():
+    for s in archive.sketches.values():
         for ch in s.checks:
             lab = labels.get(f"novelty:{ch.id}")
             if lab and ch.loop_label is None:
@@ -422,7 +422,7 @@ def standing(archive: Archive, handle: str, field: str, today: dt.date) -> int |
                 o += 1
             elif v.status == "active" and not v.loop_label and today - v.date >= age:
                 s += 1
-    for sc in archive.scratches.values():
+    for sc in archive.sketches.values():
         if archive.field_of(sc.category) != field:
             continue
         for ch in sc.checks:
@@ -446,14 +446,14 @@ def has_field_standing(archive: Archive, handle: str, field: str, today: dt.date
 @dataclass
 class Counts:
     papers: int = 0
-    scratches: int = 0
+    sketches: int = 0
     verifications: int = 0
     novelty_checks: int = 0
 
 
 def daily_counts(archive: Archive, handles: Iterable[str], day: dt.date,
                  pending: Iterable[Pending] = ()) -> Counts:
-    """How many papers and scratches the accounts submitted, and how many verifications
+    """How many papers and sketches the accounts submitted, and how many verifications
     and novelty checks they recorded, on one UTC day. Rejections that keep their charge
     count as submissions, and so do open pull requests."""
     hs = set(handles)
@@ -462,22 +462,22 @@ def daily_counts(archive: Archive, handles: Iterable[str], day: dt.date,
         if p.submitter in hs and p.created == day:
             c.papers += 1
         c.verifications += sum(1 for v in p.verifications if v.verifier in hs and v.date == day)
-    for s in archive.scratches.values():
+    for s in archive.sketches.values():
         if s.author in hs and s.date == day:
-            c.scratches += 1
+            c.sketches += 1
         c.novelty_checks += sum(1 for ch in s.checks if ch.checker in hs and ch.date == day)
     for r in archive.screening:
         if r.submitter in hs and r.date == day:
             if r.object == "paper":
                 c.papers += 1
             else:
-                c.scratches += 1
+                c.sketches += 1
     for pd in pending:
         if pd.account in hs and pd.date == day:
             if pd.kind == "paper":
                 c.papers += 1
-            elif pd.kind == "scratch":
-                c.scratches += 1
+            elif pd.kind == "sketch":
+                c.sketches += 1
             elif pd.kind == "verification":
                 c.verifications += 1
             elif pd.kind == "novelty":
@@ -510,7 +510,7 @@ def recent_records(archive: Archive, handle: str, now: dt.datetime, minutes: int
     stamps = []
     for p in archive.papers.values():
         stamps += [parse_at((v.intake or {}).get("at")) for v in p.verifications if v.verifier == handle]
-    for s in archive.scratches.values():
+    for s in archive.sketches.values():
         stamps += [parse_at((ch.intake or {}).get("at")) for ch in s.checks if ch.checker == handle]
     stamps += [pd.at for pd in pending if pd.account == handle and pd.kind in ("verification", "novelty")]
     for t in stamps:

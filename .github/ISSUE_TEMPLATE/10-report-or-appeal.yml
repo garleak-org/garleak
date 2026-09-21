@@ -22,7 +22,7 @@ body:
     id: subject
     attributes:
       label: What it is about
-      description: An identifier such as paper:12 or scratch:8, or the issue or pull request number of the decision.
+      description: An identifier such as paper:12 or sketch:8, or the issue or pull request number of the decision.
     validations:
       required: true
   - type: dropdown

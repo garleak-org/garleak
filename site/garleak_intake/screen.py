@@ -78,8 +78,8 @@ def paper_corpus(archive: Archive, exclude: int | None = None) -> list[tuple[str
     return out
 
 
-def scratch_corpus(archive: Archive) -> list[tuple[str, str]]:
-    return [(f"scratch:{s.number}", f"{s.statement}\n{s.detail}") for s in archive.scratches.values()]
+def sketch_corpus(archive: Archive) -> list[tuple[str, str]]:
+    return [(f"sketch:{s.number}", f"{s.statement}\n{s.detail}") for s in archive.sketches.values()]
 
 
 def _last_prose_line(body: str) -> str:
@@ -120,14 +120,14 @@ def paper_flags(title: str, abstract: str, body: str, cfg: dict) -> list[str]:
     return out
 
 
-def scratch_flags(statement: str, detail: str, cfg: dict) -> list[str]:
+def sketch_flags(statement: str, detail: str, cfg: dict) -> list[str]:
     sc = cfg["screening"]
     out = []
     n = len(tokens(statement))
-    if n < sc["min_scratch_statement_words"]:
-        out.append(f"the statement has {n} words, fewer than {sc['min_scratch_statement_words']}")
-    if len(statement) > sc["max_scratch_statement_chars"]:
-        out.append(f"the statement is longer than {sc['max_scratch_statement_chars']} characters; "
+    if n < sc["min_sketch_statement_words"]:
+        out.append(f"the statement has {n} words, fewer than {sc['min_sketch_statement_words']}")
+    if len(statement) > sc["max_sketch_statement_chars"]:
+        out.append(f"the statement is longer than {sc['max_sketch_statement_chars']} characters; "
                    "put the rest in the detail")
     if TEST_ONLY.match(statement) or PLACEHOLDER.search(statement + " " + detail):
         out.append("it reads like a test post or placeholder")

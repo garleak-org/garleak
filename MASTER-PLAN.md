@@ -38,7 +38,7 @@ where the interesting question is not *did a model write this* but *does it hold
 
 That reframing is the whole project. Everything below follows from it.
 
-**What it is:** an open archive of AI-assisted papers and research scratches, each with a
+**What it is:** an open archive of AI-assisted papers and research sketches, each with a
 declared provenance and a public verification record.
 
 **What it is not:** a preprint server, a journal, peer review, or anonymous.
@@ -52,7 +52,7 @@ a human to make machine-generated research correct.
 ## 2. Name and identity
 
 **Garleak** — `garleak.org`. The frame is leaking an idea without attaching your name to
-it, which matches the pseudonymous scratch stream.
+it, which matches the pseudonymous sketch stream.
 
 Two things the name does not cover, and the copy therefore has to, prominently:
 
@@ -82,7 +82,7 @@ Two object types, each with its own ladder of stages. The submitter chooses the 
 upload; the stage is earned, never chosen.
 
 ```
-SCRATCH                              PAPER
+SKETCH                              PAPER
 N0 posted                            T0 unverified
 N1 no prior work found               T1 citations checked
 N2 prior work found and linked       T2 claims checked
@@ -97,22 +97,22 @@ N3 judged tractable                  T3 partially reproduced
 
 A full write-up with a claim and an argument. Verified for correctness.
 
-### Scratches
+### Sketches
 
 An idea, an observation, a fragment that came out of a conversation with a model. Five
 minutes to post. Verified for **novelty**, not correctness — the question is "has this
 been done," which is a literature question and partly mechanical.
 
-Scratches will probably outnumber papers heavily, and that's fine. A browsable feed of
+Sketches will probably outnumber papers heavily, and that's fine. A browsable feed of
 plausible, not-previously-done, unclaimed ideas is genuinely useful to a graduate student
 and exists nowhere else.
 
-**Promotion:** a scratch that someone tests becomes a paper — a new object with a permanent
-backlink crediting the scratch's author. This is the mechanic that makes posting an idea
+**Promotion:** a sketch that someone tests becomes a paper — a new object with a permanent
+backlink crediting the sketch's author. This is the mechanic that makes posting an idea
 worthwhile rather than a giveaway.
 
 The two streams are completely separate: different listings, different identifiers,
-different visual treatment, different credit costs. A scratch must never be citable in a way
+different visual treatment, different credit costs. A sketch must never be citable in a way
 that implies a result.
 
 ---
@@ -154,7 +154,7 @@ mathematics (proof checks line by line), empirical and medical (studies exist an
 what is claimed), law (cases and statutes exist and are still good law), humanities
 (quotations and sources exist and say what is claimed).
 
-### 5b. Novelty stage — scratches
+### 5b. Novelty stage — sketches
 
 | Tier | Meaning |
 |------|---------|
@@ -163,7 +163,7 @@ what is claimed), law (cases and statutes exist and are still good law), humanit
 | N2 | Prior work found and linked. **Informative, not a failure.** Display it neutrally or nobody will post. |
 | N3 | Someone judged it tractable and said what testing it would take |
 
-T3 and T4 have no meaning for a scratch. Don't fake them.
+T3 and T4 have no meaning for a sketch. Don't fake them.
 
 ### 5c. Assistance: two axes, three signals each
 
@@ -221,7 +221,7 @@ Generation is free, so unlimited submission drowns the archive in week one. Veri
 is the scarce resource and nobody volunteers. One mechanic solves both.
 
 - Verifying earns credits, submitting spends them. Opening ratio: **2 verifications per
-  paper**, tighter for scratches. Tuned from real throughput, set in config.
+  paper**, tighter for sketches. Tuned from real throughput, set in config.
 - A merged fix earns more than a verification. It is harder work.
 - **Credits are field-scoped.** Global pools get farmed in the easy fields and spent in
   the hard ones.
@@ -285,7 +285,7 @@ gap visible on featured papers.
 
 ## 9. Screening
 
-Everything is read before or shortly after it goes public — papers and scratches alike.
+Everything is read before or shortly after it goes public — papers and sketches alike.
 The scope of that reading is narrow and fixed.
 
 ### What screening checks
@@ -306,7 +306,7 @@ an argument you own forever.
 
 - **Papers**: screened *before* public visibility. They carry weight, get cited, and can
   graduate.
-- **Scratches**: published immediately, removed post-hoc if they fail. Low-stakes by
+- **Sketches**: published immediately, removed post-hoc if they fail. Low-stakes by
   construction, and pre-screening them is where the volume problem bites hardest.
 - **Anything in a gated category**: held for human review regardless of type. No
   exceptions.
@@ -316,7 +316,7 @@ an argument you own forever.
 
 This is the most likely way the project dies — not from lack of interest, but from the
 founder screening submissions every evening for eight months. Submission is free and a
-scratch takes five minutes to write, so success means hundreds a week.
+sketch takes five minutes to write, so success means hundreds a week.
 
 **Automate the entire first pass.** A human sees only what is flagged, plus a random
 sample for calibration:
@@ -381,7 +381,7 @@ Static, free, and boring. Contributors are academics, not platform engineers, an
 static site has no server to patch, no database to back up, and no monthly bill. The
 decision and its trade-offs are recorded in `rfcs/0001-static-architecture.md`.
 
-**The repository is the database.** Papers, scratches, versions, verifications, and
+**The repository is the database.** Papers, sketches, versions, verifications, and
 screening decisions are YAML and Markdown records under `archive/`, in the format
 documented in `archive/FORMAT.md`. Git history is the audit trail. v1 is guarded by a
 content hash that CI checks on every pull request.
@@ -394,7 +394,7 @@ with the pages. GitHub Actions builds the site and deploys it to GitHub Pages at
 
 **Phase 1 submission and verification go through GitHub issue forms.** An Actions
 workflow turns each form into a pull request. Screening a paper is reviewing and merging
-that pull request. A scratch merges automatically once the automated checks pass.
+that pull request. A sketch merges automatically once the automated checks pass.
 
 **Phase 1 identity is a GitHub account plus an ORCID link.** The link is verified by
 checking that the person's public ORCID record lists their GitHub profile URL, through
@@ -403,7 +403,7 @@ an institutional email by hand through the contact address.
 
 **The trade-off, stated plainly.** In Phase 1 GitHub handles are public, and so is the
 ORCID record that links a handle to a name. That weakens "We know who you are. Nobody
-else does" for pseudonymous scratches, and the copy has to say so. Only an account
+else does" for pseudonymous sketches, and the copy has to say so. Only an account
 verified by institutional email keeps its identity out of public view. Issues are also
 public from the moment they are opened, so a paper is visible on GitHub before it is
 screened, even though the site shows it only after merge. Gated submissions should not
@@ -420,7 +420,7 @@ that GitHub handles are public until then.
 holds files and mints DOIs for Graduated versions later, a version DOI plus a concept
 DOI that resolves to the latest.
 
-Identifiers: `scratch:4471` resolves to canonical, `scratch:4471v3` to a specific
+Identifiers: `sketch:4471` resolves to canonical, `sketch:4471v3` to a specific
 version. Nothing ever 404s.
 
 Repo: `site/`, `archive/`, `archive-example/`, `services/citecheck`, `packages/rubrics`,
@@ -463,14 +463,14 @@ Detail in `BUILD-PLAN.md`, rewritten on 2026-09-14 for the static architecture.
 | S3 | Verification through issue forms, rubric items, anti-gaming, standing | |
 | S4 | Stamped PDFs, diff pages, digests and feeds | |
 | S5 | citecheck, released as `garleak-citecheck` | Parallelizable. Release standalone early. |
-| S6 | Fixes, scratch promotion, graduation, moderator queue, features, leaderboard | Never ship the leaderboard before S3's anti-gaming. |
+| S6 | Fixes, sketch promotion, graduation, moderator queue, features, leaderboard | Never ship the leaderboard before S3's anti-gaming. |
 | S7 | Zenodo DOIs, dataset export, final terms, seeding | |
 
 ---
 
 ## 14. Launch
 
-**Seed before opening.** 50 papers and 50 scratches across three fields, verified by hand.
+**Seed before opening.** 50 papers and 50 sketches across three fields, verified by hand.
 An archive that launches empty stays empty. Physics, CS, and mathematics first — they
 verify cheaply and semi-mechanically, which gets you a live leaderboard fast. Other
 fields are open from day one but will stay thin, and that's fine. Hide any category below
@@ -495,8 +495,8 @@ Signup line, stated plainly so the credit requirement never feels like a bait:
 > Every paper here says which model wrote it and who checked it. Post yours, check two
 > others.
 
-On the scratch submission page, defuse the scooping fear directly: the timestamp is a
-public, permanent precedence record with your name on it, and promoting a scratch into a
+On the sketch submission page, defuse the scooping fear directly: the timestamp is a
+public, permanent precedence record with your name on it, and promoting a sketch into a
 paper credits its author by enforced backlink. Without both, you get only the ideas people
 don't care about.
 

@@ -9,7 +9,7 @@
   <h1>Verify</h1>
   <p>Garleak needs its first five verifiers. Write to <a href="mailto:{{ cfg.contact }}">{{ cfg.contact }}</a> with your name, your field and your ORCID iD.</p>
   <p>A verification checks one exact version against one rubric: <a href="{{ R }}citations/v1.0.0.yaml">citations 1.0.0</a> for T1, and <a href="{{ R }}computational/v1.0.0.yaml">computational 1.0.0</a> or <a href="{{ R }}mathematics/v1.0.0.yaml">mathematics 1.0.0</a> for T2 to T4. Each earns 1 credit, pass or fail.</p>
-  <p class="small">Forms, at launch: <a href="{{ G }}5-verify-paper.yml">verify a paper</a> | <a href="{{ G }}6-novelty-check.yml">check a scratch</a></p>
+  <p class="small">Forms: <a href="{{ G }}5-verify-paper.yml">verify a paper</a> | <a href="{{ G }}6-novelty-check.yml">check a sketch</a></p>
 </div>
 <h2 id="queue">Queue</h2>
 {% else %}
@@ -35,6 +35,6 @@
 {% endfor %}
 </dl>
 {% else %}
-<p>The queue fills when submissions open.</p>
+<p>Nothing is waiting to be checked right now.</p>
 {% endif %}
 {% endblock %}

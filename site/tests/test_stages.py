@@ -4,7 +4,7 @@ a minor version carries them, with reopened items pending."""
 
 from garleak_archive.ids import VersionNumber as VN
 from garleak_archive.loader import load_archive
-from garleak_archive.stages import compute_paper, scratch_stage
+from garleak_archive.stages import compute_paper, sketch_stage
 from garleak_archive.validate import validate
 
 from .conftest import EXAMPLE
@@ -83,9 +83,9 @@ def test_t4_needs_a_recorded_independent_verifier(maker):
     assert compute_paper(a.papers[5], a.rubrics)[VN(1, 0)].tier == "T3"
 
 
-def test_scratch_stages():
+def test_sketch_stages():
     a = load_archive(EXAMPLE)
-    assert scratch_stage(a.scratches[8813]) == ("N0", "")
-    assert scratch_stage(a.scratches[8812])[0] == "N1"
-    assert scratch_stage(a.scratches[8815])[0] == "N2"
-    assert scratch_stage(a.scratches[8816]) == ("N3", "no prior work found")
+    assert sketch_stage(a.sketches[8813]) == ("N0", "")
+    assert sketch_stage(a.sketches[8812])[0] == "N1"
+    assert sketch_stage(a.sketches[8815])[0] == "N2"
+    assert sketch_stage(a.sketches[8816]) == ("N3", "no prior work found")

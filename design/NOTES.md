@@ -36,7 +36,7 @@ On `--gold-pale`, bronze drops to 4.03:1 and ink-soft to 4.14:1, both under AA. 
 
 The DESIGN.md row mockups use all-caps type labels (`PAPER`) and middle-dot meta strings,
 both of which the same document lists as tells to avoid. The prototype uses sentence-case
-"Paper" and "Scratch" in small sans, and separates metadata by spacing alone.
+"Paper" and "Sketch" in small sans, and separates metadata by spacing alone.
 
 ## 4. Row layout
 

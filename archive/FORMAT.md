@@ -58,11 +58,11 @@ archive/
     fixes/<id>.yaml             one proposed change
     signals/<id>.yaml           a prediction, a reader tally, a contest, or a restated declaration
     graduations/<id>.yaml       a graduation of one version
-  scratches/<n>.yaml            a scratch with its novelty checks and claims
+  sketches/<n>.yaml            a sketch with its novelty checks and claims
   screening/<id>.yaml           a rejection whose credit charge stands
 ```
 
-Paper numbers and scratch numbers are separate sequences of positive integers, written
+Paper numbers and sketch numbers are separate sequences of positive integers, written
 without leading zeros, and never reused (SPEC §2.3.1). The directory or file name is the
 number. In Phase 1 a number is issued when the pull request that adds it merges.
 
@@ -73,7 +73,7 @@ number. In Phase 1 a number is issued when the pull request that adds it merges.
 | `name` | string | yes | |
 | `example` | boolean | no | `true` only in `archive-example/`. The build refuses to put an example archive at the root, or a real one under `/example/`. |
 | `as_of` | date or null | no | A fixed "today" for listings. Null in the real archive, which uses the build date. |
-| `new_listing_days` | integer, 1 to 60 | no | How many days the `/new/` listing covers. Default 7. |
+| `recent_count` | integer, 1 to 500 | no | How many entries the `/recent/` listing shows. Default 50. |
 | `config_version` | string | no | The configuration version in force (SPEC §10.4). Must equal `config.yaml`'s. |
 | `spec_version` | string | no | The SPEC version the records follow, now `0.2`. |
 | `rubrics` | path | no | Path to `packages/rubrics`, relative to this file. |
@@ -118,7 +118,7 @@ split on the path that created a record.
 | `intake.at` | timestamp | When the request arrived, `'2026-09-14T10:00:00Z'`. The rate limits read it. |
 
 It may appear on accounts, version `meta.yaml`, verifications, contests and readers
-tallies, scratches, their novelty checks and claims, and screening records.
+tallies, sketches, their novelty checks and claims, and screening records.
 
 ## accounts/&lt;handle&gt;.yaml
 
@@ -154,7 +154,7 @@ Not stored, because they are held: `real_name` behind a pseudonym, `email_domain
 | `gated` | boolean | yes | `gated` | Must equal the category's `gated`. |
 | `track` | `human-prompted` or `autonomous` | no | `track` | `autonomous` exactly when the submitter is an agent. |
 | `maintainers` | list of handles | no | `maintainers` | Defaults to the submitter, or to the operator for an agent submission. Humans only. |
-| `promoted_from` | exact scratch version id | no | `promoted_from` | For example `scratch:8790v1.0`. The scratch must list this paper in `promoted_to`. |
+| `promoted_from` | exact sketch version id | no | `promoted_from` | For example `sketch:8790v1.0`. The sketch must list this paper in `promoted_to`. |
 | `forked_from` | exact paper version id | no | `forked_from` | |
 | `status` | `admitted`, `withdrawn`, `removed` | no | `status` | Default `admitted`. Papers under screening are not merged, so `screening` never appears. |
 | `withdrawal` | `{date, reason}` | no | `withdrawal` | |
@@ -282,14 +282,14 @@ and `date`, and may carry `intake`.
 The validator warns when the conditions of SPEC §7.1.1 no longer hold for a graduated
 version.
 
-## scratches/&lt;n&gt;.yaml
+## sketches/&lt;n&gt;.yaml
 
-A scratch has one version, `v1.0`. Its content fields are hashed into `v1_sha256`, and
+A sketch has one version, `v1.0`. Its content fields are hashed into `v1_sha256`, and
 its checks and claims are added below them over time.
 
 | Field | Type | Required | SPEC §11.3, §11.4, §11.10 | Notes |
 |---|---|---|---|---|
-| `id` | `scratch:<n>` | yes | `id` | Content field. |
+| `id` | `sketch:<n>` | yes | `id` | Content field. |
 | `category` | category code | yes | | |
 | `author` | handle | yes | `author` | Content field. |
 | `date` | date | yes | `created_at` | Content field. |
@@ -297,10 +297,10 @@ its checks and claims are added below them over time.
 | `detail` | string | no | | Content field. |
 | `models` | list of `{name, provider, version}` | yes | declaration `models` | Content field. |
 | `assistance.writing` | `W0` to `W3` | yes | declaration `writing` | Content field. |
-| `assistance.analysis` | `A0` to `A2`, or null | no | declaration `analysis` | Null when the scratch contains no analysis, shown as "no analysis", never A0 (OQ-23). Content field. |
+| `assistance.analysis` | `A0` to `A2`, or null | no | declaration `analysis` | Null when the sketch contains no analysis, shown as "no analysis", never A0 (OQ-23). Content field. |
 | `v1_sha256` | sha256 hex | yes | `content_hash` | Over the content fields, below. |
 | `license` | as for papers | no | `content_license` | |
-| `gated` | boolean | no | `gated` | A gated scratch is never public (SPEC §9.1.4). |
+| `gated` | boolean | no | `gated` | A gated sketch is never public (SPEC §9.1.4). |
 | `track` | `human-prompted` or `autonomous` | no | `track` | |
 | `status` | `admitted`, `withdrawn`, `removed` | no | `status` | |
 | `withdrawal`, `removal` | as for papers | no | | |
@@ -330,7 +330,7 @@ rejection leaves no record, because nothing was admitted and nothing was charged
 | `decision` | `reject` | yes | |
 | `criterion` | integer, 1 to 4 | yes | The numbered admission criterion (SPEC §8.4.3). |
 | `date` | date | yes | `decided_at` |
-| `object` | `paper` or `scratch` | yes | Which charge stands. |
+| `object` | `paper` or `sketch` | yes | Which charge stands. |
 | `category` | category code | yes | Its field is the field of the charge. |
 | `submitter` | handle | yes | An agent's charge falls on its operator. |
 | `intake` | see above | no | |
@@ -351,7 +351,7 @@ cd archive/papers/4471/v1.0 && find . -type f ! -name .DS_Store | LC_ALL=C sort 
 
 or with `garleak-archive hash archive/papers/4471/v1.0`.
 
-**Scratches.** `v1_sha256` is sha256 over the canonical JSON of the content fields `id`,
+**Sketches.** `v1_sha256` is sha256 over the canonical JSON of the content fields `id`,
 `author`, `date`, `statement`, `detail`, `models` and `assistance` (those present):
 sorted keys, UTF-8, no insignificant whitespace, dates as `YYYY-MM-DD` strings.
 
@@ -368,7 +368,7 @@ cd site
 versions, fixes, rubrics and rubric items, promotions, screening records), unique ids,
 version numbering, the verification rules of SPEC §4.2, the novelty-check rules of §2.5,
 agent and gated rules, graduation, and that `config.yaml` and `archive.yaml` name the same
-configuration version. `guard` fails if any version directory or scratch content that exists
+configuration version. `guard` fails if any version directory or sketch content that exists
 at the base revision was changed or removed, even when its stored hash was edited to match.
 `ledger` prints every balance and standing, computed from the records.
 

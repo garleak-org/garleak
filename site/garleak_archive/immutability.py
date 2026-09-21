@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """Git-level immutability guard for CI (SPEC §6.1, CLAUDE.md invariant 1).
 
-The stored hashes (v1_sha256 and version_sha256 in paper.yaml, v1_sha256 in a scratch)
+The stored hashes (v1_sha256 and version_sha256 in paper.yaml, v1_sha256 in a sketch)
 catch accidental edits, but someone could edit a version and its hash together. This
 guard compares the working tree with a base git revision. Every version directory that
 exists at the base must still exist, byte for byte, its stored hash must not change, and
-every scratch's content fields must be unchanged.
+every sketch's content fields must be unchanged.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 
 import yaml
 
-from .hashing import scratch_content_sha256, tree_manifest
+from .hashing import sketch_content_sha256, tree_manifest
 
 VERSION_DIR = re.compile(r"^v[1-9][0-9]*\.(0|[1-9][0-9]*)$")
 
@@ -90,7 +90,7 @@ def guard(archive_root: Path, base_ref: str) -> list[str]:
             if new_hashes.get(key) != value:
                 errors.append(f"{pdir}/paper.yaml changed the stored hash of v{key}")
 
-    for entry in _ls(repo, base_ref, f"{rel}/scratches"):
+    for entry in _ls(repo, base_ref, f"{rel}/sketches"):
         if not entry.endswith(".yaml"):
             continue
         old = _yaml_at(repo, base_ref, entry)
@@ -106,6 +106,6 @@ def guard(archive_root: Path, base_ref: str) -> list[str]:
             continue
         if new.get("v1_sha256") != old.get("v1_sha256"):
             errors.append(f"{entry} changed v1_sha256; it is fixed at admission")
-        if scratch_content_sha256(new) != scratch_content_sha256(old):
-            errors.append(f"{entry} changed a content field of v1.0; a scratch's v1.0 is immutable (§6.1.1)")
+        if sketch_content_sha256(new) != sketch_content_sha256(old):
+            errors.append(f"{entry} changed a content field of v1.0; a sketch's v1.0 is immutable (§6.1.1)")
     return errors

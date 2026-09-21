@@ -14,7 +14,7 @@ from .paths import LABELS_FILE
 # The form a new issue came from. Each issue form applies exactly one of these.
 ROUTING = {
     "identity": "intake:identity",
-    "scratch": "intake:scratch",
+    "sketch": "intake:sketch",
     "paper": "intake:paper",
     "version": "intake:version",
     "verify": "intake:verify",

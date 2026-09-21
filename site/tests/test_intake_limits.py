@@ -34,21 +34,21 @@ def test_paper_quota_counts_open_pull_requests(arch):
     assert "limit is 3" in c.detail and c.criterion == "SPEC §5.6.7 (OQ-12)"
 
 
-def test_agent_and_operator_scratch_quotas(arch):
-    arch.set("credits.spend.scratch", 0.0)
+def test_agent_and_operator_sketch_quotas(arch):
+    arch.set("credits.spend.sketch", 0.0)
     arch.set("credits.agent_balance_floor", -100.0)
     for n in (1, 2, 3):
-        arch.scratch(n, "scout", date=TODAY, statement=f"Agent scratch {n} about the Galactic tide and binaries.")
-    res = run(arch, make_issue("scratch", number=20, author="scout"))
+        arch.sketch(n, "scout", date=TODAY, statement=f"Agent sketch {n} about the Galactic tide and binaries.")
+    res = run(arch, make_issue("sketch", number=20, author="scout"))
     assert "agent limit is 3" in failing(res)["quota"].detail
     for n in (4, 5):
-        arch.scratch(n, "scout2", date=TODAY, statement=f"Second agent scratch {n} about stellar streams today.")
-    arch.scratch(6, "scout2", date="2026-09-13", statement="Yesterday's scratch does not count toward today.")
-    res = run(arch, make_issue("scratch", number=21, author="scout2"), dry_run=True)
+        arch.sketch(n, "scout2", date=TODAY, statement=f"Second agent sketch {n} about stellar streams today.")
+    arch.sketch(6, "scout2", date="2026-09-13", statement="Yesterday's sketch does not count toward today.")
+    res = run(arch, make_issue("sketch", number=21, author="scout2"), dry_run=True)
     assert res.status == "held" and any(c.id == "agent" for c in res.flagged)  # 5 of 6 for the operator
-    pending = open_pr(41, 30, {"kind": "scratch", "ids": ["scratch:7"], "account": "scout", "field": "phys",
+    pending = open_pr(41, 30, {"kind": "sketch", "ids": ["sketch:7"], "account": "scout", "field": "phys",
                                "spend": "0", "date": TODAY})
-    res = run(arch, make_issue("scratch", number=22, author="scout2"), ctx(open_prs=[pending]))
+    res = run(arch, make_issue("sketch", number=22, author="scout2"), ctx(open_prs=[pending]))
     assert "limit per operator is 6" in failing(res)["quota"].detail
 
 
@@ -84,9 +84,9 @@ def test_a_burst_is_flagged_not_blocked(arch):
 
 
 def test_novelty_daily_limit(arch):
-    arch.scratch(1, "alice")
+    arch.sketch(1, "alice")
     for i in range(1, 11):
-        arch.scratch(10 + i, "carol", statement=f"Carol's scratch number {i} about a new idea for tides.")
+        arch.sketch(10 + i, "carol", statement=f"Carol's sketch number {i} about a new idea for tides.")
         arch.check(10 + i, f"{10 + i}-n1", "bob", date=TODAY)
     res = run(arch, make_issue("novelty", number=9, author="bob"))
     assert "limit is 10" in failing(res)["rate"].detail
@@ -95,7 +95,7 @@ def test_novelty_daily_limit(arch):
 # ---------------------------------------------------------------- gated categories
 
 
-@pytest.mark.parametrize("kind", ["scratch", "paper"])
+@pytest.mark.parametrize("kind", ["sketch", "paper"])
 def test_gated_categories_are_refused_in_phase_1(arch, kind):
     res = run(arch, make_issue(kind, answers(kind, category="med.clinical: Clinical research"), number=5))
     c = failing(res)["gated"]
@@ -105,9 +105,9 @@ def test_gated_categories_are_refused_in_phase_1(arch, kind):
 
 def test_the_gated_switch_opens_them_held_for_a_person(arch):
     arch.set("intake.accept_gated", True)
-    res = run(arch, make_issue("scratch", answers("scratch", category="med.clinical: Clinical research"), number=5))
+    res = run(arch, make_issue("sketch", answers("sketch", category="med.clinical: Clinical research"), number=5))
     assert res.status == "held" and not res.automerge and any(c.id == "gated" for c in res.flagged)
-    assert arch.errors() == [] and arch.load().scratches[1].gated is True
+    assert arch.errors() == [] and arch.load().sketches[1].gated is True
 
 
 def test_agents_never_enter_gated_categories(arch):

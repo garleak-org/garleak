@@ -12,7 +12,7 @@ from typing import Any
 import yaml
 
 from . import schema
-from .hashing import scratch_content_sha256
+from .hashing import sketch_content_sha256
 from .ids import IdentifierError, VersionNumber
 from .models import (
     Account,
@@ -31,7 +31,7 @@ from .models import (
     Paper,
     Prediction,
     ReaderTally,
-    Scratch,
+    Sketch,
     ScreeningRecord,
     StatusChange,
     Verification,
@@ -117,7 +117,7 @@ def load_archive(root: Path, rubrics_dir: Path | None = None) -> Archive:
         a.name = cfg.get("name", a.name)
         a.example = bool(cfg.get("example", False))
         a.as_of = _opt_date(cfg.get("as_of"))
-        a.new_listing_days = int(cfg.get("new_listing_days", a.new_listing_days))
+        a.recent_count = int(cfg.get("recent_count", a.recent_count))
         a.config_version = str(cfg.get("config_version", a.config_version))
         a.spec_version = str(cfg.get("spec_version", a.spec_version))
         if cfg.get("rubrics") and rubrics_dir is None:
@@ -133,8 +133,8 @@ def load_archive(root: Path, rubrics_dir: Path | None = None) -> Archive:
         for d in sorted(papers_dir.iterdir(), key=lambda p: p.name):
             if d.is_dir():
                 _load_paper(c, d)
-    for p in sorted((root / "scratches").glob("*.yaml")):
-        _load_scratch(c, p)
+    for p in sorted((root / "sketches").glob("*.yaml")):
+        _load_sketch(c, p)
     for p in sorted((root / "screening").glob("*.yaml")):
         _load_screening(c, p)
     _after_load(c)
@@ -477,17 +477,17 @@ def _load_signal(c: _Ctx, path: Path, p: Paper) -> None:
         p.declarations.append(d)
 
 
-def _load_scratch(c: _Ctx, path: Path) -> None:
-    s = c.read(path, "scratch")
+def _load_sketch(c: _Ctx, path: Path) -> None:
+    s = c.read(path, "sketch")
     if not s:
         return
     if not path.stem.isdigit():
-        c.issue(path, "scratch files are named by number, for example scratches/8812.yaml")
+        c.issue(path, "sketch files are named by number, for example sketches/8812.yaml")
         return
     number = int(path.stem)
-    if s["id"] != f"scratch:{number}":
-        c.issue(path, f"id {s['id']} does not match the file name (scratch:{number})")
-    obj = Scratch(
+    if s["id"] != f"sketch:{number}":
+        c.issue(path, f"id {s['id']} does not match the file name (sketch:{number})")
+    obj = Sketch(
         number=number,
         path=path,
         category=s["category"],
@@ -498,7 +498,7 @@ def _load_scratch(c: _Ctx, path: Path) -> None:
         models=_models(s.get("models")),
         assistance={"writing": s["assistance"]["writing"], "analysis": s["assistance"].get("analysis")},
         v1_sha256=s["v1_sha256"],
-        content_sha256=scratch_content_sha256(s),
+        content_sha256=sketch_content_sha256(s),
         license=s.get("license", "CC-BY-4.0"),
         gated=bool(s.get("gated", False)),
         status=s.get("status", "admitted"),
@@ -531,10 +531,10 @@ def _load_scratch(c: _Ctx, path: Path) -> None:
             )
         )
     obj.checks.sort(key=lambda x: (x.date, x.id))
-    if number in c.a.scratches:
-        c.issue(path, f"scratch number {number} is used twice")
+    if number in c.a.sketches:
+        c.issue(path, f"sketch number {number} is used twice")
         return
-    c.a.scratches[number] = obj
+    c.a.sketches[number] = obj
 
 
 def _load_screening(c: _Ctx, path: Path) -> None:

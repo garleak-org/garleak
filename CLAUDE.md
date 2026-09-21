@@ -1,6 +1,6 @@
 # Guide for coding agents
 
-Garleak is an open archive for AI-assisted papers and research scratches. Each object
+Garleak is an open archive for AI-assisted papers and research sketches. Each object
 has a declared provenance and a public verification record. It is not a journal, a
 preprint server, or peer review.
 
@@ -86,7 +86,7 @@ first, not a code change.
    record stores its content hash, and CI recomputes every hash and fails on any
    mismatch. Never rewrite the history of `main`, and never add a script or workflow
    that works around the guard.
-2. **Verifications attach to an exact version**, never to a paper or scratch.
+2. **Verifications attach to an exact version**, never to a paper or sketch.
 3. **Assistance axes and signals are never merged.** Writing (W0 to W3) and analysis
    (A0 to A2) are separate ordinal axes. Each has three signals (declared, predicted,
    community), stored and displayed separately. No average, no combined score, no single
@@ -102,7 +102,7 @@ first, not a code change.
 8. **Nothing ever 404s for an archive identifier.** An identifier that was issued
    resolves to its page or a tombstone. One that was never issued reaches a page that
    says so and links to what exists.
-9. **Papers and scratches never share a listing**, an identifier space, or a stage
+9. **Papers and sketches never share a listing**, an identifier space, or a stage
    ladder.
 10. **The repository is public.** Nothing that SPEC.md §11 marks restricted (R) or held
     (H) is ever committed. Phase 1 limits on identity are in SPEC.md §3.7, and copy must

@@ -15,7 +15,7 @@ from functools import cached_property
 
 from garleak_archive import assistance as asst
 from garleak_archive.ids import VersionNumber
-from garleak_archive.models import Archive, Paper, Scratch, Verification
+from garleak_archive.models import Archive, Paper, Sketch, Verification
 from garleak_archive.pct import PctResult, po1, rendition
 from garleak_archive.stages import (
     N_NAMES,
@@ -27,9 +27,9 @@ from garleak_archive.stages import (
     graduation_check,
     highest_held,
     relation,
-    scratch_indexable,
-    scratch_stage,
-    scratch_visible,
+    sketch_indexable,
+    sketch_stage,
+    sketch_visible,
     standing,
     version_indexable,
     version_visible,
@@ -124,6 +124,27 @@ class AxisView:
     @property
     def vote_label(self) -> str:
         return ", ".join(f"{c} {self.counts.get(c, 0) or 'none'}" for c in self.codes)
+
+
+LICENSES = [
+    ("CC-BY-4.0", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/",
+     "Anyone may share it and build on it, with credit."),
+    ("CC-BY-SA-4.0", "CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/",
+     "As CC BY, and work built on it carries the same license."),
+    ("CC0-1.0", "CC0 1.0", "https://creativecommons.org/publicdomain/zero/1.0/",
+     "You place it in the public domain and keep no conditions."),
+    ("CC-BY-NC-4.0", "CC BY-NC 4.0", "https://creativecommons.org/licenses/by-nc/4.0/",
+     "Credit required, and no commercial use."),
+]
+_LICENSE = {code: (name, url) for code, name, url, _ in LICENSES}
+
+
+def license_name(code: str) -> str:
+    return _LICENSE.get(code, (code, ""))[0]
+
+
+def license_url(code: str) -> str:
+    return _LICENSE.get(code, ("", ""))[1]
 
 
 def gloss(code: str | None) -> str:
@@ -505,11 +526,11 @@ class PaperView:
 
     @property
     def promoted_from(self):
-        """(identifier, scratch view or None) for a promoted paper."""
+        """(identifier, sketch view or None) for a promoted paper."""
         if not self.p.promoted_from:
             return None
         n = int(self.p.promoted_from.split(":")[1].split("v")[0])
-        return self.p.promoted_from, self.site.scratch_by_n.get(n)
+        return self.p.promoted_from, self.site.sketch_by_n.get(n)
 
     @property
     def pairs(self) -> list[tuple[VersionView, list[VersionView]]]:
@@ -517,15 +538,15 @@ class PaperView:
         return [(a, vis[i + 1:]) for i, a in enumerate(vis[:-1])]
 
 
-# ---------------------------------------------------------------- scratches
+# ---------------------------------------------------------------- sketches
 
 
-class ScratchView:
-    def __init__(self, site: Site, s: Scratch):
+class SketchView:
+    def __init__(self, site: Site, s: Sketch):
         self.site = site
         self.s = s
         self.number = s.number
-        self.stage, self.path = scratch_stage(s)
+        self.stage, self.path = sketch_stage(s)
         self.category = site.a.categories.get(s.category)
 
     @property
@@ -544,19 +565,19 @@ class ScratchView:
 
     @property
     def ident(self) -> str:
-        return f"scratch:{self.number}v1.0"
+        return f"sketch:{self.number}v1.0"
 
     @property
     def url(self) -> str:
-        return self.site.url(f"/scratch/{self.number}/")
+        return self.site.url(f"/sketch/{self.number}/")
 
     @property
     def visible(self) -> bool:
-        return scratch_visible(self.s)
+        return sketch_visible(self.s)
 
     @property
     def indexable(self) -> bool:
-        return scratch_indexable(self.s) and not self.site.example
+        return sketch_indexable(self.s) and not self.site.example
 
     @property
     def listed(self) -> bool:
@@ -647,12 +668,12 @@ class Site:
         self.base_url = config["site_url"].rstrip("/")
         self._people: dict[str, Person] = {}
         self._standing: dict[tuple[str, str], int] = {}
-        self.scratch_by_n: dict[int, ScratchView] = {}
+        self.sketch_by_n: dict[int, SketchView] = {}
         self.papers = [PaperView(self, p) for p in sorted(archive.papers.values(), key=lambda p: p.number)]
         self.paper_by_n = {pv.number: pv for pv in self.papers}
-        self.scratches = [ScratchView(self, s) for s in sorted(archive.scratches.values(), key=lambda s: s.number)]
-        self.scratch_by_n.update({sv.number: sv for sv in self.scratches})
-        self.window_start = today - dt.timedelta(days=archive.new_listing_days - 1)
+        self.sketches = [SketchView(self, s) for s in sorted(archive.sketches.values(), key=lambda s: s.number)]
+        self.sketch_by_n.update({sv.number: sv for sv in self.sketches})
+        self.recent_count = archive.recent_count
 
     # urls
     def url(self, path: str) -> str:
@@ -686,23 +707,26 @@ class Site:
     def cat_papers(self, code: str) -> list[PaperView]:
         return [pv for pv in self.papers if pv.p.category == code and pv.listed]
 
-    def cat_scratches(self, code: str) -> list[ScratchView]:
-        return [sv for sv in self.scratches if sv.s.category == code and sv.listed]
+    def cat_sketches(self, code: str) -> list[SketchView]:
+        return [sv for sv in self.sketches if sv.s.category == code and sv.listed]
 
     def cat_count(self, code: str) -> int:
-        return len(self.cat_papers(code)) + len(self.cat_scratches(code))
+        return len(self.cat_papers(code)) + len(self.cat_sketches(code))
 
     def shown(self, code: str) -> bool:
         """At or above the visibility threshold, a category shows counts, else an invitation."""
         cat = self.a.categories[code]
         return self.cat_count(code) >= cat.threshold
 
-    def in_window(self, d: dt.date) -> bool:
-        return self.window_start <= d <= self.today
-
     # paper listings
-    def paper_new(self, code: str) -> Listing:
-        out = Listing()
+    def paper_recent(self, code: str) -> Listing:
+        """The newest entries in a category, capped at recent_count.
+
+        A submission and a later version are separate events. A paper appears once, filed
+        by its newest event, so a paper revised since it was submitted lists as a new
+        version rather than a new paper.
+        """
+        events = []
         for pv in self.papers:
             if not pv.listed:
                 continue
@@ -710,13 +734,22 @@ class Site:
             cur = pv.as_of(self.today)
             if cur is None:
                 continue
-            if self.in_window(v1.date):
-                if pv.p.category == code:
-                    out.new.append(cur)
-                elif code in pv.p.cross_list:
-                    out.cross.append(cur)
-            elif pv.p.category == code and self.in_window(cur.v.date):
-                out.versions.append(cur)
+            if pv.p.category == code:
+                events.append((v1.date, pv.number, "new", cur))
+                if cur.v.date != v1.date:
+                    events.append((cur.v.date, pv.number, "versions", cur))
+            elif code in pv.p.cross_list:
+                events.append((v1.date, pv.number, "cross", cur))
+        events.sort(key=lambda e: (e[0], e[1]), reverse=True)
+        order, picked = [], {}
+        for _, number, bucket, view in events[: self.recent_count]:
+            if number not in picked:
+                order.append(number)
+                picked[number] = (bucket, view)
+        out = Listing()
+        for number in order:
+            bucket, view = picked[number]
+            getattr(out, bucket).append(view)
         return out
 
     def paper_month(self, code: str, ym: str) -> Listing:
@@ -740,7 +773,7 @@ class Site:
 
     def months(self, code: str) -> list[str]:
         dates = [v.date for pv in self.papers if pv.p.category == code or code in pv.p.cross_list for v in pv.p.versions]
-        dates += [sv.s.date for sv in self.scratches if sv.s.category == code]
+        dates += [sv.s.date for sv in self.sketches if sv.s.category == code]
         now = month_key(self.today)
         if not dates:
             return [now]
@@ -751,12 +784,13 @@ class Site:
             y, m = (y + 1, 1) if m == 12 else (y, m + 1)
         return list(reversed(out))
 
-    # scratch listings
-    def scratch_new(self, code: str) -> Listing:
-        return Listing(new=[sv for sv in self.cat_scratches(code) if self.in_window(sv.s.date)])
+    # sketch listings
+    def sketch_recent(self, code: str) -> Listing:
+        rows = sorted(self.cat_sketches(code), key=lambda sv: (sv.s.date, sv.number), reverse=True)
+        return Listing(new=rows[: self.recent_count])
 
-    def scratch_month(self, code: str, ym: str) -> Listing:
-        return Listing(new=[sv for sv in self.cat_scratches(code) if month_key(sv.s.date) == ym])
+    def sketch_month(self, code: str, ym: str) -> Listing:
+        return Listing(new=[sv for sv in self.cat_sketches(code) if month_key(sv.s.date) == ym])
 
     # other lists
     @property
@@ -787,7 +821,7 @@ class Site:
             else:
                 continue
             out.append((v, need))
-        for sv in self.scratches:
+        for sv in self.sketches:
             if sv.listed and sv.stage == "N0":
                 out.append((sv, "Needs a novelty check"))
         return sorted(out, key=lambda x: (getattr(x[0], "tier_index", getattr(x[0], "stage_index", 0)), -x[0].pv.number if hasattr(x[0], "pv") else -x[0].number))
@@ -796,5 +830,5 @@ class Site:
     def issued(self) -> dict:
         return {
             "paper": {str(pv.number): [str(v.number) for v in pv.versions] for pv in self.papers},
-            "scratch": {str(sv.number): ["1.0"] for sv in self.scratches},
+            "sketch": {str(sv.number): ["1.0"] for sv in self.sketches},
         }

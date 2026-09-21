@@ -41,7 +41,7 @@ ul { padding-left: 40px; }
 .box { border: 1px solid #ddd; padding: 6px 10px; max-width: 34em; font-size: 14.4px; margin: 10px 0 16px; }
 .cats li { margin: 2px 0; }
 
-/* stage glyphs: filled dot for papers, ring for scratches */
+/* stage glyphs: filled dot for papers, ring for sketches */
 .s0 { --st: var(--s0, #908B82); } .s1 { --st: var(--s1, #5C8278); } .s2 { --st: var(--s2, #2F7565); }
 .s3 { --st: var(--s3, #006751); } .s4 { --st: var(--s4, #00583F); }
 .dot, .ring { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }

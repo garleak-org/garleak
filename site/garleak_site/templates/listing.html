@@ -3,15 +3,15 @@
 {% import "macros.html" as m %}
 {% block head %}
 {% if not example %}
-<link rel="alternate" type="application/atom+xml" title="{{ cat.name }}" href="{{ '/list/' if kind == 'paper' else '/scratch/list/' }}{{ cat.code }}/feed.xml">
+<link rel="alternate" type="application/atom+xml" title="{{ cat.name }}" href="{{ '/list/' if kind == 'paper' else '/sketch/list/' }}{{ cat.code }}/feed.xml">
 {% endif %}
 {% endblock %}
 {% block main %}
 {% set P = site.prefix %}
-{% set base = "/list/" if kind == "paper" else "/scratch/list/" %}
-{% set other = "/scratch/list/" if kind == "paper" else "/list/" %}
-{% set noun = "papers" if kind == "paper" else "scratches" %}
-<h1>{{ cat.name }}{% if kind == "scratch" %} scratches{% endif %}</h1>
+{% set base = "/list/" if kind == "paper" else "/sketch/list/" %}
+{% set other = "/sketch/list/" if kind == "paper" else "/list/" %}
+{% set noun = "papers" if kind == "paper" else "sketches" %}
+<h1>{{ cat.name }}{% if kind == "sketch" %} sketches{% endif %}</h1>
 {% if kind == "paper" and not listing.empty %}
 <ul>
 {% if listing.new %}<li><a href="#new">New papers</a></li>{% endif %}
@@ -19,17 +19,17 @@
 {% if listing.versions %}<li><a href="#versions">New versions</a></li>{% endif %}
 </ul>
 {% endif %}
-<p class="small">See {% if period != "new" %}<a href="{{ P }}{{ base }}{{ cat.code }}/new/">new</a> | {% endif %}{% for ym in months[:4] if ym != period %}<a href="{{ P }}{{ base }}{{ cat.code }}/{{ ym }}/">{{ ym }}</a> | {% endfor %}<a href="{{ P }}{{ other }}{{ cat.code }}/new/">{{ "scratches" if kind == "paper" else "papers" }}</a>{% if not example %} | <a href="{{ base }}{{ cat.code }}/feed.xml">feed</a>{% endif %}</p>
-<h3>{% if period == "new" %}Showing new listings for {{ site.today|dayname }}{% else %}Listings for {{ period|monthname }}{% endif %}</h3>
+<p class="small">See {% if period != "recent" %}<a href="{{ P }}{{ base }}{{ cat.code }}/recent/">recent</a> | {% endif %}{% for ym in months[:4] if ym != period %}<a href="{{ P }}{{ base }}{{ cat.code }}/{{ ym }}/">{{ ym }}</a> | {% endfor %}<a href="{{ P }}{{ other }}{{ cat.code }}/recent/">{{ "sketches" if kind == "paper" else "papers" }}</a>{% if not example %} | <a href="{{ base }}{{ cat.code }}/feed.xml">feed</a>{% endif %}</p>
+<h3>{% if period == "recent" %}Recent submissions{% else %}Submissions in {{ period|monthname }}{% endif %}</h3>
 {% if cat.gated %}
 <p class="small">Gated category. Papers are not shown below T1.</p>
 {% endif %}
 {% if listing.empty %}
 <p>No {{ noun }} yet. What belongs here: {{ cat.description }}</p>
 {% if example %}
-<p class="small">See the <a href="{{ P }}{{ base }}phys.astro/new/">Astrophysics {{ noun }}</a>.</p>
+<p class="small">See the <a href="{{ P }}{{ base }}phys.astro/recent/">Astrophysics {{ noun }}</a>.</p>
 {% elif cfg.state == "prelaunch" %}
-<p class="small">Submissions open after the prelaunch.{% if has_example %} See the <a href="/example{{ base }}{{ cat.code }}/new/">example listing</a>.{% endif %}</p>
+<p class="small">Submissions open after the prelaunch.{% if has_example %} See the <a href="/example{{ base }}{{ cat.code }}/recent/">example listing</a>.{% endif %}</p>
 {% else %}
 <p class="small"><a href="/submit/">Submit</a></p>
 {% endif %}
@@ -49,7 +49,7 @@
 {% else %}
 <dl class="articles">
 {% for sv in listing.new %}
-{{ m.scratch_entry(sv, loop.index) }}
+{{ m.sketch_entry(sv, loop.index) }}
 {% endfor %}
 </dl>
 {% endif %}

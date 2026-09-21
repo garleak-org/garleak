@@ -2,7 +2,7 @@
 site_url: https://garleak.org
 repo: garleak-org/garleak
 contact: contact@garleak.org
-state: prelaunch            # prelaunch | open
+state: open                 # prelaunch | open
 
 archive: ../archive                  # built at the site root
 example_archive: ../archive-example  # built under /example/ with a banner and noindex

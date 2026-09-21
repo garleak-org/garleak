@@ -3,7 +3,7 @@
 records that the base branch does not already have, and does it still merge cleanly?
 
 Two intake runs can pick the same number if they run at the same moment, and two novelty
-checks can edit the same scratch file. Both show up here, and the sync workflow then
+checks can edit the same sketch file. Both show up here, and the sync workflow then
 processes the later issue again against the current main."""
 
 from __future__ import annotations

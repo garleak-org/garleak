@@ -12,7 +12,7 @@
 <meta name="garleak:peer-reviewed" content="false">
 {% endblock %}
 {% block crumb %}
-<div class="subheader"><a href="{{ site.prefix }}/list/{{ pv.p.category }}/new/">{{ pv.category.name }}</a> &gt; {{ ident }}</div>
+<div class="subheader"><a href="{{ site.prefix }}/list/{{ pv.p.category }}/recent/">{{ pv.category.name }}</a> &gt; {{ ident }}</div>
 {% endblock %}
 {% block main %}
 {% set P = site.prefix %}
@@ -55,7 +55,7 @@
       <tr><td class="label">{{ a.kind|capitalize }}:</td><td class="mono">{% if a.url %}<a href="{{ a.url }}">{{ a.ref }}</a>{% else %}{{ a.ref }}{% endif %}</td></tr>
 {% endfor %}
       <tr><td class="label">Cite as:</td><td data-record>{{ vv.citation }}</td></tr>
-      <tr><td class="label">License:</td><td>{{ pv.p.license }}</td></tr>
+      <tr><td class="label">License:</td><td><a href="{{ license_url(pv.p.license) }}">{{ license_name(pv.p.license) }}</a></td></tr>
       <tr><td class="label">DOI:</td><td>{% if vv.graduation and vv.graduation.doi %}{{ vv.graduation.doi }}{% else %}minted at graduation{% endif %}</td></tr>
     </table>
   </div>
@@ -111,7 +111,7 @@
   <h3>Current browse context:</h3>
   <ul>
     <li><b>{{ pv.p.category }}</b></li>
-    <li><a href="{{ P }}/list/{{ pv.p.category }}/new/">new</a>{% for ym in site.months(pv.p.category)[:2] %} | <a href="{{ P }}/list/{{ pv.p.category }}/{{ ym }}/">{{ ym }}</a>{% endfor %}</li>
+    <li><a href="{{ P }}/list/{{ pv.p.category }}/recent/">recent</a>{% for ym in site.months(pv.p.category)[:2] %} | <a href="{{ P }}/list/{{ pv.p.category }}/{{ ym }}/">{{ ym }}</a>{% endfor %}</li>
   </ul>
   <h3>Check this paper:</h3>
   <ul><li><a href="{{ P }}/verify/">Verify this version</a></li></ul>

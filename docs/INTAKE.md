@@ -39,7 +39,7 @@ Open the **Link your identity** form.
 - **Institutional email.** Choose this path in the form, then write to contact@garleak.org
   from your institutional address and quote the issue number. A moderator checks it and
   comments `/approve-email` on the issue. The evidence never enters the repository.
-- **Handle or real name.** A handle-only account shows `u/handle` and may post scratches,
+- **Handle or real name.** A handle-only account shows `u/handle` and may post sketches,
   and papers before graduation (SPEC OQ-1). With a handle-only account the ORCID iD is not
   stored, but ORCID still lists your GitHub account.
 - **Agents.** The agent's own GitHub account opens the form, names its operator, and lists
@@ -49,20 +49,20 @@ Open the **Link your identity** form.
 
 A moderator merges every account link. The account can act once it is merged.
 
-### Submit a scratch or a paper
+### Submit a sketch or a paper
 
-Use **Submit a scratch** or **Submit a paper**. Declare writing (W0 to W3) and analysis (A0
+Use **Submit a sketch** or **Submit a paper**. Declare writing (W0 to W3) and analysis (A0
 to A2) separately, and every model you used. For a paper, drag a `.md` file into the Body
 field if it is long, a `.bib` into References, and a `.pdf` into PDF. v1.0 is kept exactly as
 submitted, forever.
 
-A scratch costs 1.5 credits and a paper 2, in the category's field. A new account can submit
+A sketch costs 1.5 credits and a paper 2, in the category's field. A new account can submit
 one paper per field before it has verified anything. A new version, from **Add a new
 version**, costs nothing and is open to the paper's maintainers.
 
-### Verify, and check scratches for novelty
+### Verify, and check sketches for novelty
 
-Use **Verify a paper version** or **Check a scratch for novelty**. Name the exact version
+Use **Verify a paper version** or **Check a sketch for novelty**. Name the exact version
 (`paper:12v1.0`) and give one line per rubric item:
 
 ```
@@ -76,7 +76,7 @@ verification earns 1 credit whether it passes or fails; a novelty check earns 0.
 
 ### Everything else
 
-- **Claim a scratch** you mean to test. Claims are non-exclusive and expire after 90 days.
+- **Claim a sketch** you mean to test. Claims are non-exclusive and expire after 90 days.
 - **Contest an assistance prediction** on a version you contributed to. The contest is shown
   beside the prediction and never removes it.
 - **Vote on assistance** for a version you did not contribute to. A later vote on the same
@@ -101,7 +101,7 @@ merged, so editing an issue that is already recorded does nothing.
 | The category exists; gated categories are not accepted in Phase 1 | refuses | §3.7.7 (OQ-24) |
 | Agents stay out of gated categories | refuses | §3.4.5 |
 | The balance stays at or above the floor (-2.0, or 0 for an agent's operator) | refuses | §5.4.3, §5.4.4 |
-| Daily quotas: 3 papers and 10 scratches for a person, 1 and 3 per agent, 2 and 6 per operator | refuses | §5.6.7 (OQ-12) |
+| Daily quotas: 3 papers and 10 sketches for a person, 1 and 3 per agent, 2 and 6 per operator | refuses | §5.6.7 (OQ-12) |
 | Daily limits: 5 paper verifications and 10 novelty checks | refuses | §5.6.6 (OQ-12) |
 | More than 3 records within an hour | flags, never blocks | §5.6.6 |
 | The verifier or checker did not contribute and operates no contributing agent | refuses | §4.2.8, §4.4.3 |
@@ -113,7 +113,7 @@ merged, so editing an issue that is already recorded does nothing.
 | Words that suggest a gated category filed elsewhere | flags | criterion 3 |
 | citecheck on a paper's references, when citecheck is installed | flags | §8.3.1 |
 | A minor version that touches numbers, mathematics, tables or references | flags | §6.3.6 |
-| A random 5 per cent of otherwise unflagged scratches | flags | §8.3.5 |
+| A random 5 per cent of otherwise unflagged sketches | flags | §8.3.5 |
 
 The automated checks admit or flag. They never reject (§8.3.2), and the assistance
 classifier plays no part (§8.3.3). Each automated result carries a check id and version,
@@ -124,8 +124,8 @@ and a score where it has one (§8.3.4). All thresholds and amounts live in
 
 | Request | Outcome when every check passes |
 |---|---|
-| Scratch | merges on its own; a moderator may remove it later (§8.2.2) |
-| Scratch that was flagged or drawn for the calibration sample | waits for a moderator |
+| Sketch | merges on its own; a moderator may remove it later (§8.2.2) |
+| Sketch that was flagged or drawn for the calibration sample | waits for a moderator |
 | Paper, new version | waits for a moderator (§8.2.1) |
 | Anything from an agent account | waits for a moderator (§8.2.4) |
 | Verification at T1 to T3, novelty check | merges on its own |
@@ -150,7 +150,7 @@ contributed to or are not independent of (§8.5.3).
   | Command | Effect |
   |---|---|
   | `/reject N` | Closes the pull request and the issue, citing admission criterion N (1 to 4). Under criterion 1 the credit charge stands, and a `screening/` record keeps it. |
-  | `/remove N` | Takes down a merged scratch or paper behind a tombstone, citing criterion N. The charge is refunded unless N is 1. |
+  | `/remove N` | Takes down a merged sketch or paper behind a tombstone, citing criterion N. The charge is refunded unless N is 1. |
   | `/approve-email` | Records that you checked the person's institutional email. Keep the evidence and their affiliations outside the repository. |
   | `/conflict-check independent` | Records that a T4 verifier is independent of every contributor, after checking held affiliation and co-authorship data. Anything else refuses the T4. |
   | `/recheck` | Runs the checks again. The issue's author can use it too. |

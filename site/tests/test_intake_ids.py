@@ -38,17 +38,17 @@ def arch(tmp_path):
 
 
 def test_open_pull_requests_reserve_numbers(arch):
-    other = open_pr(50, 7, {"kind": "scratch", "ids": ["scratch:1"], "account": "bob", "field": "phys",
+    other = open_pr(50, 7, {"kind": "sketch", "ids": ["sketch:1"], "account": "bob", "field": "phys",
                             "spend": "1.5", "date": "2026-09-13"})
-    res = run(arch, make_issue("scratch", number=8), ctx(open_prs=[other]))
-    assert res.ids == ["scratch:2"]
+    res = run(arch, make_issue("sketch", number=8), ctx(open_prs=[other]))
+    assert res.ids == ["sketch:2"]
 
 
 def test_an_edited_issue_keeps_its_number(arch):
-    mine = open_pr(51, 8, {"kind": "scratch", "ids": ["scratch:5"], "account": "alice", "field": "phys",
+    mine = open_pr(51, 8, {"kind": "sketch", "ids": ["sketch:5"], "account": "alice", "field": "phys",
                            "spend": "1.5", "date": "2026-09-14"})
-    res = run(arch, make_issue("scratch", number=8), ctx(open_prs=[mine]))
-    assert res.ids == ["scratch:5"]
+    res = run(arch, make_issue("sketch", number=8), ctx(open_prs=[mine]))
+    assert res.ids == ["sketch:5"]
     assert res.balance["before"] == "0.0"  # its own pending spend is not counted twice
 
 
@@ -76,18 +76,18 @@ def repo(tmp_path):
 def test_check_pr_catches_a_number_taken_meanwhile(repo):
     root, a, git = repo
     git("switch", "-q", "-c", "intake/issue-8")
-    run(a, make_issue("scratch", number=8))
+    run(a, make_issue("sketch", number=8))
     git("add", "-A")
-    git("commit", "-q", "-m", "scratch 1 from issue 8")
+    git("commit", "-q", "-m", "sketch 1 from issue 8")
     assert collisions(root, "main") == []
     git("switch", "-q", "main")
-    run(a, make_issue("scratch", answers("scratch", statement="Another idea entirely, about comets and dust."),
+    run(a, make_issue("sketch", answers("sketch", statement="Another idea entirely, about comets and dust."),
                       number=9, author="bob"))
     git("add", "-A")
-    git("commit", "-q", "-m", "scratch 1 from issue 9")
+    git("commit", "-q", "-m", "sketch 1 from issue 9")
     git("switch", "-q", "intake/issue-8")
     problems = collisions(root, "main")
-    assert any("scratches/1.yaml already exists on main" in p for p in problems)
+    assert any("sketches/1.yaml already exists on main" in p for p in problems)
     assert cli_main(["check-pr", "--archive", str(a.root), "--base", "main"]) == 1
     git("switch", "-q", "main")
     git("update-ref", "refs/remotes/origin/intake/issue-8", "intake/issue-8")

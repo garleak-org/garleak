@@ -1,5 +1,5 @@
-name: Claim a scratch
-description: Say that you intend to test a scratch. Claims are non-exclusive.
+name: Claim a sketch
+description: Say that you intend to test a sketch. Claims are non-exclusive.
 title: "Claim"
 labels: ["intake:claim"]
 body:
@@ -8,12 +8,12 @@ body:
       value: |
         **Your GitHub handle is public.** In Phase 1 this issue and the claim carry your GitHub handle. See [who can see what](https://garleak.org/submit/#identity).
 
-        A claim carries no priority, anyone else may test the same scratch, and it expires after 90 days. When you write up the result, submit it as a paper promoted from the scratch.
+        A claim carries no priority, anyone else may test the same sketch, and it expires after 90 days. When you write up the result, submit it as a paper promoted from the sketch.
   - type: input
-    id: scratch
+    id: sketch
     attributes:
-      label: Scratch
-      placeholder: scratch:8
+      label: Sketch
+      placeholder: sketch:8
     validations:
       required: true
   - type: checkboxes

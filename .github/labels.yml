@@ -10,9 +10,9 @@
 - name: "intake:identity"
   color: "1d76db"
   description: Link a GitHub account to a Garleak account
-- name: "intake:scratch"
+- name: "intake:sketch"
   color: "1d76db"
-  description: Submit a scratch
+  description: Submit a sketch
 - name: "intake:paper"
   color: "1d76db"
   description: Submit a paper
@@ -24,7 +24,7 @@
   description: Verify a paper version
 - name: "intake:novelty"
   color: "0e8a16"
-  description: Novelty check of a scratch
+  description: Novelty check of a sketch
 - name: "intake:contest"
   color: "5319e7"
   description: Contest an assistance prediction
@@ -33,7 +33,7 @@
   description: Reader vote on assistance
 - name: "intake:claim"
   color: "5319e7"
-  description: Claim a scratch
+  description: Claim a sketch
 - name: "intake:report"
   color: "d93f0b"
   description: Report content or appeal a decision

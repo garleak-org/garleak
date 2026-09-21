@@ -13,7 +13,7 @@
 <link rel="canonical" href="{{ canonical }}">
 {% endif %}
 {% block meta %}
-<meta name="description" content="Garleak is an open archive for AI-assisted papers and research scratches, each with a declared provenance and a public verification record.">
+<meta name="description" content="Garleak is an open archive for AI-assisted papers and research sketches, each with a declared provenance and a public verification record.">
 {% endblock %}
 <link rel="stylesheet" href="/static/garleak.css">
 <link rel="icon" href="/static/favicon.ico" sizes="any">
@@ -30,7 +30,7 @@
     <form role="search" action="/search/" method="get"><label class="vh" for="q">Search</label><input id="q" name="q" type="search" placeholder="Search"></form>
 {% endif %}
     <a href="{{ P }}/list/"{% if nav == "papers" %} aria-current="page"{% endif %}>Papers</a>
-    <a href="{{ P }}/scratch/list/"{% if nav == "scratches" %} aria-current="page"{% endif %}>Scratches</a>
+    <a href="{{ P }}/sketch/list/"{% if nav == "sketches" %} aria-current="page"{% endif %}>Sketches</a>
     <a href="/submit/"{% if nav == "submit" %} aria-current="page"{% endif %}>Submit</a>
     <a href="{{ P }}/verify/"{% if nav == "verify" %} aria-current="page"{% endif %}>Verify</a>
     <a href="/blog/"{% if nav == "blog" %} aria-current="page"{% endif %}>Blog</a>
@@ -45,7 +45,7 @@
 {% block main %}{% endblock %}
 </main>
 <footer class="foot">
-  <p><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/stages/">Help</a><a href="/spec/">Specification</a><a href="/terms/">Terms</a><a href="/moderation/">Moderation</a><a href="/citecheck/">citecheck</a>{% if not example and has_example %}<a href="/example/">Example records</a>{% endif %}<a href="https://github.com/{{ cfg.repo }}">Source</a><a href="mailto:{{ cfg.contact }}">Contact</a></p>
+  <p><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/stages/">Help</a><a href="/spec/">Specification</a><a href="/licenses/">Licenses</a><a href="/terms/">Terms</a><a href="/moderation/">Moderation</a><a href="/citecheck/">citecheck</a>{% if not example and has_example %}<a href="/example/">Example records</a>{% endif %}<a href="https://github.com/{{ cfg.repo }}">Source</a><a href="mailto:{{ cfg.contact }}">Contact</a></p>
   <p>Not peer reviewed. Admission is not endorsement. GitHub handles are public in Phase 1.</p>
 </footer>
 {% block scripts %}{% endblock %}

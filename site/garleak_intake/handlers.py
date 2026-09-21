@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 
-from garleak_archive.models import Paper, Scratch
+from garleak_archive.models import Paper, Sketch
 
 from . import labels as L
 from .forms import parse_body
@@ -70,15 +70,15 @@ class Intake(RecordMixin, SubmitMixin, Base):
             for c in p.contests:
                 if mine(c.intake):
                     out.append((f"contest {c.id}", c))
-        for s in self.a.scratches.values():
+        for s in self.a.sketches.values():
             if mine(s.intake):
-                out.append((f"scratch:{s.number}", s))
+                out.append((f"sketch:{s.number}", s))
             for ch in s.checks:
                 if mine(ch.intake):
-                    out.append((f"novelty check {ch.id} of scratch:{s.number}", ch))
+                    out.append((f"novelty check {ch.id} of sketch:{s.number}", ch))
             for cl in s.claims:
                 if mine(cl.intake):
-                    out.append((f"a claim on scratch:{s.number}", cl))
+                    out.append((f"a claim on sketch:{s.number}", cl))
         for r in self.a.screening:
             if mine(r.intake):
                 out.append((f"the rejection {r.id}", r))
@@ -95,16 +95,16 @@ class Intake(RecordMixin, SubmitMixin, Base):
         if crit is None:
             return self.noop("Give the criterion: /remove followed by 1, 2, 3 or 4.",
                              "Every removal cites a numbered admission criterion (SPEC §8.4.3).")
-        targets = [obj for _, obj in existing if isinstance(obj, (Scratch, Paper))]
+        targets = [obj for _, obj in existing if isinstance(obj, (Sketch, Paper))]
         if not targets:
-            return self.noop("Nothing here to remove.", "Removal applies to admitted papers and scratches "
+            return self.noop("Nothing here to remove.", "Removal applies to admitted papers and sketches "
                              "(SPEC §9.6). A verification is withdrawn, overturned or voided instead.")
         obj = targets[0]
         if obj.status == "removed":
             return self.noop("Already removed.")
         date = t.at.date().isoformat()
-        if isinstance(obj, Scratch):
-            rel, ident, auto = f"scratches/{obj.number}.yaml", f"scratch:{obj.number}", True
+        if isinstance(obj, Sketch):
+            rel, ident, auto = f"sketches/{obj.number}.yaml", f"sketch:{obj.number}", True
         else:
             rel, ident, auto = f"papers/{obj.number}/paper.yaml", f"paper:{obj.number}", False
         data = self.w.load(rel)
@@ -134,7 +134,7 @@ class Intake(RecordMixin, SubmitMixin, Base):
         r = self.res
         r.status, r.close_pr, r.close_issue = "rejected", True, "not planned"
         r.headline = f"Rejected under admission criterion {crit}: {CRITERIA[crit]}."
-        charged = self.kind in ("paper", "scratch")
+        charged = self.kind in ("paper", "sketch")
         no_refund = crit in self.cfg["credits"]["no_refund_criteria"]
         credit_note = ""
         if charged:

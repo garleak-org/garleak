@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from garleak_archive.hashing import scratch_content_sha256, tree_sha256
+from garleak_archive.hashing import sketch_content_sha256, tree_sha256
 from garleak_archive.rubrics import RubricSet
 from garleak_site.build import Builder, load_config
 
@@ -67,10 +67,10 @@ class ArchiveMaker:
         self.rubrics = RubricSet.load(RUBRICS)
         (root / "accounts").mkdir(parents=True)
         (root / "papers").mkdir()
-        (root / "scratches").mkdir()
+        (root / "sketches").mkdir()
         (root / "archive.yaml").write_text(yaml.safe_dump({
             "name": "test archive", "example": example, "as_of": "2026-09-14",
-            "new_listing_days": 7, "rubrics": str(RUBRICS),
+            "recent_count": 50, "rubrics": str(RUBRICS),
         }))
         shutil.copy(REAL / "categories.yaml", root / "categories.yaml")
         for h, name in (("author", "A. Author"), ("vera", "V. Era"), ("otto", "O. Tto")):
@@ -131,13 +131,13 @@ class ArchiveMaker:
         d.mkdir(exist_ok=True)
         (d / f"{vid}.yaml").write_text(yaml.safe_dump(data, sort_keys=False))
 
-    def scratch(self, n: int, statement: str, date: str = "2026-09-13", **extra) -> Path:
-        data = {"id": f"scratch:{n}", "category": "phys.astro", "author": "author", "date": date,
+    def sketch(self, n: int, statement: str, date: str = "2026-09-13", **extra) -> Path:
+        data = {"id": f"sketch:{n}", "category": "phys.astro", "author": "author", "date": date,
                 "statement": statement, "models": [{"name": "model-x"}],
                 "assistance": {"writing": "W3", "analysis": None}}
         data.update(extra)
-        data["v1_sha256"] = scratch_content_sha256(data)
-        p = self.root / "scratches" / f"{n}.yaml"
+        data["v1_sha256"] = sketch_content_sha256(data)
+        p = self.root / "sketches" / f"{n}.yaml"
         p.write_text(yaml.safe_dump(data, sort_keys=False))
         return p
 

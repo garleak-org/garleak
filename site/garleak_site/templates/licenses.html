@@ -1,0 +1,16 @@
+{#- SPDX-License-Identifier: AGPL-3.0-or-later -#}
+{% extends "base.html" %}
+{% block main %}
+<div class="prose">
+  <h1>Licenses</h1>
+  <p>You choose a license when you submit. It is shown on the paper or sketch page, and it covers the content you submitted, not the records about it. Verifications, novelty checks, declarations, predictions and votes are released under CC0.</p>
+  <table class="plain">
+    <tr><th>License</th><th>What it allows</th></tr>
+{% for code, name, url, says in LICENSES %}
+    <tr><td><a href="{{ url }}">{{ name }}</a>{% if code == "CC-BY-4.0" %}, the default{% endif %}</td><td>{{ says }}</td></tr>
+{% endfor %}
+  </table>
+  <p>Submit only work you have the right to license this way. A version keeps the license it was admitted under, and a later version may carry a different one.</p>
+  <p>The site's code is AGPL-3.0-or-later, the <a href="/spec/">specification</a> is CC0, and dataset releases are CC BY 4.0.</p>
+</div>
+{% endblock %}

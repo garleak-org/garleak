@@ -22,13 +22,13 @@
   <div class="list-title"><a href="{{ v.url }}">{{ v.v.title }}</a></div>
   <div class="list-authors">{{ people(v.authors) }}</div>
   <div class="list-comments">Stage: {{ stage_dot(v.tier_index, v.tier, v.tier_name) }}{% if v.verifiers %}, verified by {{ v.verifiers|length }}{% endif %}{% if v.state.pending %}, pending re-check{% endif %}{% if v.graduation %}, Graduated{% endif %}</div>
-  <div class="list-comments">Model: {{ v.model_names|join(", ") }}. {{ v.declared_codes }} declared. {{ (v.index + 1)|plural("version") }}, {{ v.pct.display() }} original.{% if section == "versions" and v.change_fact %} {{ v.change_fact }}.{% endif %}{% if pf %} Promoted from {% if pf[1] %}<a href="{{ pf[1].url }}">scratch:{{ pf[1].number }}</a>{% else %}{{ pf[0] }}{% endif %}.{% endif %}{% if v.pv.p.track == "autonomous" %} Autonomous track.{% endif %}{% if v.pv.withdrawn %} Withdrawn.{% endif %}</div>
+  <div class="list-comments">Model: {{ v.model_names|join(", ") }}. {{ v.declared_codes }} declared. {{ (v.index + 1)|plural("version") }}, {{ v.pct.display() }} original.{% if section == "versions" and v.change_fact %} {{ v.change_fact }}.{% endif %}{% if pf %} Promoted from {% if pf[1] %}<a href="{{ pf[1].url }}">sketch:{{ pf[1].number }}</a>{% else %}{{ pf[0] }}{% endif %}.{% endif %}{% if v.pv.p.track == "autonomous" %} Autonomous track.{% endif %}{% if v.pv.withdrawn %} Withdrawn.{% endif %}</div>
   <div class="list-subjects">Subjects: <span class="primary-subject">{{ v.pv.category.name }} ({{ v.pv.p.category }})</span></div>
   <p class="abstract">{{ v.v.abstract }}</p>
 </dd>
 {%- endmacro %}
 
-{% macro scratch_entry(sv, i) -%}
+{% macro sketch_entry(sv, i) -%}
 <dt><a id="item{{ i }}">[{{ i }}]</a> <a class="id" href="{{ sv.url }}">{{ sv.ident }}</a></dt>
 <dd data-record>
   <div class="list-title"><a href="{{ sv.url }}">{{ sv.s.statement }}</a></div>

@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Scratches, papers and new versions."""
+"""Sketches, papers and new versions."""
 
 from __future__ import annotations
 
-from garleak_archive.hashing import scratch_content_sha256, tree_sha256
+from garleak_archive.hashing import sketch_content_sha256, tree_sha256
 from garleak_archive.stages import CITATIONS, graduated
 
 from . import labels as L
 from . import screen
 from .assign import next_number
 from .attachments import AttachmentError, Fetcher, pdf_field, text_field
-from .requests import Fields, build_paper, build_scratch, build_version
+from .requests import Fields, build_paper, build_sketch, build_version
 from .screen import CHECK_VERSION
 
 BODY_SUFFIXES = (".md", ".markdown", ".txt")
@@ -89,20 +89,20 @@ class SubmitMixin:
                               "SPEC §3.1")
         return handles
 
-    # -------------------------------------------------------- scratch
+    # -------------------------------------------------------- sketch
 
-    def do_scratch(self, f: Fields):
-        req = build_scratch(f)
+    def do_sketch(self, f: Fields):
+        req = build_sketch(f)
         acc = self.need_account()
         self._form_problems(f)
         cat = self.need_category(req.category, acc)
         if acc and cat:
-            self.check_quota(acc, "scratch")
-            sc = self.check_credits(acc, cat, "scratch")
+            self.check_quota(acc, "sketch")
+            sc = self.check_credits(acc, cat, "sketch")
         if req.statement:
-            self._text_flags(screen.scratch_flags(req.statement, req.detail, self.cfg))
-            self.check_duplicate(f"{req.statement}\n{req.detail}", screen.scratch_corpus(self.a),
-                                 self.cfg["screening"]["scratch_shingle_k"])
+            self._text_flags(screen.sketch_flags(req.statement, req.detail, self.cfg))
+            self.check_duplicate(f"{req.statement}\n{req.detail}", screen.sketch_corpus(self.a),
+                                 self.cfg["screening"]["sketch_shingle_k"])
             self.check_gated_keywords(f"{req.statement}\n{req.detail}")
         if self.res.failed:
             return self.refuse()
@@ -111,23 +111,23 @@ class SubmitMixin:
                 self.number, screen.content_hash(req.statement + "\n" + req.detail),
                 self.cfg["screening"]["sample_rate"]):
             self.res.flag("calibration-sample", "Calibration sample", "chosen at random for a person to read, "
-                          f"{self.cfg['screening']['sample_rate']:.0%} of unflagged scratches", "SPEC §8.3.1, §8.3.5")
+                          f"{self.cfg['screening']['sample_rate']:.0%} of unflagged sketches", "SPEC §8.3.1, §8.3.5")
             self.res.labels_add.append(L.FLAGS["calibration-sample"])
-        n = next_number(self.a.scratches, self.taken.get("scratch", set()),
-                        self.cfg["intake"]["first_scratch_number"], self.mine.get("scratch", ()))
-        data = {"id": f"scratch:{n}", "category": cat.code, "author": acc.handle, "date": self.date_iso(),
+        n = next_number(self.a.sketches, self.taken.get("sketch", set()),
+                        self.cfg["intake"]["first_sketch_number"], self.mine.get("sketch", ()))
+        data = {"id": f"sketch:{n}", "category": cat.code, "author": acc.handle, "date": self.date_iso(),
                 "statement": req.statement}
         if req.detail:
             data["detail"] = req.detail
         data["models"] = req.models
         data["assistance"] = {"writing": req.writing, "analysis": req.analysis}
-        data["v1_sha256"] = scratch_content_sha256(data)
+        data["v1_sha256"] = sketch_content_sha256(data)
         data.update({"license": req.license, "gated": cat.gated,
                      "track": "autonomous" if acc.is_agent else "human-prompted", "intake": self.intake()})
-        self.w.data(f"scratches/{n}.yaml", data)
-        self.meta("scratch", [f"scratch:{n}"], acc.handle, cat.field_code, sc.amount)
+        self.w.data(f"sketches/{n}.yaml", data)
+        self.meta("sketch", [f"sketch:{n}"], acc.handle, cat.field_code, sc.amount)
         auto = not self.res.flagged
-        return self.done([f"scratch:{n}"], f"Add scratch:{n}", auto,
+        return self.done([f"sketch:{n}"], f"Add sketch:{n}", auto,
                          held_reason="It waits because the automated pass flagged it, or it came from an agent, or "
                                      "it was drawn for the calibration sample. A person reads it and merges it, or "
                                      "rejects it citing a numbered criterion.")
@@ -179,15 +179,15 @@ class SubmitMixin:
         cat = self.need_category(req.category, acc)
         authors = self._authors(req.authors or ([acc.handle] if acc else []))
         fams = self._families(req.rubric_families)
-        scratch = None
+        sketch = None
         if req.promoted_from:
-            scratch = self.a.scratches.get(req.promoted_from)
-            if scratch is None or scratch.status != "admitted":
-                self.res.fail("promoted", "Promoted from", f"scratch:{req.promoted_from} is not an admitted scratch.",
+            sketch = self.a.sketches.get(req.promoted_from)
+            if sketch is None or sketch.status != "admitted":
+                self.res.fail("promoted", "Promoted from", f"sketch:{req.promoted_from} is not an admitted sketch.",
                               "SPEC §2.6.1")
-                scratch = None
+                sketch = None
             else:
-                self.res.ok("promoted", "Promoted from", f"scratch:{scratch.number}v1.0 by u/{scratch.author}; its "
+                self.res.ok("promoted", "Promoted from", f"sketch:{sketch.number}v1.0 by u/{sketch.author}; its "
                             "author earns the promotion credit when this paper is admitted (SPEC §2.6.5)")
         body, bib, pdf = self._files(req.body, req.refs, req.pdf) if req.body else (None, None, None)
         if acc and cat:
@@ -210,9 +210,9 @@ class SubmitMixin:
         v1 = self._write_version(f"{rel}/v1.0", meta, body, bib, pdf)
         paper = {"id": f"paper:{n}", "category": cat.code, "submitter": acc.handle, "created": self.date_iso(),
                  "license": req.license, "gated": cat.gated, "track": "autonomous" if acc.is_agent else "human-prompted"}
-        if scratch:
-            paper["promoted_from"] = f"scratch:{scratch.number}v1.0"
-            srel = f"scratches/{scratch.number}.yaml"
+        if sketch:
+            paper["promoted_from"] = f"sketch:{sketch.number}v1.0"
+            srel = f"sketches/{sketch.number}.yaml"
             sdata = self.w.load(srel)
             sdata["promoted_to"] = sorted(set(sdata.get("promoted_to") or []) | {n})
             self.w.data(srel, sdata)

@@ -40,7 +40,7 @@ body:
     id: display
     attributes:
       label: What your account shows
-      description: A handle-only account can post scratches and papers, but a version can graduate only when every contributor shows a real name (SPEC §3.3.4).
+      description: A handle-only account can post sketches and papers, but a version can graduate only when every contributor shows a real name (SPEC §3.3.4).
       options:
         - Real name
         - Handle only (pseudonymous)

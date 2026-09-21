@@ -1,6 +1,6 @@
 # Garleak Specification
 
-**Spec version 0.2, draft for comment, 2026-09-14**
+**Spec version 0.3, draft for comment, 2026-09-21**
 
 | | |
 |---|---|
@@ -15,13 +15,14 @@
 |---|---|---|
 | 0.1 | 2026-09-14 | First draft for comment. |
 | 0.2 | 2026-09-14 | Assistance is declared on two ordinal axes, writing (W0 to W3) and analysis (A0 to A2), in place of L0 to L4 (§4.5, §4.7, §11.6 to §11.9). OQ-7 is resolved, OQ-21 is closed by the new scale, and OQ-23 and OQ-24 are new. New §3.7 on identity and visibility in the static Phase 1 implementation (RFC 0001), with matching notes in §3.2.1, §3.3.1, §5.2.6, and §11. §6.1.4 and §9.3.1 updated for the static implementation. Code license stated as AGPL-3.0-or-later (§9.8.4). |
+| 0.3 | 2026-09-21 | The second object type is renamed from "scratch" to "sketch" throughout, including identifiers (`sketch:8812`) and addresses (`/sketch/`). No rule changes with the name. Category listings show the most recent entries (`recent_count`, default 50) instead of a fixed window of days, so nothing drops off a listing because time passed. Submissions are open. |
 
 ## Notes for reviewers
 
 This document turns sections 3 through 7 of the project's master plan into rules, and pulls in the parts of sections 8, 9, 10, and 12 that those sections depend on. Where the plan was silent or inconsistent, this draft says so rather than choosing quietly. The changes relative to the plan are these.
 
 - The plan's screening section points to "§11" for gated categories and plagiarism screening. Both live in the plan's safety section (§10). In this document they are §9 and §8.3.
-- The plan does not say whether a paper may carry a pseudonym before graduation. Its stage diagram ties graduation to real names, while the design shows scratches under handles and papers under real names. This draft proposes a default and lists it as OQ-1.
+- The plan does not say whether a paper may carry a pseudonym before graduation. Its stage diagram ties graduation to real names, while the design shows sketches under handles and papers under real names. This draft proposes a default and lists it as OQ-1.
 - The plan uses both "Verified" and "Graduated" for graduation. Here "Graduated" is the graduation state, and "Verified" always carries a stage ("Verified T2"), so the word never stands alone as an endorsement.
 - The plan's assistance codes L0 to L4 were categories that mixed two questions, who wrote the text and who did the analysis, so no single order fit them and a community "median" had no meaning. Version 0.2 replaces them with two ordinal axes (§4.5.2), which resolves OQ-7.
 - Version 0.2 also records the move to a static implementation built from a public git repository (RFC 0001). The rules do not change, but a few cannot be met in its first phase, and §3.7 says which.
@@ -67,16 +68,16 @@ This document defines what the archive holds, the stages objects move through, w
 
 | Term | Meaning |
 |---|---|
-| Object | A paper or a scratch. The unit that gets an identifier. |
+| Object | A paper or a sketch. The unit that gets an identifier. |
 | Paper | A full write-up with a claim and an argument. Checked for correctness (§2.1.2). |
-| Scratch | An idea, observation, or fragment. Checked for novelty, not correctness (§2.1.3). |
+| Sketch | An idea, observation, or fragment. Checked for novelty, not correctness (§2.1.3). |
 | Version | One immutable state of an object's content, numbered major.minor (§6.2). |
-| Stage | Where a version sits on its ladder. T0 to T4 for papers, N0 to N3 for scratches. "Tier" means a paper stage. |
+| Stage | Where a version sits on its ladder. T0 to T4 for papers, N0 to N3 for sketches. "Tier" means a paper stage. |
 | Field | A subject area (for example physics or mathematics). Credits, standing, moderators, and listings are scoped by field. |
 | Rubric family | A kind of claim with its own checklist (computational, mathematics, and later others). A paper declares one or more (§4.2.3). Distinct from field. |
 | Rubric | A versioned YAML file listing the items a verifier checks at each tier (§10.3). |
 | Verification | A record by one verifier, on one exact version, at one stage, under one rubric version (§4.2). |
-| Novelty check | The verification record for a scratch (§4.4). |
+| Novelty check | The verification record for a sketch (§4.4). |
 | Fix | A proposed change to a version, shaped like a pull request (§6.7). |
 | Maintainer | The account that may merge or decline fixes on a paper (§6.8). |
 | Contributor | An account listed on a version, because it submitted the object or authored a merged fix (§6.5). |
@@ -95,31 +96,31 @@ This document defines what the archive holds, the stages objects move through, w
 
 ### 2.1 Object types
 
-**2.1.1** Garleak holds two object types, papers and scratches. The submitter chooses the type at upload. The stage is earned through verification and is never chosen by the submitter.
+**2.1.1** Garleak holds two object types, papers and sketches. The submitter chooses the type at upload. The stage is earned through verification and is never chosen by the submitter.
 
 **2.1.2** A paper is a full write-up with a claim and an argument. Papers are checked for correctness against the T1 citations rubric and the rubric of each rubric family the paper declares.
 
-**2.1.3** A scratch is an idea, an observation, or a fragment, often one that came out of a conversation with a model. A scratch SHOULD take minutes to post. Scratches are checked for novelty (has this been done?), which is a literature question, and never for correctness.
+**2.1.3** A sketch is an idea, an observation, or a fragment, often one that came out of a conversation with a model. A sketch SHOULD take minutes to post. Sketches are checked for novelty (has this been done?), which is a literature question, and never for correctness.
 
-**2.1.4** An object's type MUST NOT change after admission. A moderator MAY change the type during screening, before admission (§8.4.1). The only route from a scratch to a paper is promotion (§2.6), which creates a new object.
+**2.1.4** An object's type MUST NOT change after admission. A moderator MAY change the type during screening, before admission (§8.4.1). The only route from a sketch to a paper is promotion (§2.6), which creates a new object.
 
 ### 2.2 Separation of the two streams
 
-**2.2.1** Papers and scratches MUST have separate listings, separate identifier sequences, separate stage ladders, separate visual treatment, and separate credit costs. A listing page MUST NOT contain both types.
+**2.2.1** Papers and sketches MUST have separate listings, separate identifier sequences, separate stage ladders, separate visual treatment, and separate credit costs. A listing page MUST NOT contain both types.
 
-**2.2.2** T stages MUST NOT be applied to scratches, and N stages MUST NOT be applied to papers. There is no T3 or T4 equivalent for a scratch.
+**2.2.2** T stages MUST NOT be applied to sketches, and N stages MUST NOT be applied to papers. There is no T3 or T4 equivalent for a sketch.
 
-**2.2.3** A scratch MUST NOT be citable in a way that implies a result. Its citation string MUST call it an idea record (§2.3.8).
+**2.2.3** A sketch MUST NOT be citable in a way that implies a result. Its citation string MUST call it an idea record (§2.3.8).
 
 ### 2.3 Identifiers
 
-**2.3.1** Every object receives a type and a number at submission. Papers and scratches are numbered from separate sequences of positive integers. A number is never reused, even after removal. `paper:4471` and `scratch:4471` are unrelated objects.
+**2.3.1** Every object receives a type and a number at submission. Papers and sketches are numbered from separate sequences of positive integers. A number is never reused, even after removal. `paper:4471` and `sketch:4471` are unrelated objects.
 
 **2.3.2** Identifiers follow this grammar (ABNF, RFC 5234).
 
 ```
 identifier   = type ":" number [ version ]
-type         = "paper" / "scratch"
+type         = "paper" / "sketch"
 number       = nonzero *DIGIT
 version      = "v" major [ "." minor ]
 major        = nonzero *DIGIT
@@ -156,8 +157,8 @@ Graduated version (§7.3):
   <authors>. <title>. Garleak paper:4471v3.2, Graduated 2026-10-02 (T3).
   <DOI if issued, see OQ-16>
 
-Scratch:
-  <handle or name>. "<one-line statement>". Garleak scratch:8812v1.0,
+Sketch:
+  <handle or name>. "<one-line statement>". Garleak sketch:8812v1.0,
   idea record, not a result, posted 2026-09-14.
 ```
 
@@ -211,7 +212,7 @@ Scratch:
     major bump   new version starts at T0 (§6.3.4)
 ```
 
-### 2.5 Scratch stages
+### 2.5 Sketch stages
 
 | Stage | Name | Meaning |
 |---|---|---|
@@ -220,19 +221,19 @@ Scratch:
 | N2 | Prior work found and linked | Informative, not a failure. |
 | N3 | Judged tractable | Someone judged the idea tractable and said what testing it would take. |
 
-**2.5.1** Scratch stages belong to versions, like paper stages.
+**2.5.1** Sketch stages belong to versions, like paper stages.
 
 **2.5.2** N1 requires a novelty check with a search record: the sources searched, the queries or search strategy, the date, and the closest items found with a sentence on why each is not close.
 
-**2.5.3** N2 requires a novelty check that names at least one prior work by a resolvable reference and states how it overlaps the scratch. N2 MUST be displayed neutrally. Its label, color, and wording MUST NOT suggest failure, rejection, or fault.
+**2.5.3** N2 requires a novelty check that names at least one prior work by a resolvable reference and states how it overlaps the sketch. N2 MUST be displayed neutrally. Its label, color, and wording MUST NOT suggest failure, rejection, or fault.
 
-**2.5.4** N1 and N2 are alternative outcomes, not steps. A later check that finds prior work moves an N1 scratch to N2, and the earlier N1 record stays visible. An N2 scratch returns to N1 only if a later check addresses each linked prior work and shows it does not overlap.
+**2.5.4** N1 and N2 are alternative outcomes, not steps. A later check that finds prior work moves an N1 sketch to N2, and the earlier N1 record stays visible. An N2 sketch returns to N1 only if a later check addresses each linked prior work and shows it does not overlap.
 
 **2.5.5** N3 requires an earlier N1 or N2 record on the same version, plus a tractability note that says what testing the idea would take (data, method, rough effort). The display MUST show which path led there, as "N3, no prior work found" or "N3, prior work linked".
 
 **2.5.6** Novelty checks carry no claim about correctness, and the interface MUST NOT imply one.
 
-**2.5.7** Any account MAY post a non-exclusive claim of intent to test a scratch. Claims carry no priority and expire after `config.scratch_claim_days` (opening value 90). The scratch row shows "unclaimed" or the number of active claims.
+**2.5.7** Any account MAY post a non-exclusive claim of intent to test a sketch. Claims carry no priority and expire after `config.sketch_claim_days` (opening value 90). The sketch row shows "unclaimed" or the number of active claims.
 
 ```
       N0 ----> N1 (no prior work found) ---- later check finds prior work ----> N2
@@ -243,19 +244,19 @@ Scratch:
 
 ### 2.6 Promotion
 
-**2.6.1** When someone tests a scratch and writes up the result, the write-up is submitted as a new paper whose `promoted_from` field holds the exact scratch version identifier. This is promotion. The paper is a new object with its own number, its own v1.0, and its own stages.
+**2.6.1** When someone tests a sketch and writes up the result, the write-up is submitted as a new paper whose `promoted_from` field holds the exact sketch version identifier. This is promotion. The paper is a new object with its own number, its own v1.0, and its own stages.
 
-**2.6.2** The backlink is permanent on both objects. The paper's maintainer MUST NOT be able to remove it. The scratch page lists every paper promoted from it.
+**2.6.2** The backlink is permanent on both objects. The paper's maintainer MUST NOT be able to remove it. The sketch page lists every paper promoted from it.
 
-**2.6.3** Anyone may test a scratch and promote it, including its author. Promotion needs no permission from the scratch's author. One scratch MAY be promoted into several papers.
+**2.6.3** Anyone may test a sketch and promote it, including its author. Promotion needs no permission from the sketch's author. One sketch MAY be promoted into several papers.
 
-**2.6.4** The paper shows its origin inline, for example "promoted from scratch:8812v1.0 by u/kestrel". The scratch author's name is shown as the scratch shows it. Promotion MUST NOT reveal the held identity of a pseudonymous scratch author.
+**2.6.4** The paper shows its origin inline, for example "promoted from sketch:8812v1.0 by u/kestrel". The sketch author's name is shown as the sketch shows it. Promotion MUST NOT reveal the held identity of a pseudonymous sketch author.
 
-**2.6.5** When a promoted paper is admitted, the scratch author receives a promotion credit event in the paper's field (§5.3). Promotion is also the attribution the plan describes, and the attribution does not depend on the credit.
+**2.6.5** When a promoted paper is admitted, the sketch author receives a promotion credit event in the paper's field (§5.3). Promotion is also the attribution the plan describes, and the attribution does not depend on the credit.
 
-**2.6.6** Any account MAY file a claim that an admitted paper derives from a scratch but lacks the backlink. A moderator decides the claim and records the reasoning. An upheld claim adds the backlink and the credit event.
+**2.6.6** Any account MAY file a claim that an admitted paper derives from a sketch but lacks the backlink. A moderator decides the claim and records the reasoning. An upheld claim adds the backlink and the credit event.
 
-**2.6.7** Promotion is not a stage. The scratch keeps its N stage and gains a "promoted" marker.
+**2.6.7** Promotion is not a stage. The sketch keeps its N stage and gains a "promoted" marker.
 
 ---
 
@@ -281,7 +282,7 @@ Scratch:
 
 **3.3.2** Each human account has one public handle (written `u/name`) and one real name. For each object, a contributor chooses whether that object shows their handle or their real name.
 
-**3.3.3** A scratch MAY show its author's handle at every stage.
+**3.3.3** A sketch MAY show its author's handle at every stage.
 
 **3.3.4** **Proposed default, open for comment (OQ-1).** A paper MAY show contributors' handles until graduation. A version can graduate only when every human contributor, and the operator of every contributing agent, shows a real name on it (§7.1). A contributor who does not want to show a real name blocks graduation of that version and nothing else.
 
@@ -401,13 +402,13 @@ The first implementation is a static site built from a public git repository. Su
 
 **4.3.5** When a later conflict check (§3.6.8) shows that a counted T4 verification was not independent, the verification loses its T4 standing, and the tier is recomputed. If the verifier's attestation (§3.6.9) was false, the verification is voided.
 
-### 4.4 Novelty checks of scratches
+### 4.4 Novelty checks of sketches
 
-**4.4.1** A novelty check is recorded by one human on one exact scratch version. Its outcome is N1, N2, or N3, with the contents required by §2.5.2, §2.5.3, or §2.5.5.
+**4.4.1** A novelty check is recorded by one human on one exact sketch version. Its outcome is N1, N2, or N3, with the contents required by §2.5.2, §2.5.3, or §2.5.5.
 
 **4.4.2** Novelty checks use the same statuses, withdrawal rules, dispute rules, and display rules as paper verifications. They need no rubric file in this version of the spec. A novelty rubric MAY be added by RFC.
 
-**4.4.3** A scratch's author MUST NOT record a novelty check on their own scratch.
+**4.4.3** A sketch's author MUST NOT record a novelty check on their own sketch.
 
 ### 4.5 Assistance
 
@@ -438,7 +439,7 @@ Assistance is declared on two axes, because who wrote the text and who did the a
 
 Analysis means the work behind the claims, such as calculations, code, derivations, proofs, data handling, and the choice of method. The two scales are not comparable with each other. Implementations MUST NOT add, subtract, or otherwise combine a W code with an A code, and MUST NOT do arithmetic on the numbers in the codes beyond ordering them.
 
-**Proposed default, open for comment (OQ-23).** A paper declares both axes. A scratch declares the writing axis and MAY leave the analysis axis empty when it contains no analysis. An empty analysis axis is shown as "no analysis", never as A0.
+**Proposed default, open for comment (OQ-23).** A paper declares both axes. A sketch declares the writing axis and MAY leave the analysis axis empty when it contains no analysis. An empty analysis axis is shown as "no analysis", never as A0.
 
 **4.5.3** Every version MUST carry a declaration made by its accountable human. The declaration records one code on each axis (subject to OQ-23), every model used (name, provider, and version or date), other AI tools used, a provenance statement in free text, and an OPTIONAL link to transcripts or logs. The declaration describes the version as a whole, as it stands.
 
@@ -507,10 +508,10 @@ Generating a paper costs a model user almost nothing, so unlimited free submissi
 | Event | Opening amount | Config key |
 |---|---|---|
 | Paper verification, any tier, pass or fail | +1.0 | `config.earn.verification` |
-| Novelty check on a scratch | +0.5 | `config.earn.novelty_check` |
+| Novelty check on a sketch | +0.5 | `config.earn.novelty_check` |
 | Merged fix | +2.0 | `config.earn.merged_fix` |
 | Screening or appeal decision by a moderator | +1.0 | `config.earn.moderation` |
-| Promotion of the account's scratch into an admitted paper | +1.0 | `config.earn.promotion` |
+| Promotion of the account's sketch into an admitted paper | +1.0 | `config.earn.promotion` |
 
 **5.3.1** **Proposed default, open for comment (OQ-9).** The amounts above are the opening values. Every paper verification earns the same amount whatever its tier.
 
@@ -527,10 +528,10 @@ Generating a paper costs a model user almost nothing, so unlimited free submissi
 | Event | Opening amount | Config key |
 |---|---|---|
 | Paper submission (a new paper object, including promoted papers and forks) | -2.0 | `config.spend.paper` |
-| Scratch submission | -1.5 | `config.spend.scratch` |
+| Sketch submission | -1.5 | `config.spend.sketch` |
 | New version of an existing object | 0 | none |
 
-**5.4.1** The opening ratio is two verifications per paper, the value of `config.spend.paper` divided by `config.earn.verification`. It is tighter for scratches. **Proposed default, open for comment (OQ-9).** A scratch costs 1.5, which is three novelty checks or one and a half paper verifications.
+**5.4.1** The opening ratio is two verifications per paper, the value of `config.spend.paper` divided by `config.earn.verification`. It is tighter for sketches. **Proposed default, open for comment (OQ-9).** A sketch costs 1.5, which is three novelty checks or one and a half paper verifications.
 
 **5.4.2** New versions cost nothing. Fixing should never be the expensive path.
 
@@ -562,7 +563,7 @@ Reciprocal verification rings will form in the first month. The rules below assu
 
 **5.6.6** Verification has a daily rate limit, since careful checking is slow and a burst is a signal. **Proposed default, open for comment (OQ-12).** A human account MAY record at most 5 paper verifications and 10 novelty checks per day across all fields. More than 3 records within one hour are flagged for moderator review but not blocked.
 
-**5.6.7** **Proposed default, open for comment (OQ-12).** Submission quotas per day are 3 papers and 10 scratches for a human account; 1 paper and 3 scratches for each agent account; and 2 papers and 6 scratches for an operator summed over all their agents.
+**5.6.7** **Proposed default, open for comment (OQ-12).** Submission quotas per day are 3 papers and 10 sketches for a human account; 1 paper and 3 sketches for each agent account; and 2 papers and 6 sketches for an operator summed over all their agents.
 
 **5.6.8** Shared affiliation and recent co-authorship are allowed below T4, flagged, and visible (§3.6.6). T4 requires no shared affiliation or co-authorship with any contributor (§2.4.7).
 
@@ -610,7 +611,7 @@ Reciprocal verification rings will form in the first month. The rules below assu
 
 A pending item is resolved by a re-check, which is a verification limited to the pending items. Any verifier MAY make it, subject to the usual rules.
 
-**6.3.4** A major bump clears verifications. The new version starts at T0 (or N0 for a scratch). The parent keeps its records. New verifications MAY cite evidence recorded on earlier versions.
+**6.3.4** A major bump clears verifications. The new version starts at T0 (or N0 for a sketch). The parent keeps its records. New verifications MAY cite evidence recorded on earlier versions.
 
 **6.3.5** **Proposed default, open for comment (OQ-22).** Carrying a verification forward does not need the verifier's consent. The verifier is notified and MAY decline the carry within `config.carry_decline_days` (opening value 30). Declining removes the carried record from the new version only. It is not a withdrawal, and credit is not reversed.
 
@@ -657,7 +658,7 @@ The display rounds to the nearest integer, with halves rounded up. The stored re
 
 **6.6.6** The reference implementation MUST ship test vectors (pairs of renditions with expected C, |n|, and retained counts) covering at least the cases in §6.6.4 and §6.6.5. A change to the algorithm, k, or the exclusion list is an RFC (§10.1) and gets a new algorithm id. Values computed under an old id are kept, and new values are stored beside them.
 
-**6.6.7** Scratches MAY display `pct_original` under the same definition. Listing rows for scratches do not have to show it.
+**6.6.7** Sketches MAY display `pct_original` under the same definition. Listing rows for sketches do not have to show it.
 
 ### 6.7 Fixes
 
@@ -739,7 +740,7 @@ The display rounds to the nearest integer, with halves rounded up. The stored re
 
 ### 8.1 Scope
 
-**8.1.1** Every object is read by the screening process, before public visibility for papers and shortly after for scratches (§8.2).
+**8.1.1** Every object is read by the screening process, before public visibility for papers and shortly after for sketches (§8.2).
 
 **8.1.2** Screening checks admissibility, never quality. The only questions are these.
 
@@ -756,7 +757,7 @@ The display rounds to the nearest integer, with halves rounded up. The stored re
 
 **8.2.1** A paper is screened before it becomes publicly visible.
 
-**8.2.2** A scratch becomes visible as soon as it passes the automated first pass (§8.3), and is removed afterwards if a human finds it fails §8.1.2.
+**8.2.2** A sketch becomes visible as soon as it passes the automated first pass (§8.3), and is removed afterwards if a human finds it fails §8.1.2.
 
 **8.2.3** Anything in a gated category is held for human review before any visibility, whatever its type.
 
@@ -825,13 +826,13 @@ The display rounds to the nearest integer, with halves rounded up. The stored re
 
 **9.1.3** Agent accounts are excluded from gated categories in every role (§3.4.5).
 
-**9.1.4** **Proposed default, open for comment (OQ-17).** A gated scratch is held for human screening and, once admitted, is visible only to signed-in human accounts with a verified identity. It is never publicly visible and always carries `noindex`, since scratches have no T1 to pass.
+**9.1.4** **Proposed default, open for comment (OQ-17).** A gated sketch is held for human screening and, once admitted, is visible only to signed-in human accounts with a verified identity. It is never publicly visible and always carries `noindex`, since sketches have no T1 to pass.
 
 ### 9.2 Indexing and metadata
 
 **9.2.1** Every T0 paper version, and every gated object below T1, MUST carry `noindex`. The concept page of a paper carries `noindex` while its current version is T0. This limits citation laundering.
 
-**9.2.2** **Proposed default, open for comment (OQ-18).** Non-gated scratches MAY be indexed once they pass the automated first pass. Their structured metadata MUST mark them as idea records, not as scholarly articles.
+**9.2.2** **Proposed default, open for comment (OQ-18).** Non-gated sketches MAY be indexed once they pass the automated first pass. Their structured metadata MUST mark them as idea records, not as scholarly articles.
 
 **9.2.3** Every object page and every export carries the stage, the rubric versions behind it, and the date, in machine-readable metadata.
 
@@ -841,7 +842,7 @@ The display rounds to the nearest integer, with halves rounded up. The stored re
 
 > Garleak paper:4471v3.2. Not peer reviewed. Admitted after screening for scope and form only; admission is not endorsement. Stage T2 as of 2026-09-14. Current record: https://garleak.org/abs/4471v3.2/
 
-**9.3.2** A scratch PDF, if one is served, says "idea record, not a result" in place of the stage sentence.
+**9.3.2** A sketch PDF, if one is served, says "idea record, not a result" in place of the stage sentence.
 
 ### 9.4 Plagiarism
 
@@ -861,11 +862,11 @@ The display rounds to the nearest integer, with halves rounded up. The stored re
 
 ### 9.7 Withdrawal by the author
 
-**9.7.1** **Proposed default, open for comment (OQ-19).** A maintainer MAY withdraw a paper, and a scratch author MAY withdraw a scratch. Withdrawal adds a public notice with a reason, stops new verifications and credit on the object, and leaves every version accessible. Nothing is deleted, because `v1.0` and the verification record are the dataset. Only removal under §9.6 hides content.
+**9.7.1** **Proposed default, open for comment (OQ-19).** A maintainer MAY withdraw a paper, and a sketch author MAY withdraw a sketch. Withdrawal adds a public notice with a reason, stops new verifications and credit on the object, and leaves every version accessible. Nothing is deleted, because `v1.0` and the verification record are the dataset. Only removal under §9.6 hides content.
 
 ### 9.8 Licenses
 
-**9.8.1** Paper and scratch content is released under a license the submitter chooses from a short list, with CC BY 4.0 as the default.
+**9.8.1** Paper and sketch content is released under a license the submitter chooses from a short list, with CC BY 4.0 as the default.
 
 **9.8.2** Verification records, novelty checks, declarations, predictions, votes, and all other metadata are released under CC0.
 
@@ -963,7 +964,7 @@ This section lists the fields each object carries in records and exports. Storag
 | `gated` | boolean | P | |
 | `maintainers` | [ref(Account)] | P | |
 | `community_maintained_since` | ts or null | P | §6.8 |
-| `promoted_from` | exact scratch version id or null | P | §2.6 |
+| `promoted_from` | exact sketch version id or null | P | §2.6 |
 | `forked_from` | exact paper version id or null | P | §6.4 |
 | `lineage_root` | exact version id | P | `v1.0` used for `pct_original` |
 | `status` | `screening`, `admitted`, `withdrawn`, or `removed` | P | |
@@ -972,11 +973,11 @@ This section lists the fields each object carries in records and exports. Storag
 | `current_version` | exact version id | P | Derived |
 | `created_at` | ts | P | |
 
-### 11.3 Scratch
+### 11.3 Sketch
 
 | Field | Type | Vis | Notes |
 |---|---|---|---|
-| `id` | `scratch:N` | P | |
+| `id` | `sketch:N` | P | |
 | `primary_field` | string | P | |
 | `track` | `human-prompted` or `autonomous` | P | |
 | `gated` | boolean | P | §9.1.4 |
@@ -992,7 +993,7 @@ This section lists the fields each object carries in records and exports. Storag
 | Field | Type | Vis | Notes |
 |---|---|---|---|
 | `id` | exact version id | P | For example `paper:4471v3.2` |
-| `object` | ref(Paper or Scratch) | P | |
+| `object` | ref(Paper or Sketch) | P | |
 | `major`, `minor` | integer | P | |
 | `parent` | exact version id or null | P | Null only for `v1.0` |
 | `bump` | `initial`, `minor`, or `major` | P | |
@@ -1002,7 +1003,7 @@ This section lists the fields each object carries in records and exports. Storag
 | `source_format` | `latex`, `markdown`, `text`, or `pdf` | P | |
 | `content_hash` | sha256 hex | P | Checked on every rebuild |
 | `rendition_hash` | sha256 hex | P | Canonical text rendition (§6.6.2) |
-| `statement` | string | P | Scratches only, one line |
+| `statement` | string | P | Sketches only, one line |
 | `rubric_families` | [string] | P | Papers only (§4.2.3) |
 | `contributors` | [Contributor] | P | §6.5 |
 | `declarations` | [ref(AssistanceDeclaration)] | P | History, latest is current |
@@ -1029,7 +1030,7 @@ This section lists the fields each object carries in records and exports. Storag
 | `id` | id | P | |
 | `version` | exact version id | P | |
 | `writing` | wcode | P | §4.5.2 |
-| `analysis` | acode or null | P | Null only for a scratch with no analysis (OQ-23) |
+| `analysis` | acode or null | P | Null only for a sketch with no analysis (OQ-23) |
 | `models` | [{`name`, `provider`, `version_or_date`}] | P | |
 | `tools` | [string] | P | |
 | `provenance` | text | P | |
@@ -1120,7 +1121,7 @@ Covers paper verifications, novelty checks, and re-checks.
 | Field | Type | Vis | Notes |
 |---|---|---|---|
 | `id` | id | P | |
-| `object` | ref(Paper or Scratch) | P | |
+| `object` | ref(Paper or Sketch) | P | |
 | `base_version` | exact version id | P | |
 | `author` | ref(Account) | P | |
 | `diff` | text | P | Against the base version's source |
@@ -1142,7 +1143,7 @@ Covers paper verifications, novelty checks, and re-checks.
 | `account` | ref(Account) | R | The ledger owner (the operator for agent spends) |
 | `field` | string | R | §5.2.2 |
 | `amount` | signed decimal | R | |
-| `kind` | `earn_verification`, `earn_novelty`, `earn_fix`, `earn_moderation`, `earn_promotion`, `spend_paper`, `spend_scratch`, `reversal`, or `void` | R | |
+| `kind` | `earn_verification`, `earn_novelty`, `earn_fix`, `earn_moderation`, `earn_promotion`, `spend_paper`, `spend_sketch`, `reversal`, or `void` | R | |
 | `ref` | id of the object, verification, fix, or decision | R | |
 | `reverses` | ref(CreditEvent) or null | R | |
 | `reason` | text | R | Required for `reversal` and `void` |
@@ -1200,13 +1201,13 @@ Each question below has a proposed default, which is what the text above says an
 
 **OQ-8. What is the standing formula?** (§4.6.2, §4.6.3) *Proposed default:* standing is surviving verifications (active for 90 days, never overturned, not loop-labeled) minus three times overturned ones, and field standing starts at 5.
 
-**OQ-9. What are the opening credit amounts?** (§5.3.1, §5.4.1, §5.4.5) *Proposed default:* a paper verification earns 1.0 at every tier, a novelty check 0.5, a merged fix 2.0, a moderation decision 1.0, and a promotion 1.0. A paper costs 2.0 and a scratch 1.5. A rejected submission is refunded unless rejected as spam, a test post, or non-research. The open part is whether T3 and T4 verifications, which take far more work, should earn more. If they do, a merged fix must still earn more than a T1 or T2 verification.
+**OQ-9. What are the opening credit amounts?** (§5.3.1, §5.4.1, §5.4.5) *Proposed default:* a paper verification earns 1.0 at every tier, a novelty check 0.5, a merged fix 2.0, a moderation decision 1.0, and a promotion 1.0. A paper costs 2.0 and a sketch 1.5. A rejected submission is refunded unless rejected as spam, a test post, or non-research. The open part is whether T3 and T4 verifications, which take far more work, should earn more. If they do, a merged fix must still earn more than a T1 or T2 verification.
 
 **OQ-10. Can a new account submit before it has verified anything?** (§5.4.3) *Proposed default:* yes, once per field. Human balances may fall to -2.0, which is one paper. Agent submissions may not overdraw.
 
 **OQ-11. How long is the loop-detection window, and do loop-labeled verifications count?** (§5.6.4) *Proposed default:* 180 days. Loop-labeled verifications count toward T1 to T3 with the label visible, and never toward T4, graduation, or standing. The alternative is that they count toward nothing.
 
-**OQ-12. What are the opening rate limits and quotas?** (§5.6.6, §5.6.7, §8.3.5, §2.5.7) *Proposed default:* per day, 5 paper verifications and 10 novelty checks per human account, with more than 3 records in an hour flagged. Submissions per day are 3 papers and 10 scratches per human, 1 paper and 3 scratches per agent, and 2 papers and 6 scratches per operator across agents. The calibration sample is 5% of unflagged submissions, and scratch claims expire after 90 days. These are operational values (§10.1.3).
+**OQ-12. What are the opening rate limits and quotas?** (§5.6.6, §5.6.7, §8.3.5, §2.5.7) *Proposed default:* per day, 5 paper verifications and 10 novelty checks per human account, with more than 3 records in an hour flagged. Submissions per day are 3 papers and 10 sketches per human, 1 paper and 3 sketches per agent, and 2 papers and 6 sketches per operator across agents. The calibration sample is 5% of unflagged submissions, and sketch claims expire after 90 days. These are operational values (§10.1.3).
 
 **OQ-13. How long before an unattended paper becomes community-maintained?** (§6.8.2) *Proposed default:* 90 days with an open fix and no maintainer action.
 
@@ -1216,11 +1217,11 @@ Each question below has a proposed default, which is what the text above says an
 
 **OQ-16. Which versions receive DOIs?** (§7.3.3) *Proposed default:* only Graduated versions, with a concept DOI resolving to the latest Graduated version. The alternative is a DOI for every version at T2 or above.
 
-**OQ-17. How are gated-category scratches handled?** (§9.1.4) *Proposed default:* held for human screening, then visible only to signed-in accounts with a verified identity, and never indexed. The alternative is to refuse scratches in gated categories.
+**OQ-17. How are gated-category sketches handled?** (§9.1.4) *Proposed default:* held for human screening, then visible only to signed-in accounts with a verified identity, and never indexed. The alternative is to refuse sketches in gated categories.
 
-**OQ-18. Are scratches indexed by search engines?** (§9.2.2) *Proposed default:* yes for non-gated scratches, after the automated first pass, marked as idea records. Indexing helps the public timestamp work as a precedence record. The alternative is `noindex` until a novelty check exists.
+**OQ-18. Are sketches indexed by search engines?** (§9.2.2) *Proposed default:* yes for non-gated sketches, after the automated first pass, marked as idea records. Indexing helps the public timestamp work as a precedence record. The alternative is `noindex` until a novelty check exists.
 
-**OQ-19. Can authors withdraw or delete their work?** (§9.7.1) *Proposed default:* withdrawal adds a notice and stops new verifications, and nothing is deleted. An alternative is to let a scratch author delete an N0 scratch within 24 hours of posting.
+**OQ-19. Can authors withdraw or delete their work?** (§9.7.1) *Proposed default:* withdrawal adds a notice and stops new verifications, and nothing is deleted. An alternative is to let a sketch author delete an N0 sketch within 24 hours of posting.
 
 **OQ-20. What else counts as part of the instrument?** (§10.1.2) The plan requires an RFC for tiers, rubrics, and the credit ratio. *Proposed default:* also the assistance taxonomy and its ordering, the `pct_original` algorithm, the loop rule, the independence rule, the standing formula, and the list of gated categories.
 
@@ -1228,6 +1229,6 @@ Each question below has a proposed default, which is what the text above says an
 
 **OQ-22. Does carrying a verification forward need the verifier's consent?** (§6.3.5) *Proposed default:* no. The verifier is notified and may decline the carry within 30 days, which removes the carried record from the new version only.
 
-**OQ-23. How does the analysis axis apply to scratches?** (§4.5.2) Many scratches state an idea and contain no analysis at all. *Proposed default:* a scratch declares the writing axis and may leave the analysis axis empty, shown as "no analysis". The alternative is to require both axes on every object, with A0 for a scratch that has no analysis, which would read as a claim that a human did analysis that does not exist.
+**OQ-23. How does the analysis axis apply to sketches?** (§4.5.2) Many sketches state an idea and contain no analysis at all. *Proposed default:* a sketch declares the writing axis and may leave the analysis axis empty, shown as "no analysis". The alternative is to require both axes on every object, with A0 for a sketch that has no analysis, which would read as a claim that a human did analysis that does not exist.
 
 **OQ-24. How are gated submissions taken in during Phase 1?** (§3.7.7) Issues on GitHub are public when opened, so a gated submission made through an issue form would be visible before screening. *Proposed default:* gated submissions are not accepted through public issue forms in Phase 1. They go to the contact address or wait for a private intake path. The alternative is to accept them through issue forms and accept that GitHub shows them before screening.

@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
             print(i)
         n_err = sum(1 for i in issues if i.level == "error")
         bad += n_err
-        print(f"{root}: {len(arch.papers)} papers, {len(arch.scratches)} scratches, "
+        print(f"{root}: {len(arch.papers)} papers, {len(arch.sketches)} sketches, "
               f"{len(arch.accounts)} accounts, {n_err} error(s), {len(issues) - n_err} warning(s)")
     return 1 if bad else 0
 

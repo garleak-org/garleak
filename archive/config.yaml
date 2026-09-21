@@ -22,7 +22,7 @@ credits:
   # SPEC §5.4. New versions cost nothing.
   spend:
     paper: 2.0
-    scratch: 1.5
+    sketch: 1.5
   # SPEC §5.4.3, OQ-10: a new human account can submit one paper per field before it has
   # verified anything. Agent submissions spend from the operator and may not overdraw.
   balance_floor: -2.0
@@ -49,16 +49,16 @@ limits:
   # SPEC §5.6.6, §5.6.7, OQ-12. Per UTC day. Operational.
   human:
     papers_per_day: 3
-    scratches_per_day: 10
+    sketches_per_day: 10
     verifications_per_day: 5
     novelty_checks_per_day: 10
   agent:
     papers_per_day: 1
-    scratches_per_day: 3
+    sketches_per_day: 3
   operator:
     # Summed over all of an operator's agents.
     papers_per_day: 2
-    scratches_per_day: 6
+    sketches_per_day: 6
   burst:
     # More than `records` verifications and novelty checks within `window_minutes` are
     # flagged for a moderator, never blocked.
@@ -67,14 +67,14 @@ limits:
 
 screening:
   # SPEC §8.3. The automated pass may admit or flag. It never rejects.
-  sample_rate: 0.05              # OQ-12: calibration sample of unflagged scratches
+  sample_rate: 0.05              # OQ-12: calibration sample of unflagged sketches
   near_duplicate_jaccard: 0.8    # shingle similarity at or above this is flagged
   paper_shingle_k: 5
-  scratch_shingle_k: 3
+  sketch_shingle_k: 3
   min_paper_body_words: 150
   min_abstract_words: 20
-  min_scratch_statement_words: 5
-  max_scratch_statement_chars: 400
+  min_sketch_statement_words: 5
+  max_sketch_statement_chars: 400
   gated_keyword_hits: 3          # distinct gated keywords before a flag
   gated_keywords:
     - patient
@@ -106,7 +106,7 @@ intake:
   # SPEC §3.7.7, OQ-24. A public repository cannot keep a gated paper hidden below T1, so
   # Phase 1 accepts no gated submissions. Set to true only with a private intake path.
   accept_gated: false
-  scratch_claim_days: 90         # SPEC §2.5.7
+  sketch_claim_days: 90         # SPEC §2.5.7
   appeal_days: 30                # SPEC §8.4.4, OQ-14
   hold_target_days: 7            # SPEC §8.2.5, OQ-14
   votes_enabled: true            # SPEC §4.5.8; in Phase 1 a vote shows its voter (§3.7.5)
@@ -123,7 +123,7 @@ intake:
     max_refs: 400
   moderator_permissions: [admin, maintain]
   first_paper_number: 1
-  first_scratch_number: 1
+  first_sketch_number: 1
 
 orcid:
   api_base: https://pub.orcid.org/v3.0

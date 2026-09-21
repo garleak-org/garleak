@@ -2,7 +2,7 @@
 """Identifier grammar (SPEC §2.3).
 
     identifier = type ":" number [ version ]
-    type       = "paper" / "scratch"
+    type       = "paper" / "sketch"
     number     = nonzero *DIGIT
     version    = "v" major [ "." minor ]
     major      = nonzero *DIGIT
@@ -11,7 +11,7 @@
 Three forms resolve differently (§2.3.3): concept (`paper:4471`), series
 (`paper:4471v3`, the latest minor in major 3) and exact (`paper:4471v3.2`).
 URL keys drop the type prefix because the path already carries it
-(`/abs/4471v3.2/`, `/scratch/8812/`).
+(`/abs/4471v3.2/`, `/sketch/8812/`).
 """
 
 from __future__ import annotations
@@ -19,10 +19,10 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-TYPES = ("paper", "scratch")
+TYPES = ("paper", "sketch")
 _NUM = r"[1-9][0-9]*"
 _MINOR = r"(?:0|[1-9][0-9]*)"
-IDENTIFIER_RE = re.compile(rf"^(paper|scratch):({_NUM})(?:v({_NUM})(?:\.({_MINOR}))?)?$")
+IDENTIFIER_RE = re.compile(rf"^(paper|sketch):({_NUM})(?:v({_NUM})(?:\.({_MINOR}))?)?$")
 URL_KEY_RE = re.compile(rf"^({_NUM})(?:v({_NUM})(?:\.({_MINOR}))?)?$")
 VERSION_RE = re.compile(rf"^({_NUM})\.({_MINOR})$")
 

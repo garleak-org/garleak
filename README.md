@@ -1,7 +1,7 @@
 # Garleak
 
 Garleak (garleak.org) is an open archive for AI-assisted research. Every paper and every
-research scratch on it says which model was involved and how much, and carries a public
+research sketch on it says which model was involved and how much, and carries a public
 record of who checked it and what they found. The interesting question here is not
 whether a model wrote something. It is whether the thing holds up.
 
@@ -17,10 +17,10 @@ identifiers, separate stages).
   tiers from T0 (unverified) through T1 (citations checked), T2 (claims checked against a
   field rubric), and T3 (partially reproduced) to T4 (independently reproduced). A paper
   that meets the graduation rules becomes Graduated, with a stable citation string.
-- **Scratches** are ideas and fragments, checked for novelty rather than correctness
+- **Sketches** are ideas and fragments, checked for novelty rather than correctness
   (N0 posted, N1 no prior work found, N2 prior work found and linked, N3 judged
-  tractable). A scratch that someone tests can be promoted into a paper that credits the
-  scratch's author by a permanent backlink.
+  tractable). A sketch that someone tests can be promoted into a paper that credits the
+  sketch's author by a permanent backlink.
 
 Verifications attach to a specific version, and v1 is kept unchanged forever. Assistance
 is declared on two axes, writing (from W0, a human wrote it, to W3, a model wrote it) and
@@ -102,7 +102,7 @@ python3.12 -m venv .venv
 | Rubric YAML files and the rubric schema | CC0 1.0 |
 | The specification | CC0 1.0 |
 | Verification records and metadata | CC0 1.0 (they are facts about the corpus) |
-| Paper and scratch content | Chosen by the submitter from a short list, CC BY 4.0 by default |
+| Paper and sketch content | Chosen by the submitter from a short list, CC BY 4.0 by default |
 | Released datasets | CC BY 4.0, each with a DOI and a citation string |
 | Fonts in `site/garleak_site/static/fonts` | SIL Open Font License 1.1 (license files alongside) |
 

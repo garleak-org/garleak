@@ -183,17 +183,17 @@ def version_id(f: Fields, fid: str) -> tuple[int, VersionNumber] | None:
     return ident.number, ident.version
 
 
-def scratch_number(f: Fields, fid: str) -> int | None:
+def sketch_number(f: Fields, fid: str) -> int | None:
     raw = f.line(fid, required=True).replace(" ", "")
     if not raw:
         return None
-    t = raw if raw.startswith("scratch:") else "scratch:" + raw
+    t = raw if raw.startswith("sketch:") else "sketch:" + raw
     try:
         ident = Identifier.parse(t)
     except IdentifierError:
         ident = None
-    if ident is None or ident.type != "scratch" or (ident.major not in (None, 1)) or (ident.minor not in (None, 0)):
-        f.add(fid, f"Could not read {raw!r} as a scratch, such as scratch:8 or scratch:8v1.0.")
+    if ident is None or ident.type != "sketch" or (ident.major not in (None, 1)) or (ident.minor not in (None, 0)):
+        f.add(fid, f"Could not read {raw!r} as a sketch, such as sketch:8 or sketch:8v1.0.")
         return None
     return ident.number
 
@@ -225,7 +225,7 @@ class IdentityRequest:
 
 
 @dataclass
-class ScratchRequest:
+class SketchRequest:
     category: str | None
     statement: str
     detail: str
@@ -300,7 +300,7 @@ class VerifyRequest:
 
 @dataclass
 class NoveltyRequest:
-    scratch: int | None
+    sketch: int | None
     outcome: str | None
     summary: str
     sources: list[str]
@@ -331,7 +331,7 @@ class VoteRequest:
 
 @dataclass
 class ClaimRequest:
-    scratch: int | None
+    sketch: int | None
 
 
 @dataclass
@@ -376,10 +376,10 @@ def build_identity(f: Fields) -> IdentityRequest:
     return req
 
 
-def build_scratch(f: Fields) -> ScratchRequest:
+def build_sketch(f: Fields) -> SketchRequest:
     a = f.text("analysis")
     analysis = None if (not a or a.lower().startswith("no analysis")) else f.code("analysis", ANALYSIS_RE)
-    req = ScratchRequest(
+    req = SketchRequest(
         category=f.code("category", CATEGORY_RE),
         statement=f.line("statement", required=True),
         detail=f.text("detail"),
@@ -415,7 +415,7 @@ def _artifacts(f: Fields, fid: str) -> list[dict]:
 def build_paper(f: Fields) -> PaperRequest:
     promoted = None
     if f.text("promoted_from"):
-        promoted = scratch_number(f, "promoted_from")
+        promoted = sketch_number(f, "promoted_from")
     req = PaperRequest(
         category=f.code("category", CATEGORY_RE),
         title=f.line("title", required=True),
@@ -532,7 +532,7 @@ def build_verify(f: Fields) -> VerifyRequest:
 
 def build_novelty(f: Fields) -> NoveltyRequest:
     req = NoveltyRequest(
-        scratch=scratch_number(f, "scratch"),
+        sketch=sketch_number(f, "sketch"),
         outcome=f.code("outcome", OUTCOME_RE),
         summary=f.text("summary", required=True),
         sources=lines(f.text("sources")),
@@ -574,7 +574,7 @@ def build_vote(f: Fields) -> VoteRequest:
 
 
 def build_claim(f: Fields) -> ClaimRequest:
-    req = ClaimRequest(scratch_number(f, "scratch"))
+    req = ClaimRequest(sketch_number(f, "sketch"))
     f.all_required_checked("confirm")
     return req
 
@@ -588,7 +588,7 @@ def build_report(f: Fields) -> ReportRequest:
 
 BUILDERS = {
     "identity": build_identity,
-    "scratch": build_scratch,
+    "sketch": build_sketch,
     "paper": build_paper,
     "version": build_version,
     "verify": build_verify,

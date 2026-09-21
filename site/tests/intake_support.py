@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Helpers for the intake tests: a scratch archive with the real config and categories,
+"""Helpers for the intake tests: a sketch archive with the real config and categories,
 issue fixtures rendered from the real issue forms, and a fake HTTP client."""
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from pathlib import Path
 
 import yaml
 
-from garleak_archive.hashing import scratch_content_sha256, tree_sha256
+from garleak_archive.hashing import sketch_content_sha256, tree_sha256
 from garleak_archive.loader import load_archive
 from garleak_archive.validate import validate
 from garleak_intake.context import Comment, Context, OpenPR
@@ -48,11 +48,11 @@ DEFAULTS = {
     "identity": {"kind": "Human", "path": "ORCID: my public ORCID record lists this GitHub profile",
                  "orcid": "0000-0002-1825-0097", "display": "Real name", "display_name": "Dana Example",
                  "confirm": _all("identity", "confirm")},
-    "scratch": {"category": "phys.astro: Astrophysics",
+    "sketch": {"category": "phys.astro: Astrophysics",
                 "statement": "Wide-binary eccentricities should flatten above 0.1 pc if the Galactic tide is strong.",
                 "models": "gpt-5, OpenAI, 2026-06", "writing": "W3: a model wrote it, with light or no human edits",
-                "analysis": "No analysis in this scratch", "license": "CC-BY-4.0 (default)",
-                "confirm": _all("scratch", "confirm")},
+                "analysis": "No analysis in this sketch", "license": "CC-BY-4.0 (default)",
+                "confirm": _all("sketch", "confirm")},
     "paper": {"category": "phys.astro: Astrophysics", "title": "A lighter halo from a rotation curve fit",
               "abstract": ABSTRACT, "models": "claude-opus-4, Anthropic, 2026-05",
               "writing": "W2: a model drafted it, and a human edited it",
@@ -70,7 +70,7 @@ DEFAULTS = {
                "rubric_version": "1.0.0", "kind": "Full verification", "items": T1_ITEMS,
                "summary": "All references exist and support the sentences that cite them.",
                "conflicts": "None that I know of", "attest": _all("verify", "attest")},
-    "novelty": {"scratch": "scratch:1", "outcome": "N1: no prior work found",
+    "novelty": {"sketch": "sketch:1", "outcome": "N1: no prior work found",
                 "summary": "No work uses the eccentricity distribution above 0.1 pc to measure the tide.",
                 "sources": "ADS\nOpenAlex", "queries": "wide binary eccentricity tide\nGalactic tide wide binaries",
                 "attest": _all("novelty", "attest")},
@@ -78,8 +78,8 @@ DEFAULTS = {
                 "statement": "We wrote the text ourselves and only used the model for spelling."},
     "vote": {"version": "paper:1v1.0", "writing": "W2: a model drafted it, and a human edited it",
              "analysis": "No vote on this axis", "confirm": _all("vote", "confirm")},
-    "claim": {"scratch": "scratch:1", "confirm": _all("claim", "confirm")},
-    "report": {"kind": "Report content", "subject": "scratch:1", "criterion": "1: not a genuine attempt at research",
+    "claim": {"sketch": "sketch:1", "confirm": _all("claim", "confirm")},
+    "report": {"kind": "Report content", "subject": "sketch:1", "criterion": "1: not a genuine attempt at research",
                "details": "This looks like a test post."},
 }
 
@@ -169,16 +169,16 @@ class Arch:
         d.update(extra)
         self._w(f"accounts/{handle}.yaml", d)
 
-    def scratch(self, n: int, author: str, date: str = "2026-09-01", category: str = "phys.astro",
+    def sketch(self, n: int, author: str, date: str = "2026-09-01", category: str = "phys.astro",
                 statement: str | None = None, **extra) -> None:
-        d = {"id": f"scratch:{n}", "category": category, "author": author, "date": date,
-             "statement": statement or f"Scratch number {n} says something testable about wide binaries.",
+        d = {"id": f"sketch:{n}", "category": category, "author": author, "date": date,
+             "statement": statement or f"Sketch number {n} says something testable about wide binaries.",
              "models": [{"name": "gpt-5"}], "assistance": {"writing": "W3", "analysis": None}}
-        d["v1_sha256"] = scratch_content_sha256(d)
+        d["v1_sha256"] = sketch_content_sha256(d)
         if self.load_accounts().get(author, {}).get("kind") == "agent":
             d["track"] = "autonomous"
         d.update(extra)
-        self._w(f"scratches/{n}.yaml", d)
+        self._w(f"sketches/{n}.yaml", d)
 
     def load_accounts(self) -> dict:
         return {p.stem: yaml.safe_load(p.read_text()) for p in (self.root / "accounts").glob("*.yaml")}
@@ -218,7 +218,7 @@ class Arch:
         self._w(f"papers/{n}/verifications/{vid}.yaml", d)
 
     def check(self, n: int, cid: str, checker: str, date: str = "2026-09-05", outcome: str = "N1") -> None:
-        p = self.root / "scratches" / f"{n}.yaml"
+        p = self.root / "sketches" / f"{n}.yaml"
         data = yaml.safe_load(p.read_text())
         data.setdefault("checks", []).append({"id": cid, "outcome": outcome, "checker": checker, "date": date,
                                               "summary": "Searched.", "sources": ["ADS"], "queries": ["q"]})

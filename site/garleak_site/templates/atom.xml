@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Garleak, {{ cat.name }} {{ 'papers' if kind == 'paper' else 'scratches' }}</title>
+  <title>Garleak, {{ cat.name }} {{ 'papers' if kind == 'paper' else 'sketches' }}</title>
   <subtitle>Admitted after screening for scope and form only. Not peer reviewed.</subtitle>
   <id>{{ cfg.site_url }}{{ base }}{{ cat.code }}/feed.xml</id>
   <link rel="self" href="{{ cfg.site_url }}{{ base }}{{ cat.code }}/feed.xml"/>

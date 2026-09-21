@@ -28,10 +28,10 @@
         "spend": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["paper", "scratch"],
+          "required": ["paper", "sketch"],
           "properties": {
             "paper": {"type": "number", "minimum": 0},
-            "scratch": {"type": "number", "minimum": 0}
+            "sketch": {"type": "number", "minimum": 0}
           }
         },
         "balance_floor": {"type": "number", "maximum": 0},
@@ -68,10 +68,10 @@
         "human": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["papers_per_day", "scratches_per_day", "verifications_per_day", "novelty_checks_per_day"],
+          "required": ["papers_per_day", "sketches_per_day", "verifications_per_day", "novelty_checks_per_day"],
           "properties": {
             "papers_per_day": {"type": "integer", "minimum": 0},
-            "scratches_per_day": {"type": "integer", "minimum": 0},
+            "sketches_per_day": {"type": "integer", "minimum": 0},
             "verifications_per_day": {"type": "integer", "minimum": 0},
             "novelty_checks_per_day": {"type": "integer", "minimum": 0}
           }
@@ -79,19 +79,19 @@
         "agent": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["papers_per_day", "scratches_per_day"],
+          "required": ["papers_per_day", "sketches_per_day"],
           "properties": {
             "papers_per_day": {"type": "integer", "minimum": 0},
-            "scratches_per_day": {"type": "integer", "minimum": 0}
+            "sketches_per_day": {"type": "integer", "minimum": 0}
           }
         },
         "operator": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["papers_per_day", "scratches_per_day"],
+          "required": ["papers_per_day", "sketches_per_day"],
           "properties": {
             "papers_per_day": {"type": "integer", "minimum": 0},
-            "scratches_per_day": {"type": "integer", "minimum": 0}
+            "sketches_per_day": {"type": "integer", "minimum": 0}
           }
         },
         "burst": {
@@ -108,18 +108,18 @@
     "screening": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sample_rate", "near_duplicate_jaccard", "paper_shingle_k", "scratch_shingle_k",
-                   "min_paper_body_words", "min_abstract_words", "min_scratch_statement_words",
-                   "max_scratch_statement_chars", "gated_keyword_hits", "gated_keywords"],
+      "required": ["sample_rate", "near_duplicate_jaccard", "paper_shingle_k", "sketch_shingle_k",
+                   "min_paper_body_words", "min_abstract_words", "min_sketch_statement_words",
+                   "max_sketch_statement_chars", "gated_keyword_hits", "gated_keywords"],
       "properties": {
         "sample_rate": {"type": "number", "minimum": 0, "maximum": 1},
         "near_duplicate_jaccard": {"type": "number", "minimum": 0, "maximum": 1},
         "paper_shingle_k": {"type": "integer", "minimum": 1},
-        "scratch_shingle_k": {"type": "integer", "minimum": 1},
+        "sketch_shingle_k": {"type": "integer", "minimum": 1},
         "min_paper_body_words": {"type": "integer", "minimum": 0},
         "min_abstract_words": {"type": "integer", "minimum": 0},
-        "min_scratch_statement_words": {"type": "integer", "minimum": 0},
-        "max_scratch_statement_chars": {"type": "integer", "minimum": 1},
+        "min_sketch_statement_words": {"type": "integer", "minimum": 0},
+        "max_sketch_statement_chars": {"type": "integer", "minimum": 1},
         "gated_keyword_hits": {"type": "integer", "minimum": 1},
         "gated_keywords": {"type": "array", "items": {"type": "string", "minLength": 1}}
       }
@@ -127,12 +127,12 @@
     "intake": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["accept_gated", "scratch_claim_days", "appeal_days", "hold_target_days", "votes_enabled",
+      "required": ["accept_gated", "sketch_claim_days", "appeal_days", "hold_target_days", "votes_enabled",
                    "max_body_bytes", "max_bib_bytes", "max_pdf_bytes", "attachment_prefixes", "citecheck",
-                   "moderator_permissions", "first_paper_number", "first_scratch_number"],
+                   "moderator_permissions", "first_paper_number", "first_sketch_number"],
       "properties": {
         "accept_gated": {"type": "boolean"},
-        "scratch_claim_days": {"type": "integer", "minimum": 1},
+        "sketch_claim_days": {"type": "integer", "minimum": 1},
         "appeal_days": {"type": "integer", "minimum": 1},
         "hold_target_days": {"type": "integer", "minimum": 1},
         "votes_enabled": {"type": "boolean"},
@@ -152,7 +152,7 @@
         },
         "moderator_permissions": {"type": "array", "items": {"enum": ["admin", "maintain", "write", "triage"]}},
         "first_paper_number": {"type": "integer", "minimum": 1},
-        "first_scratch_number": {"type": "integer", "minimum": 1}
+        "first_sketch_number": {"type": "integer", "minimum": 1}
       }
     },
     "orcid": {

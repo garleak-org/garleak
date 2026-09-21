@@ -3,7 +3,7 @@
 name: Garleak example archive
 example: true
 as_of: '2026-09-14'
-new_listing_days: 21
+recent_count: 50
 config_version: '0.1'
 spec_version: '0.2'
 rubrics: ../packages/rubrics

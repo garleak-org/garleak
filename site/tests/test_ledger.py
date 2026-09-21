@@ -35,11 +35,11 @@ def bal(a, h, f="phys"):
 def test_spend_and_earn_are_field_scoped(arch):
     arch.paper(1, "alice")
     arch.verification(1, "1-01", "bob")
-    arch.scratch(1, "bob", category="math.nt")
+    arch.sketch(1, "bob", category="math.nt")
     a = arch.load()
     assert bal(a, "alice") == dec(-2) and bal(a, "bob") == dec(1) and bal(a, "bob", "math") == dec("-1.5")
     kinds = {e.kind for e in ledger.events(a)}
-    assert kinds == {"spend_paper", "earn_verification", "spend_scratch"}
+    assert kinds == {"spend_paper", "earn_verification", "spend_sketch"}
     assert all(e.config_version == "0.1" for e in ledger.events(a))
 
 
@@ -59,17 +59,17 @@ def test_the_floor_allows_one_paper_per_field(arch):
 
 
 def test_an_agent_spends_from_its_operator_and_may_not_overdraw(arch):
-    sc = ledger.check_spend(arch.load(), "scout", "phys", "scratch")
+    sc = ledger.check_spend(arch.load(), "scout", "phys", "sketch")
     assert sc.payer == "alice" and sc.floor == 0 and not sc.ok
     arch.paper(1, "bob")
     arch.verification(1, "1-01", "alice")
     arch.verification(1, "1-02", "alice", tier="T2")
-    assert ledger.check_spend(arch.load(), "scout", "phys", "scratch").ok
+    assert ledger.check_spend(arch.load(), "scout", "phys", "sketch").ok
 
 
 def test_refund_on_removal_except_for_criterion_one(arch):
     arch.paper(1, "alice", status="removed", removal={"date": "2026-09-10", "criterion": "2"})
-    arch.scratch(1, "bob", status="removed", removal={"date": "2026-09-10", "criterion": "1"})
+    arch.sketch(1, "bob", status="removed", removal={"date": "2026-09-10", "criterion": "1"})
     a = arch.load()
     assert bal(a, "alice") == 0 and bal(a, "bob") == dec("-1.5")
 
@@ -94,9 +94,9 @@ def test_withdrawn_is_reversed_and_overturned_keeps_its_credit(arch):
     assert bal(a, "bob") == 0 and bal(a, "carol") == 1
 
 
-def test_promotion_credits_the_scratch_author(arch):
-    arch.scratch(1, "bob", promoted_to=[1])
-    arch.paper(1, "alice", promoted_from="scratch:1v1.0")
+def test_promotion_credits_the_sketch_author(arch):
+    arch.sketch(1, "bob", promoted_to=[1])
+    arch.paper(1, "alice", promoted_from="sketch:1v1.0")
     a = arch.load()
     assert arch.errors() == []
     assert bal(a, "bob") == dec(1 - 1.5)
@@ -170,12 +170,12 @@ def test_a_cycle_of_five_is_not_a_loop():
 
 
 def test_novelty_checks_are_edges_too(arch):
-    arch.scratch(1, "alice")
-    arch.scratch(2, "bob")
+    arch.sketch(1, "alice")
+    arch.sketch(2, "bob")
     arch.check(1, "1-n1", "bob")
     arch.check(2, "2-n1", "alice")
     a = arch.load()
-    assert a.scratches[1].checks[0].loop_label["length"] == 2
+    assert a.sketches[1].checks[0].loop_label["length"] == 2
     assert bal(a, "bob") == dec("-1.5")
 
 

@@ -39,6 +39,7 @@ CONTENT_PAGES = [
     ("/submit/", "submit.html", "Submitting to Garleak", "submit"),
     ("/citecheck/", "citecheck.html", "citecheck", "citecheck"),
     ("/terms/", "terms.html", "Terms, draft", "terms"),
+    ("/licenses/", "licenses.html", "Licenses", "licenses"),
     ("/moderation/", "moderation.html", "Screening and moderation", "moderation"),
 ]
 
@@ -89,6 +90,7 @@ class Builder:
             cfg=config, TIER_NAMES=TIER_NAMES, N_NAMES=N_NAMES, WRITING=asst.WRITING,
             ANALYSIS=asst.ANALYSIS, gloss=V.gloss, build_date=self.build_date,
             MIN_VOTES=asst.MIN_VOTES_FOR_MEDIAN, has_example=False,
+            LICENSES=V.LICENSES, license_name=V.license_name, license_url=V.license_url,
         )
 
     # ------------------------------------------------------------ output
@@ -196,27 +198,29 @@ class Builder:
                         example_site=s)
         self.render(s.url("/list/"), "list_index.html", title="Papers by category", site=s,
                     robots=LISTING_ROBOTS, nav="papers", kind="paper")
-        self.render(s.url("/scratch/list/"), "list_index.html", title="Scratches by category", site=s,
-                    robots=LISTING_ROBOTS, nav="scratches", kind="scratch")
+        self.render(s.url("/sketch/list/"), "list_index.html", title="Sketches by category", site=s,
+                    robots=LISTING_ROBOTS, nav="sketches", kind="sketch")
         self.render(s.url("/graduated/"), "graduated.html", title="Graduated papers", site=s,
                     robots=LISTING_ROBOTS, nav="graduated")
         for cat in s.a.categories.values():
             months = s.months(cat.code)
-            for kind, base, nav in (("paper", "/list/", "papers"), ("scratch", "/scratch/list/", "scratches")):
-                noun = "papers" if kind == "paper" else "scratches"
-                new = s.paper_new(cat.code) if kind == "paper" else s.scratch_new(cat.code)
-                self.render(s.url(f"{base}{cat.code}/new/"), "listing.html", title=f"{cat.name} {noun}, new",
-                            site=s, robots=LISTING_ROBOTS, nav=nav, kind=kind, cat=cat, listing=new,
-                            period="new", months=months)
+            for kind, base, nav in (("paper", "/list/", "papers"), ("sketch", "/sketch/list/", "sketches")):
+                noun = "papers" if kind == "paper" else "sketches"
+                recent = s.paper_recent(cat.code) if kind == "paper" else s.sketch_recent(cat.code)
+                self.render(s.url(f"{base}{cat.code}/recent/"), "listing.html",
+                            title=f"{cat.name} {noun}, recent", site=s, robots=LISTING_ROBOTS, nav=nav,
+                            kind=kind, cat=cat, listing=recent, period="recent", months=months)
+                self.redirect(s.url(f"{base}{cat.code}/new/"), s.url(f"{base}{cat.code}/recent/"), s,
+                              f"{cat.name} {noun}, recent")
                 for ym in months:
-                    lst = s.paper_month(cat.code, ym) if kind == "paper" else s.scratch_month(cat.code, ym)
+                    lst = s.paper_month(cat.code, ym) if kind == "paper" else s.sketch_month(cat.code, ym)
                     self.render(s.url(f"{base}{cat.code}/{ym}/"), "listing.html",
                                 title=f"{cat.name} {noun}, {V.monthname(ym)}", site=s, robots=LISTING_ROBOTS,
                                 nav=nav, kind=kind, cat=cat, listing=lst, period=ym, months=months)
         for pv in s.papers:
             self.paper_pages(s, pv)
-        for sv in s.scratches:
-            self.scratch_pages(s, sv)
+        for sv in s.sketches:
+            self.sketch_pages(s, sv)
 
     def abs_page(self, s: V.Site, pv: V.PaperView, vv: V.VersionView, path: str, canonical: str, form: str) -> None:
         ident = "paper:" + path.rstrip("/").rsplit("/", 1)[-1]
@@ -277,21 +281,21 @@ class Builder:
                     body_diff=render_html(body), added=body.added + abstract.added,
                     removed=body.removed + abstract.removed)
 
-    def scratch_pages(self, s: V.Site, sv: V.ScratchView) -> None:
+    def sketch_pages(self, s: V.Site, sv: V.SketchView) -> None:
         n = sv.number
         if sv.s.status == "removed":
-            self.render(sv.url, "tombstone.html", title=f"scratch:{n} removed", site=s, robots=LISTING_ROBOTS,
-                        pv=None, ident=f"scratch:{n}", obj=sv.s)
+            self.render(sv.url, "tombstone.html", title=f"sketch:{n} removed", site=s, robots=LISTING_ROBOTS,
+                        pv=None, ident=f"sketch:{n}", obj=sv.s)
         elif not sv.visible:
-            self.render(sv.url, "gated.html", title=f"scratch:{n}, gated", site=s, robots=LISTING_ROBOTS,
-                        pv=None, vv=None, sv=sv, ident=f"scratch:{n}")
+            self.render(sv.url, "gated.html", title=f"sketch:{n}, gated", site=s, robots=LISTING_ROBOTS,
+                        pv=None, vv=None, sv=sv, ident=f"sketch:{n}")
         else:
-            self.render(sv.url, "scratch.html", title=sv.s.statement, site=s, nav="scratches", searchable=True,
+            self.render(sv.url, "sketch.html", title=sv.s.statement, site=s, nav="sketches", searchable=True,
                         robots=None if sv.indexable else LISTING_ROBOTS, sv=sv)
         for key in (f"{n}v1", f"{n}v1.0"):
-            self.redirect(s.url(f"/scratch/{key}/"), sv.url, s, f"scratch:{key}")
+            self.redirect(s.url(f"/sketch/{key}/"), sv.url, s, f"sketch:{key}")
         for key in (f"{n}", f"{n}v1", f"{n}v1.0"):
-            self.redirect(s.url(f"/abs/scratch:{key}/"), sv.url, s, f"scratch:{key}")
+            self.redirect(s.url(f"/abs/sketch:{key}/"), sv.url, s, f"sketch:{key}")
 
     # ------------------------------------------------------------ feeds, 404, sitemap
 
@@ -301,8 +305,8 @@ class Builder:
         for cat in s.a.categories.values():
             papers = sorted((v for pv in s.cat_papers(cat.code) for v in pv.versions if v.visible),
                             key=lambda v: (v.v.date, v.pv.number), reverse=True)[:50]
-            scratches = sorted(s.cat_scratches(cat.code), key=lambda x: (x.s.date, x.number), reverse=True)[:50]
-            for kind, base, entries in (("paper", "/list/", papers), ("scratch", "/scratch/list/", scratches)):
+            sketches = sorted(s.cat_sketches(cat.code), key=lambda x: (x.s.date, x.number), reverse=True)[:50]
+            for kind, base, entries in (("paper", "/list/", papers), ("sketch", "/sketch/list/", sketches)):
                 xml = self.env.get_template("atom.xml").render(site=s, cat=cat, kind=kind, entries=entries,
                                                                 updated=updated, base=base)
                 self.write(f"{base}{cat.code}/feed.xml", xml)

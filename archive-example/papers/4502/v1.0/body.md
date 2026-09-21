@@ -1,6 +1,6 @@
 ## 1. Idea
 
-This paper tests scratch:8790v1.0 by u/kestrel, which proposed using stream width against radius to count subhalos.
+This paper tests sketch:8790v1.0 by u/kestrel, which proposed using stream width against radius to count subhalos.
 
 ## 2. Model
 

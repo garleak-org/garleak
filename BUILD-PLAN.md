@@ -19,7 +19,7 @@ the hosting details in [docs/HOSTING.md](docs/HOSTING.md).
 | S3 | Verification through issue forms, rubric item records, anti-gaming, standing | Not started. The rubrics are written (citations, computational, and mathematics v1.0.0, status draft, 43 items, a validator, 27 tests). |
 | S4 | Stamped PDFs, diff pages, digests and feeds | Not started |
 | S5 | citecheck, released as `garleak-citecheck` | Code done, not released. 49 offline tests pass. The benchmark is in-sample only. |
-| S6 | Fixes, scratch promotion, graduation, moderator queue, features, leaderboard | Not started |
+| S6 | Fixes, sketch promotion, graduation, moderator queue, features, leaderboard | Not started |
 | S7 | Zenodo DOIs, dataset export, final terms, seeding | Not started |
 | Phase 2 | Cloudflare Worker with ORCID sign-in, for private identity | Planned for after Phase 1 opens |
 
@@ -35,11 +35,11 @@ records that the issue-form path commits.
 
 ## Rules that apply to every milestone
 
-- v1 of every paper and scratch is immutable forever, and so is every later version once
+- v1 of every paper and sketch is immutable forever, and so is every later version once
   created. Each version's content hash is stored in its record. CI recomputes every hash
   and fails any pull request that changes or deletes an existing version. The history of
   `main` is never rewritten.
-- Verifications attach to an exact version, never to a paper or scratch.
+- Verifications attach to an exact version, never to a paper or sketch.
 - Assistance is declared on two axes, writing (W0 to W3) and analysis (A0 to A2), each
   with three signals (declared, predicted, community). They are stored and shown
   separately. Nothing averages or merges them, nothing combines the axes, and the
@@ -169,17 +169,17 @@ consent (OQ-22).
 opens without an automated first pass is the day screening becomes the founder's evening
 job.
 
-**Scope.** Getting papers and scratches in through issue forms, verifying identity,
+**Scope.** Getting papers and sketches in through issue forms, verifying identity,
 paying with credits, and the automated screening pass.
 
 **Deliverables**
 
-- Issue forms in `.github/ISSUE_TEMPLATE/` for papers and scratches. Required fields
+- Issue forms in `.github/ISSUE_TEMPLATE/` for papers and sketches. Required fields
   include the declared writing and analysis codes, the models used, a provenance
   statement, the category, the rubric families (papers), and a content license from a
   short list with CC BY 4.0 as the default.
 - An intake workflow that parses the form, validates it, writes the records, and opens a
-  pull request. A paper waits for a moderator to review and merge it. A scratch merges
+  pull request. A paper waits for a moderator to review and merge it. A sketch merges
   automatically once every automated check passes.
 - Identity. A verification form, and a workflow that reads the person's public ORCID
   record through a registered public API client and checks that it lists their GitHub
@@ -236,7 +236,7 @@ that checking honest.
   verdict (pass, fail, or not applicable with a reason) and evidence for every rubric
   item. The workflow records the rubric id and its current active version. T1
   (citations) is universal and always first.
-- A novelty-check form for scratches (the search record for N1, the prior work for N2,
+- A novelty-check form for sketches (the search record for N1, the prior work for N2,
   the tractability note for N3). N2 is displayed neutrally.
 - Failed verifications shown on the version with the same weight as passing ones.
 - Conflict checks from public sources (ORCID works, Crossref, OpenAlex). Held data, such
@@ -288,7 +288,7 @@ that checking honest.
 
 - Every page of a stamped PDF carries the notice (tested by extracting text per page).
 - T0 pages, gated pages, and listing pages have `noindex` (tested).
-- No listing ever mixes papers and scratches (tested).
+- No listing ever mixes papers and sketches (tested).
 - Pages work with JavaScript disabled, with WCAG AA contrast, visible keyboard focus,
   `prefers-reduced-motion` respected, and stage never shown by color alone.
 
@@ -330,7 +330,7 @@ results, and 48 of 48 fabricated ones were flagged.
 
 ---
 
-## S6. Fixes, scratch promotion, graduation, moderator queue, features, leaderboard
+## S6. Fixes, sketch promotion, graduation, moderator queue, features, leaderboard
 
 **Never ship the leaderboard before S3's anti-gaming is live.** A leaderboard over
 unguarded verification rewards rings, and the numbers it shows would be wrong.
@@ -343,8 +343,8 @@ unguarded verification rewards rings, and the numbers it shows would be wrong.
   maintains by default. After an inactivity window the paper becomes community
   maintained, and a fix merges on two approvals from verifiers with standing in the
   field. A merged fix earns more credit than a verification.
-- Scratch promotion. A tested scratch becomes a new paper with a permanent backlink that
-  credits the scratch's author. A scratch is never citable in a way that implies a
+- Sketch promotion. A tested sketch becomes a new paper with a permanent backlink that
+  credits the sketch's author. A sketch is never citable in a way that implies a
   result.
 - Graduation, checked automatically. T3 or above, two independent verifiers, no shared
   affiliation, no open fixes. Graduation freezes that version, and further edits open a
@@ -392,7 +392,7 @@ featured papers.
   that admission never means endorsement, and that archiving here is not prior
   publication and does not preclude journal submission. A named responsible person and
   a working takedown path.
-- Seed content. 50 papers and 50 scratches across physics, computer science, and
+- Seed content. 50 papers and 50 sketches across physics, computer science, and
   mathematics, verified by hand. Categories below a threshold are hidden rather than
   shown empty.
 

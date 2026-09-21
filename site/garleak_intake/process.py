@@ -41,7 +41,7 @@ CRITERIA = {
     3: "gated content filed elsewhere",
     4: "harmful, defamatory or plagiarized, or posted without the right to",
 }
-NOUN = {"identity": "account link", "scratch": "scratch", "paper": "paper", "version": "new version",
+NOUN = {"identity": "account link", "sketch": "sketch", "paper": "paper", "version": "new version",
         "verify": "verification", "novelty": "novelty check", "contest": "contest", "vote": "vote",
         "claim": "claim", "report": "report"}
 
@@ -203,7 +203,7 @@ class Base:
 
     def check_quota(self, acc: Account, kind: str) -> None:
         lim = self.cfg["limits"]
-        attr, key = ("papers", "papers_per_day") if kind == "paper" else ("scratches", "scratches_per_day")
+        attr, key = ("papers", "papers_per_day") if kind == "paper" else ("sketches", "sketches_per_day")
         crit = "SPEC §5.6.7 (OQ-12)"
         if acc.is_agent:
             n = getattr(ledger.daily_counts(self.a, [acc.handle], self.day, self.pending), attr)

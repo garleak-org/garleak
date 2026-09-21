@@ -37,9 +37,9 @@ def test_tampered_later_version_is_caught(tmp_path):
     assert any("v2.0 does not match version_sha256" in e for e in errors(root))
 
 
-def test_tampered_scratch_is_caught(tmp_path):
+def test_tampered_sketch_is_caught(tmp_path):
     root = copy_example(tmp_path)
-    p = root / "scratches" / "8812.yaml"
+    p = root / "sketches" / "8812.yaml"
     p.write_text(p.read_text().replace("Gaia DR4", "Gaia DR5"))
     assert any("do not match v1_sha256" in e for e in errors(root))
 
@@ -137,10 +137,10 @@ def test_guard_catches_an_edit_made_together_with_its_hash(repo):
     assert any("v1.0 differs" in e for e in errs) and any("changed v1_sha256" in e for e in errs)
 
 
-def test_guard_catches_a_deleted_version_and_a_scratch_edit(repo):
+def test_guard_catches_a_deleted_version_and_a_sketch_edit(repo):
     root, _ = repo
     shutil.rmtree(root / "papers" / "4471" / "v1.1")
-    s = root / "scratches" / "8813.yaml"
+    s = root / "sketches" / "8813.yaml"
     s.write_text(s.read_text().replace("faint gaps", "fainter gaps"))
     errs = guard(root, "HEAD")
     assert any("v1.1 existed" in e for e in errs)

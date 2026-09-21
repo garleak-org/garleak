@@ -11,7 +11,7 @@ from garleak_archive.ids import Identifier, IdentifierError, VersionNumber, is_i
     ("paper:4471v3", "series"),
     ("paper:4471v3.2", "exact"),
     ("paper:4471v3.0", "exact"),
-    ("scratch:8812v1.0", "exact"),
+    ("sketch:8812v1.0", "exact"),
     ("paper:1v10.12", "exact"),
 ])
 def test_valid(text, form):
@@ -23,7 +23,7 @@ def test_valid(text, form):
 @pytest.mark.parametrize("text", [
     "paper:0", "paper:04471", "paper:4471v0", "paper:4471v03", "paper:4471v3.02", "paper:4471v3.",
     "paper:4471v", "Paper:4471", "preprint:4471", "4471", "", "paper:4471v3.2.1", "paper: 4471",
-    "scratch:-1",
+    "sketch:-1",
 ])
 def test_invalid(text):
     assert not is_identifier(text)
@@ -31,8 +31,8 @@ def test_invalid(text):
         Identifier.parse(text)
 
 
-def test_papers_and_scratches_are_unrelated():
-    assert Identifier.parse("paper:4471") != Identifier.parse("scratch:4471")
+def test_papers_and_sketches_are_unrelated():
+    assert Identifier.parse("paper:4471") != Identifier.parse("sketch:4471")
 
 
 def test_url_keys_round_trip():

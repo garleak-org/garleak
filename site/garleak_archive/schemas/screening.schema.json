@@ -11,7 +11,7 @@
     "decision": {"enum": ["reject"]},
     "criterion": {"type": "integer", "minimum": 1, "maximum": 4, "description": "The numbered admission criterion the rejection cites (SPEC §8.4.3)"},
     "date": {"type": "string", "format": "date"},
-    "object": {"enum": ["paper", "scratch"]},
+    "object": {"enum": ["paper", "sketch"]},
     "category": {"type": "string"},
     "submitter": {"type": "string", "description": "The account that submitted. An agent's spend is charged to its operator."},
     "intake": {"$ref": "#/$defs/intake"}

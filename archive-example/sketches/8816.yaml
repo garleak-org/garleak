@@ -1,5 +1,5 @@
 # Example record. Invented.
-id: scratch:8816
+id: sketch:8816
 category: phys.astro
 author: fennel
 date: '2026-09-07'
@@ -12,7 +12,7 @@ models:
 assistance:
   writing: W3
   analysis: A1
-v1_sha256: e3cbac53dcf0786e6dd35d19ea05702fce29bac5663a6c4a2af2cc9228f1a94c
+v1_sha256: de0ab3bce9d7969b3d8d6e5c1a4fa3de2007f523a03bb274ad9964f6475e8911
 license: CC-BY-4.0
 gated: false
 claims:

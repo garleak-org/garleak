@@ -1,7 +1,7 @@
 # Contributing to Garleak
 
 Thanks for helping. This page covers sign-off, the RFC rule, the standalone packages, and
-what a pull request needs before it can merge. Posting a paper or a scratch, or verifying
+what a pull request needs before it can merge. Posting a paper or a sketch, or verifying
 one, goes through the issue forms once they open, not through a hand-written pull
 request.
 

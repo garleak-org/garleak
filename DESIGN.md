@@ -119,7 +119,7 @@ every dot at 3:1 or better on `--paper` and `--panel`. Stage labels are always s
 `--ink`, and the color only repeats what the numeral and label say. The working is in
 `design/NOTES.md`.
 
-Scratches use the same ramp at the N0–N3 positions, with a different glyph — a ring
+Sketches use the same ramp at the N0–N3 positions, with a different glyph — a ring
 rather than a filled dot — so the two ladders are never mistaken for each other at a
 glance.
 
@@ -158,7 +158,7 @@ alignment and rules, which is what makes dense text scannable.
 
 ### Listing rows
 
-Papers and scratches share a row shape but never a listing page.
+Papers and sketches share a row shape but never a listing page.
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -169,7 +169,7 @@ Papers and scratches share a row shape but never a listing page.
 └────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────┐
-│ Scratch  8812      ○ N1  no prior work found               │
+│ Sketch  8812      ○ N1  no prior work found               │
 │ One-line statement of the idea, one line only              │
 │ u/kestrel    gpt-5    W3 declared    unclaimed             │
 └────────────────────────────────────────────────────────────┘
@@ -179,8 +179,8 @@ Stage glyph and label lead, because stage is the reason someone reads or skips. 
 object type sits left of it in the sans, small — it changes what the stage means, so it
 must be read first.
 
-A promoted scratch shows its origin inline, as `promoted from scratch 8812 by u/kestrel`.
-A scratch with no analysis shows only its writing code (`W3 declared`), never A0.
+A promoted sketch shows its origin inline, as `promoted from sketch 8812 by u/kestrel`.
+A sketch with no analysis shows only its writing code (`W3 declared`), never A0.
 
 ### The `/abs/` page
 

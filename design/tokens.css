@@ -27,7 +27,7 @@
   --ins: #EADFBF;        /* diff insertion background */
 
   /* stage ramp v2: one cool hue, monotone in luminance. Papers use a filled dot at T0-T4,
-     scratches a ring at N0-N3 (same positions). Labels are always set in --ink. */
+     sketches a ring at N0-N3 (same positions). Labels are always set in --ink. */
   --s0: #908B82;  /* T0 / N0. 3.05:1 on --paper, 2.8:1 on --gold-wash, accepted because the
                      numeral and label always carry the stage (DESIGN.md, ramp v2) */
   --s1: #5C8278;  /* T1 / N1 */

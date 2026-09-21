@@ -34,7 +34,7 @@ def test_every_form_round_trips(kind):
 
 
 def test_typed_values():
-    s, _ = build("scratch", answers("scratch"))
+    s, _ = build("sketch", answers("sketch"))
     assert (s.category, s.writing, s.analysis, s.license) == ("phys.astro", "W3", None, "CC-BY-4.0")
     assert s.models == [{"name": "gpt-5", "provider": "OpenAI", "version": "2026-06"}]
     p, _ = build("paper", answers("paper", authors="u/alice\n@Bob"))
@@ -51,14 +51,14 @@ def test_typed_values():
 
 
 def test_no_response_and_unticked_boxes():
-    form = FORMS["scratch"]
-    ans = answers("scratch", detail="", confirm=[form.field("confirm").options[0]])
+    form = FORMS["sketch"]
+    ans = answers("sketch", detail="", confirm=[form.field("confirm").options[0]])
     body = render_body(form, ans)
     assert "_No response_" in body and "- [ ] I understand" in body
     values, missing = parse_body(form, body)
     assert values["detail"] == "" and missing == []
     f = R.Fields(form, values, missing)
-    R.build_scratch(f)
+    R.build_sketch(f)
     assert [p.field for p in f.problems] == ["Confirm"]
 
 
@@ -69,8 +69,8 @@ def test_a_heading_inside_the_body_stays_in_the_body():
 
 
 def test_a_missing_section_is_reported():
-    form = FORMS["scratch"]
-    body = render_body(form, answers("scratch"))
+    form = FORMS["sketch"]
+    body = render_body(form, answers("sketch"))
     body = re.sub(r"### Statement, one line\n\n.*?\n\n", "", body, flags=re.S)
     values, missing = parse_body(form, body)
     f = R.Fields(form, values, missing)
@@ -113,7 +113,7 @@ def test_blank_issues_are_disabled_and_the_submit_page_is_linked():
 def test_category_dropdowns_list_the_non_gated_categories():
     a = load_archive(REPO / "archive")
     expected = [f"{c.code}: {c.name}" for c in a.categories.values() if not c.gated]
-    for kind in ("scratch", "paper"):
+    for kind in ("sketch", "paper"):
         assert FORMS[kind].field("category").options == expected
 
 
@@ -138,9 +138,9 @@ def test_prose_rules():
 def test_submit_and_verify_pages_describe_the_process(built):
     root, _ = built
     submit = page(root, "/submit/")
-    assert "at launch" in submit and "issues/new?template=2-submit-scratch.yml" in submit
+    assert "issues/new?template=2-submit-sketch.yml" in submit
     assert "Your GitHub account is public, and so is the ORCID link that verifies it." in submit
     assert "not accepted in Phase 1" in submit
     verify = page(root, "/verify/")
-    assert "issues/new?template=5-verify-paper.yml" in verify and "at launch" in verify
-    assert "The queue fills when submissions open" in verify
+    assert "issues/new?template=5-verify-paper.yml" in verify
+    assert "Nothing is waiting to be checked" in verify

@@ -24,12 +24,12 @@ def flags(res):
     return {c.id for c in res.flagged}
 
 
-def test_an_identical_scratch_is_flagged_and_held(arch):
-    statement = answers("scratch")["statement"]
-    arch.scratch(1, "bob", statement=statement)
-    res = run(arch, make_issue("scratch", number=5))
+def test_an_identical_sketch_is_flagged_and_held(arch):
+    statement = answers("sketch")["statement"]
+    arch.sketch(1, "bob", statement=statement)
+    res = run(arch, make_issue("sketch", number=5))
     assert res.status == "held" and "near-duplicate" in flags(res)
-    assert "identical to scratch:1" in next(c.detail for c in res.flagged)
+    assert "identical to sketch:1" in next(c.detail for c in res.flagged)
 
 
 def test_near_duplicates_by_shingles():
@@ -37,7 +37,7 @@ def test_near_duplicates_by_shingles():
     edited = text.replace("number 3 gives", "number 3 still gives")
     m = screen.best_match(text, [("paper:1v1.0", edited), ("paper:2v1.0", "Something else entirely.")], 5)
     assert m.ref == "paper:1v1.0" and not m.exact and m.score >= 0.8
-    m = screen.best_match("A different idea about comets and their tails.", [("scratch:1", text)], 3)
+    m = screen.best_match("A different idea about comets and their tails.", [("sketch:1", text)], 3)
     assert m.score < 0.1
     assert screen.best_match(text, [("paper:3v1.0", text.upper())], 5).exact
 
@@ -54,7 +54,7 @@ def test_truncation_heuristics(arch):
     body = long_body() + "\n```python\nx = 1\n"
     assert any("code block" in f for f in screen.paper_flags("Title", answers("paper")["abstract"], body, cfg))
     assert screen.paper_flags("Title", answers("paper")["abstract"], long_body(), cfg) == []
-    assert screen.scratch_flags("test", "", cfg)
+    assert screen.sketch_flags("test", "", cfg)
     res = run(arch, make_issue("paper", answers("paper", body="## Results\n\nToo short, and it stops mid"), number=5))
     assert res.status == "held" and "truncated" in flags(res)
 
@@ -72,7 +72,7 @@ def test_the_calibration_sample_is_deterministic(arch):
     assert screen.calibration_sampled(1, h, 0.05) == screen.calibration_sampled(1, h, 0.05)
     assert not screen.calibration_sampled(1, h, 0.0) and screen.calibration_sampled(1, h, 1.0)
     arch.set("screening.sample_rate", 1.0)
-    res = run(arch, make_issue("scratch", number=5))
+    res = run(arch, make_issue("sketch", number=5))
     assert res.status == "held" and flags(res) == {"calibration-sample"}
 
 

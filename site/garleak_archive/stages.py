@@ -14,7 +14,7 @@ import datetime as dt
 from dataclasses import dataclass, field
 
 from .ids import VersionNumber
-from .models import Archive, Paper, Scratch, Verification, Version
+from .models import Archive, Paper, Sketch, Verification, Version
 from .rubrics import RubricSet
 
 TIERS = ["T1", "T2", "T3", "T4"]
@@ -234,10 +234,10 @@ def relation(paper: Paper, states: dict[VersionNumber, VersionState], rec: Verif
     return RecordRelation("earlier-minor", f"Recorded on v{rec.version}.", muted=True)
 
 
-# ---------------------------------------------------------------- scratches
+# ---------------------------------------------------------------- sketches
 
 
-def scratch_stage(s: Scratch) -> tuple[str, str]:
+def sketch_stage(s: Sketch) -> tuple[str, str]:
     """Stage and, for N3, the path that led there (§2.5.4, §2.5.5)."""
     active = [c for c in s.checks if c.status == "active"]
     base = [c for c in active if c.outcome in ("N1", "N2")]
@@ -249,7 +249,7 @@ def scratch_stage(s: Scratch) -> tuple[str, str]:
     return "N0", ""
 
 
-def active_claims(s: Scratch, today: dt.date) -> list:
+def active_claims(s: Sketch, today: dt.date) -> list:
     return [c for c in s.claims if c.expires is None or c.expires >= today]
 
 
@@ -378,7 +378,7 @@ def standing(archive: Archive, handle: str, field_code: str, today: dt.date) -> 
                 o += 1
             elif v.status == "active" and not v.loop_label and (today - v.date).days >= STANDING_AGE_DAYS:
                 s += 1
-    for sc in archive.scratches.values():
+    for sc in archive.sketches.values():
         if field_of(sc.category) != field_code:
             continue
         for ch in sc.checks:
@@ -406,12 +406,12 @@ def version_indexable(paper: Paper, state: VersionState) -> bool:
     return version_visible(paper, state) and state.index >= 1
 
 
-def scratch_visible(s: Scratch) -> bool:
-    return s.status != "removed" and not s.gated  # gated scratches are never public (§9.1.4)
+def sketch_visible(s: Sketch) -> bool:
+    return s.status != "removed" and not s.gated  # gated sketches are never public (§9.1.4)
 
 
-def scratch_indexable(s: Scratch) -> bool:
-    return scratch_visible(s)  # OQ-18 default: non-gated scratches may be indexed
+def sketch_indexable(s: Sketch) -> bool:
+    return sketch_visible(s)  # OQ-18 default: non-gated sketches may be indexed
 
 
 def is_agent(archive: Archive, handle: str) -> bool:

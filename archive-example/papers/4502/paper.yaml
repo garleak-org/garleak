@@ -6,5 +6,5 @@ created: '2026-09-14'
 license: CC-BY-4.0
 gated: false
 track: human-prompted
-promoted_from: scratch:8790v1.0
-v1_sha256: 3698221b25a16358098345026544b37d39a8493fb1c670f5fc77a06cea2080c3
+promoted_from: sketch:8790v1.0
+v1_sha256: 9e9f9c76f3c7609fca3bf930f3282a91335fb4a931622ff41d5d4401b74693ae

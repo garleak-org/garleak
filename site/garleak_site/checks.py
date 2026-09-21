@@ -193,7 +193,7 @@ def invented_strings(example_archive: Path) -> list[str]:
 
     a = load_archive(example_archive)
     out = {v.title for p in a.papers.values() for v in p.versions}
-    out |= {s.statement for s in a.scratches.values()}
+    out |= {s.statement for s in a.sketches.values()}
     return sorted(" ".join(x.split()) for x in out if len(x) > 20)
 
 
@@ -268,7 +268,7 @@ def check_site(root: Path, example_archive: Path | None = None) -> Report:
         elif pg.banner:
             r.err(where, "the example banner appears outside /example/")
         path = where.removeprefix("/example")
-        if re.match(r"^/(list|scratch/list|graduated|diff)/", path) and "noindex" not in robots:
+        if re.match(r"^/(list|sketch/list|graduated|diff)/", path) and "noindex" not in robots:
             r.err(where, "listings and diffs need noindex")
         stage = pg.meta.get("garleak:stage", "")
         if pg.meta.get("garleak:type") == "paper" and stage == "T0" and "noindex" not in robots:

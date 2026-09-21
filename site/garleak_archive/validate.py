@@ -59,11 +59,11 @@ def validate(archive: Archive) -> list[Issue]:
 
     for p in a.papers.values():
         _paper(v, p, unique)
-    for s in a.scratches.values():
+    for s in a.sketches.values():
         path = s.path
         if s.v1_sha256 != s.content_sha256:
             v.err(path, f"the content fields do not match v1_sha256 (got {s.content_sha256}). "
-                  "A scratch's v1.0 is immutable (§6.1.1)")
+                  "A sketch's v1.0 is immutable (§6.1.1)")
         if s.category not in a.categories:
             v.err(path, f"unknown category '{s.category}'")
         elif a.categories[s.category].gated != s.gated:
@@ -80,7 +80,7 @@ def validate(archive: Archive) -> list[Issue]:
         for ch in s.checks:
             unique("check", ch.id, path)
             if v.account(path, ch.checker, "checker", human=True) and ch.checker == s.author:
-                v.err(path, f"check {ch.id}: an author may not check their own scratch (§4.4.3)")
+                v.err(path, f"check {ch.id}: an author may not check their own sketch (§4.4.3)")
             if ch.outcome == "N1" and not (ch.sources and (ch.queries or ch.summary)):
                 v.err(path, f"check {ch.id}: N1 needs the sources searched and the queries (§2.5.2)")
             if ch.outcome == "N2" and not ch.prior_work:
@@ -98,8 +98,8 @@ def validate(archive: Archive) -> list[Issue]:
             p = a.papers.get(n)
             if p is None:
                 v.err(path, f"promoted_to paper:{n} does not exist")
-            elif not (p.promoted_from or "").startswith(f"scratch:{s.number}v"):
-                v.err(path, f"paper:{n} does not carry promoted_from scratch:{s.number} (§2.6.2)")
+            elif not (p.promoted_from or "").startswith(f"sketch:{s.number}v"):
+                v.err(path, f"paper:{n} does not carry promoted_from sketch:{s.number} (§2.6.2)")
     return archive.issues + v.issues
 
 
@@ -130,7 +130,7 @@ def _codes(v: _V, path, ass: dict, analysis_optional: bool = False) -> None:
     if ass.get("writing") not in WRITING:
         v.err(path, f"writing must be one of {', '.join(WRITING)}")
     if ass.get("analysis") is None and analysis_optional:
-        return  # a scratch with no analysis (OQ-23)
+        return  # a sketch with no analysis (OQ-23)
     if ass.get("analysis") not in ANALYSIS:
         v.err(path, f"analysis must be one of {', '.join(ANALYSIS)}")
 
@@ -216,9 +216,9 @@ def _paper(v: _V, p: Paper, unique) -> None:
     if p.promoted_from:
         try:
             ident = Identifier.parse(p.promoted_from)
-            if ident.type != "scratch" or ident.form != "exact":
-                raise IdentifierError("promoted_from must be an exact scratch identifier")
-            s = a.scratches.get(ident.number)
+            if ident.type != "sketch" or ident.form != "exact":
+                raise IdentifierError("promoted_from must be an exact sketch identifier")
+            s = a.sketches.get(ident.number)
             if s is None:
                 v.err(ppath, f"{p.promoted_from} does not exist")
             elif p.number not in s.promoted_to:

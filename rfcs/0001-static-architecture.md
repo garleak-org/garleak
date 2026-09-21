@@ -40,7 +40,7 @@ anyone can clone.
 
 ## The change
 
-1. **Records.** Papers, scratches, versions, verifications, novelty checks, fixes,
+1. **Records.** Papers, sketches, versions, verifications, novelty checks, fixes,
    screening decisions, and credit events are files under `archive/`, in the format
    documented in `archive/FORMAT.md`. Invented examples live only in
    `archive-example/` and render under `/example/` with a banner and `noindex`.
@@ -53,7 +53,7 @@ anyone can clone.
 4. **Intake, Phase 1.** Issue forms for submission, verification, and the other
    actions. An Actions workflow validates the form, runs the automated pre-screen, and
    opens a pull request with the new records. Screening a paper is reviewing and
-   merging that pull request. A scratch merges automatically once the automated checks
+   merging that pull request. A sketch merges automatically once the automated checks
    pass.
 5. **Identity, Phase 1.** A GitHub account plus an ORCID link. The link is verified by
    reading the person's public ORCID record through the ORCID public API and checking
@@ -80,7 +80,7 @@ issue-form workflow commits.
   the handle is public on every record it creates.
 - **The ORCID link is public.** Verification works because the ORCID record lists the
   GitHub URL, so anyone who looks can connect a verified account to a real name. That
-  breaks the promise "We know who you are. Nobody else does" for pseudonymous scratches
+  breaks the promise "We know who you are. Nobody else does" for pseudonymous sketches
   and papers. Only accounts verified by institutional email keep their identity out of
   public view. The copy must say this in Phase 1 (`SPEC.md` §3.7).
 - **Restricted data cannot stay restricted.** The credit ledger follows from public

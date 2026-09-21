@@ -27,9 +27,9 @@ def test_full_build_of_both_archives(built):
     root, stats = built
     assert stats["pages"] > 400 and stats["pdfs"] == 1
     for path in ("/", "/about/", "/stages/", "/spec/", "/verify/", "/submit/", "/citecheck/", "/terms/",
-                 "/moderation/", "/search/", "/list/", "/scratch/list/", "/graduated/",
-                 "/list/phys.astro/new/", "/list/phys.astro/2026-09/", "/scratch/list/phys.astro/new/",
-                 "/example/", "/example/abs/4471/", "/example/diff/4471/1.0..3.0/", "/example/scratch/8812/"):
+                 "/moderation/", "/search/", "/list/", "/sketch/list/", "/graduated/",
+                 "/list/phys.astro/recent/", "/list/phys.astro/2026-09/", "/sketch/list/phys.astro/recent/",
+                 "/example/", "/example/abs/4471/", "/example/diff/4471/1.0..3.0/", "/example/sketch/8812/"):
         assert page(root, path).startswith("<!doctype html>"), path
     assert (root / "CNAME").read_text().strip() == "garleak.org"
     assert "Sitemap: https://garleak.org/sitemap.xml" in (root / "robots.txt").read_text()
@@ -78,7 +78,7 @@ def test_every_example_page_has_banner_and_noindex(built):
 def test_no_invented_record_outside_example(built):
     root, _ = built
     a = load_archive(EXAMPLE)
-    needles = {v.title for p in a.papers.values() for v in p.versions} | {s.statement for s in a.scratches.values()}
+    needles = {v.title for p in a.papers.values() for v in p.versions} | {s.statement for s in a.sketches.values()}
     # SPEC.md's own examples use paper:4471 and u/kestrel, so identifiers alone are not a
     # leak. Titles, statements and invented names are.
     needles |= {"R. Nakamura", "S. Haddad", "survey-scout"}
@@ -95,7 +95,7 @@ def test_listings_and_diffs_carry_noindex(built):
     root, _ = built
     for f in html_files(root):
         rel = "/" + f.relative_to(root).as_posix()
-        if re.match(r"^(/example)?/(list|scratch/list|graduated|diff)/", rel):
+        if re.match(r"^(/example)?/(list|sketch/list|graduated|diff)/", rel):
             assert "noindex" in meta_robots(f.read_text()), rel
 
 
@@ -105,7 +105,7 @@ def test_noindex_rules_for_a_populated_archive(built_as_root):
     assert meta_robots(page(root, "/abs/4471v1.0/")) == "noindex, follow"   # T0 version
     assert meta_robots(page(root, "/abs/4471/")) == ""                     # T3, indexable
     assert meta_robots(page(root, "/abs/4471v3.0/")) == ""
-    assert meta_robots(page(root, "/list/phys.astro/new/")) == "noindex, follow"
+    assert meta_robots(page(root, "/list/phys.astro/recent/")) == "noindex, follow"
     assert meta_robots(page(root, "/abs/4512/")) == "noindex, follow"       # gated below T1
     sitemap = (root / "sitemap.xml").read_text()
     assert "/abs/4471/" in sitemap and "/abs/4471v3.0/" in sitemap
@@ -147,9 +147,9 @@ def test_every_issued_identifier_resolves(built):
                       f"/example/abs/paper:{n}v{v.number}/"]
         for path in paths:
             assert page(root, path), path
-    for n in a.scratches:
-        for path in (f"/example/scratch/{n}/", f"/example/scratch/{n}v1/", f"/example/scratch/{n}v1.0/",
-                     f"/example/abs/scratch:{n}v1.0/"):
+    for n in a.sketches:
+        for path in (f"/example/sketch/{n}/", f"/example/sketch/{n}v1/", f"/example/sketch/{n}v1.0/",
+                     f"/example/abs/sketch:{n}v1.0/"):
             assert page(root, path), path
 
 
@@ -157,7 +157,7 @@ def test_never_issued_ids_reach_a_page_that_says_so(built):
     root, _ = built
     text = page(root, "/404.html")
     data = json.loads(re.search(r'<script type="application/json" id="issued">(.*?)</script>', text, re.S)[1])
-    assert data[""] == {"paper": {}, "scratch": {}}
+    assert data[""] == {"paper": {}, "sketch": {}}
     assert data["/example"]["paper"]["4471"] == ["1.0", "1.1", "2.0", "3.0"]
     assert "never issued" in text and 'src="/static/notfound.js"' in text
 
@@ -170,10 +170,10 @@ def test_series_pages_point_to_the_exact_version(built):
 
 def test_empty_real_archive_shows_invitations(built):
     root, _ = built
-    listing = page(root, "/list/phys.astro/new/")
+    listing = page(root, "/list/phys.astro/recent/")
     assert "What belongs here" in listing and 'class="rows"' not in listing
-    assert "Garleak is not open for submissions yet" in page(root, "/")
-    assert "The queue fills when submissions open" in page(root, "/verify/")
+    assert "Submit it here as a paper" in page(root, "/")
+    assert "Nothing is waiting to be checked" in page(root, "/verify/")
     assert "The first Graduated versions will be listed here" in page(root, "/graduated/")
 
 
@@ -198,7 +198,7 @@ def test_phase1_identity_is_stated(built):
 
 def test_example_listing_matches_the_prototype(built):
     root, _ = built
-    text = page(root, "/example/list/phys.astro/new/")
+    text = page(root, "/example/list/phys.astro/recent/")
     assert "New papers (showing 7 of 7 entries)" in text and "New versions (showing 4 of 4 entries)" in text
     assert "W2 A1 declared" in text and "4471v3" in text and "4420v1.2" in text
 
@@ -206,5 +206,18 @@ def test_example_listing_matches_the_prototype(built):
 def test_build_date_is_used_for_the_real_archive(tmp_path, config):
     out = tmp_path / "_site"
     Builder(config, out, dt.date(2027, 1, 5)).build()
-    assert "Tuesday 5 January 2027" in page(out, "/list/phys.astro/new/")
+    assert "Recent submissions" in page(out, "/list/phys.astro/recent/")
     assert (out / "list" / "phys.astro" / "2027-01" / "index.html").is_file()
+    assert "/list/phys.astro/recent/" in page(out, "/list/phys.astro/new/")
+
+
+def test_recent_listing_is_not_a_date_window(tmp_path, config, maker):
+    """Entries older than a few days still list. The listing shows the newest entries."""
+    maker.paper(1, [("1.0", "initial", "2025-01-05", BODY)])
+    maker.paper(2, [("1.0", "initial", "2026-08-01", BODY)])
+    maker.sketch(3, "An old idea worth testing.", date="2025-02-02")
+    out = tmp_path / "_site"
+    Builder(dict(config, archive=maker.root, example_archive=None), out, dt.date(2026, 9, 21)).build()
+    papers = page(out, "/list/phys.astro/recent/")
+    assert "Test paper 1" in papers and "Test paper 2" in papers
+    assert "An old idea worth testing." in page(out, "/sketch/list/phys.astro/recent/")

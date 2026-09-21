@@ -2,7 +2,7 @@
 name: Garleak archive
 example: false
 as_of: null            # listings use the build date
-new_listing_days: 7    # the "new" listing covers this many days
+recent_count: 50       # the recent listing shows this many entries
 config_version: "0.1"
-spec_version: "0.2"
+spec_version: "0.3"
 rubrics: ../packages/rubrics

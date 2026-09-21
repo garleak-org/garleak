@@ -10,7 +10,7 @@
 <meta name="garleak:gated" content="false">
 {% endblock %}
 {% block crumb %}
-<div class="subheader"><a href="{{ site.prefix }}/scratch/list/{{ sv.s.category }}/new/">{{ sv.category.name }} scratches</a> &gt; {{ sv.ident }}</div>
+<div class="subheader"><a href="{{ site.prefix }}/sketch/list/{{ sv.s.category }}/recent/">{{ sv.category.name }} sketches</a> &gt; {{ sv.ident }}</div>
 {% endblock %}
 {% block main %}
 {% set P = site.prefix %}
@@ -30,7 +30,7 @@
       <tr><td class="label">Status:</td><td data-record>{% if sv.promoted_to %}promoted to {% for p in sv.promoted_to %}<a href="{{ p.concept_url }}">paper:{{ p.number }}</a>{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{{ sv.claim_text }}{% endif %}</td></tr>
       <tr><td class="label">Subjects:</td><td><span class="primary-subject">{{ sv.category.name }} ({{ sv.s.category }})</span></td></tr>
       <tr><td class="label">Cite as:</td><td data-record>{{ sv.citation }}</td></tr>
-      <tr><td class="label">License:</td><td>{{ sv.s.license }}</td></tr>
+      <tr><td class="label">License:</td><td><a href="{{ license_url(sv.s.license) }}">{{ license_name(sv.s.license) }}</a></td></tr>
     </table>
   </div>
   <p class="notpr">An idea record, not a result. Admission is not endorsement.</p>
@@ -47,7 +47,7 @@
   <h3>Current browse context:</h3>
   <ul>
     <li><b>{{ sv.s.category }}</b></li>
-    <li><a href="{{ P }}/scratch/list/{{ sv.s.category }}/new/">new scratches</a></li>
+    <li><a href="{{ P }}/sketch/list/{{ sv.s.category }}/recent/">new sketches</a></li>
   </ul>
 </div>
 </div>

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://garleak.org/schema/archive/scratch/0.3",
-  "title": "scratches/<n>.yaml: a scratch with its novelty checks and claims",
-  "description": "A scratch has one version, v1.0. Its content fields (id, author, date, statement, detail, models, assistance) are hashed into v1_sha256 and never change. Checks and claims are appended below them.",
+  "$id": "https://garleak.org/schema/archive/sketch/0.3",
+  "title": "sketches/<n>.yaml: a sketch with its novelty checks and claims",
+  "description": "A sketch has one version, v1.0. Its content fields (id, author, date, statement, detail, models, assistance) are hashed into v1_sha256 and never change. Checks and claims are appended below them.",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "category", "author", "date", "statement", "models", "assistance", "v1_sha256"],
   "properties": {
-    "id": {"type": "string", "pattern": "^scratch:[1-9][0-9]*$"},
+    "id": {"type": "string", "pattern": "^sketch:[1-9][0-9]*$"},
     "category": {"type": "string"},
     "author": {"type": "string"},
     "date": {"type": "string", "format": "date"},
@@ -29,7 +29,7 @@
       "required": ["writing"],
       "properties": {
         "writing": {"enum": ["W0", "W1", "W2", "W3"]},
-        "analysis": {"enum": ["A0", "A1", "A2", null], "description": "null or absent when the scratch contains no analysis, shown as 'no analysis', never as A0 (SPEC OQ-23)"}
+        "analysis": {"enum": ["A0", "A1", "A2", null], "description": "null or absent when the sketch contains no analysis, shown as 'no analysis', never as A0 (SPEC OQ-23)"}
       }
     },
     "v1_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the canonical JSON of the content fields (see FORMAT.md). Fixed at admission."},

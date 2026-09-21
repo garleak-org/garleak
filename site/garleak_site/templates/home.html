@@ -3,12 +3,12 @@
 {% block main %}
 {% set P = site.prefix %}
 {% if example %}
-<p class="intro">Example records, all invented. They show how listings and paper pages will look. Start with <a href="{{ P }}/abs/4471/">paper 4471</a> or the <a href="{{ P }}/list/phys.astro/new/">Astrophysics listing</a>.</p>
+<p class="intro">Example records, all invented. They show how listings and paper pages will look. Start with <a href="{{ P }}/abs/4471/">paper 4471</a> or the <a href="{{ P }}/list/phys.astro/recent/">Astrophysics listing</a>.</p>
 {% else %}
 <div class="intro">
   <p><b>Garleak is an open archive for AI-assisted papers and research ideas.</b></p>
   <p>Are you using AI to write papers? <a href="/submit/">Submit it here as a paper.</a></p>
-  <p>Do you have a draft you wrote with AI that you do not want to polish, but would like to give the idea to the community? <a href="/submit/">Submit it as a scratch.</a></p>
+  <p>Do you have a draft you wrote with AI that you do not want to polish, but would like to give the idea to the community? <a href="/submit/">Submit it as a sketch.</a></p>
   <p>Nothing here is peer reviewed. You do not need an endorsement to submit. We check every submission before it goes public, and you can post under your own name or a pseudonym.</p>
 </div>
 {% if cfg.state == "prelaunch" %}
@@ -19,7 +19,7 @@
 <h2>{{ f.name }}</h2>
 <ul class="cats">
 {% for c in f.categories %}
-  <li><a href="{{ P }}/list/{{ c.code }}/new/">{{ c.name }}</a> (<b>{{ c.code }}</b> <a href="{{ P }}/list/{{ c.code }}/new/">new</a>{% for ym in site.months(c.code)[:1] %}, <a href="{{ P }}/list/{{ c.code }}/{{ ym }}/">recent</a>{% endfor %}, <a href="{{ P }}/scratch/list/{{ c.code }}/new/">scratches</a>){% if c.gated %} gated{% endif %}</li>
+  <li><a href="{{ P }}/list/{{ c.code }}/recent/">{{ c.name }}</a> (<b>{{ c.code }}</b> <a href="{{ P }}/list/{{ c.code }}/recent/">recent</a>{% for ym in site.months(c.code)[:1] %}, <a href="{{ P }}/list/{{ c.code }}/{{ ym }}/">{{ ym }}</a>{% endfor %}, <a href="{{ P }}/sketch/list/{{ c.code }}/recent/">sketches</a>){% if c.gated %} gated{% endif %}</li>
 {% endfor %}
 </ul>
 {% endfor %}

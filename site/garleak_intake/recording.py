@@ -112,16 +112,16 @@ class RecordMixin:
             return p, ver
         return None, None
 
-    def _scratch(self, number):
+    def _sketch(self, number):
         if number is None:
             return None
-        s = self.a.scratches.get(number)
+        s = self.a.sketches.get(number)
         if s is None:
-            self.res.fail("scratch", "Scratch", f"scratch:{number} does not exist.", "SPEC §2.3.7")
+            self.res.fail("sketch", "Sketch", f"sketch:{number} does not exist.", "SPEC §2.3.7")
         elif s.status != "admitted":
-            self.res.fail("scratch", "Scratch", f"scratch:{number} is {s.status}.", "SPEC §9.7.1")
+            self.res.fail("sketch", "Sketch", f"sketch:{number} is {s.status}.", "SPEC §9.7.1")
         else:
-            self.res.ok("scratch", "Scratch", f"scratch:{number}v1.0")
+            self.res.ok("sketch", "Sketch", f"sketch:{number}v1.0")
             return s
         return None
 
@@ -272,10 +272,10 @@ class RecordMixin:
         req = build_novelty(f)
         acc = self.need_account(human_only=True)
         self._problems(f)
-        s = self._scratch(req.scratch)
+        s = self._sketch(req.sketch)
         if acc and s:
             if ledger.responsible(self.a, s.author) == acc.handle:
-                self.res.fail("independence", "Not the author", "A scratch's author, or the operator of an agent "
+                self.res.fail("independence", "Not the author", "A sketch's author, or the operator of an agent "
                               "that wrote it, cannot check it.", "SPEC §4.4.3")
             else:
                 self.res.ok("independence", "Not the author", f"u/{s.author} wrote it")
@@ -290,7 +290,7 @@ class RecordMixin:
                 self.res.fail("outcome", "N3 tractability", "N3 needs a note on what testing the idea would take.",
                               "SPEC §2.5.5")
             if s and not any(c.outcome in ("N1", "N2") and c.status == "active" for c in s.checks):
-                self.res.fail("outcome", "N3 path", "N3 needs an earlier N1 or N2 check on the scratch.",
+                self.res.fail("outcome", "N3 path", "N3 needs an earlier N1 or N2 check on the sketch.",
                               "SPEC §2.5.5")
         if acc:
             self._rate(acc, "novelty")
@@ -321,13 +321,13 @@ class RecordMixin:
         if req.model_use:
             check["model_use"] = " ".join(req.model_use.split())
         check["intake"] = self.intake()
-        rel = f"scratches/{s.number}.yaml"
+        rel = f"sketches/{s.number}.yaml"
         data = self.w.load(rel)
         data.setdefault("checks", []).append(check)
         self.w.data(rel, data)
         self.meta("novelty", [f"check:{cid}"], acc.handle, cat.field_code)
-        return self.done([f"novelty check {cid} of scratch:{s.number}"],
-                         f"Add novelty check {cid} of scratch:{s.number}", True)
+        return self.done([f"novelty check {cid} of sketch:{s.number}"],
+                         f"Add novelty check {cid} of sketch:{s.number}", True)
 
     # -------------------------------------------------------- contest (§4.5.7)
 
@@ -423,17 +423,17 @@ class RecordMixin:
         req = build_claim(f)
         acc = self.need_account()
         self._problems(f)
-        s = self._scratch(req.scratch)
+        s = self._sketch(req.sketch)
         if acc and s:
             active = [c for c in s.claims if c.by == acc.handle and (c.expires is None or c.expires >= self.day)]
             if active:
-                self.res.fail("claim", "Claim", f"You already hold an active claim on scratch:{s.number}, until "
+                self.res.fail("claim", "Claim", f"You already hold an active claim on sketch:{s.number}, until "
                               f"{active[-1].expires}.", "SPEC §2.5.7")
         if self.res.failed or s is None:
             return self.refuse()
-        days = self.cfg["intake"]["scratch_claim_days"]
+        days = self.cfg["intake"]["sketch_claim_days"]
         expires = self.day + dt.timedelta(days=days)
-        rel = f"scratches/{s.number}.yaml"
+        rel = f"sketches/{s.number}.yaml"
         data = self.w.load(rel)
         data.setdefault("claims", []).append({"by": acc.handle, "date": self.date_iso(), "expires": expires.isoformat(),
                                               "intake": self.intake()})
@@ -441,7 +441,7 @@ class RecordMixin:
         self.res.info("claim", "What a claim means", f"non-exclusive, no priority, expires on {expires} "
                       "(SPEC §2.5.7)")
         self.meta("claim", [f"claim:{s.number}-{acc.handle}"], acc.handle, self.a.field_of(s.category))
-        return self.done([f"a claim on scratch:{s.number}"], f"Add a claim on scratch:{s.number}", True)
+        return self.done([f"a claim on sketch:{s.number}"], f"Add a claim on sketch:{s.number}", True)
 
     # -------------------------------------------------------- report or appeal (§8.4, §9.6)
 

@@ -149,8 +149,8 @@ body:
   - type: input
     id: promoted_from
     attributes:
-      label: Promoted from a scratch (optional)
-      description: The scratch this paper tests, such as scratch:8. Its author earns the promotion credit.
+      label: Promoted from a sketch (optional)
+      description: The sketch this paper tests, such as sketch:8. Its author earns the promotion credit.
   - type: checkboxes
     id: confirm
     attributes:
