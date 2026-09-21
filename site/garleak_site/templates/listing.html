@@ -27,7 +27,7 @@
 {% if listing.empty %}
 <p>No {{ noun }} yet. What belongs here: {{ cat.description }}</p>
 {% if example %}
-<p class="small">See the <a href="{{ P }}{{ base }}phys.astro/recent/">Astrophysics {{ noun }}</a>.</p>
+<p class="small">See the <a href="{{ P }}{{ base }}astro.ga/recent/">Astrophysics {{ noun }}</a>.</p>
 {% elif cfg.state == "prelaunch" %}
 <p class="small">Submissions open after the prelaunch.{% if has_example %} See the <a href="/example{{ base }}{{ cat.code }}/recent/">example listing</a>.{% endif %}</p>
 {% else %}

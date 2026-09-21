@@ -27,7 +27,7 @@ def test_paper_quota_counts_open_pull_requests(arch):
     arch.paper(1, "alice", date=TODAY)
     arch.paper(2, "alice", date=TODAY)
     assert run(arch, make_issue("paper", number=3)).status == "held"
-    pending = open_pr(40, 9, {"kind": "paper", "ids": ["paper:3"], "account": "alice", "field": "phys",
+    pending = open_pr(40, 9, {"kind": "paper", "ids": ["paper:3"], "account": "alice", "field": "astro",
                               "spend": "0", "date": TODAY})
     res = run(arch, make_issue("paper", number=10), ctx(open_prs=[pending]))
     c = failing(res)["quota"]
@@ -46,7 +46,7 @@ def test_agent_and_operator_sketch_quotas(arch):
     arch.sketch(6, "scout2", date="2026-09-13", statement="Yesterday's sketch does not count toward today.")
     res = run(arch, make_issue("sketch", number=21, author="scout2"), dry_run=True)
     assert res.status == "held" and any(c.id == "agent" for c in res.flagged)  # 5 of 6 for the operator
-    pending = open_pr(41, 30, {"kind": "sketch", "ids": ["sketch:7"], "account": "scout", "field": "phys",
+    pending = open_pr(41, 30, {"kind": "sketch", "ids": ["sketch:7"], "account": "scout", "field": "astro",
                                "spend": "0", "date": TODAY})
     res = run(arch, make_issue("sketch", number=22, author="scout2"), ctx(open_prs=[pending]))
     assert "limit per operator is 6" in failing(res)["quota"].detail
@@ -57,7 +57,7 @@ def test_the_credit_floor_refuses_and_names_its_criterion(arch):
     res = run(arch, make_issue("paper", number=5))
     c = failing(res)["credits"]
     assert c.criterion == "SPEC §5.4.3 (OQ-10)" and "-4.0, below the floor of -2.0" in c.detail
-    pending = open_pr(42, 8, {"kind": "paper", "ids": ["paper:2"], "account": "bob", "field": "phys",
+    pending = open_pr(42, 8, {"kind": "paper", "ids": ["paper:2"], "account": "bob", "field": "astro",
                               "spend": "2.0", "date": TODAY})
     res = run(arch, make_issue("paper", number=6, author="bob"), ctx(open_prs=[pending]))
     assert "credits" in failing(res)
@@ -97,7 +97,7 @@ def test_novelty_daily_limit(arch):
 
 @pytest.mark.parametrize("kind", ["sketch", "paper"])
 def test_gated_categories_are_refused_in_phase_1(arch, kind):
-    res = run(arch, make_issue(kind, answers(kind, category="med.clinical: Clinical research"), number=5))
+    res = run(arch, make_issue(kind, answers(kind, category="other.applied: Clinical, legal and financial"), number=5))
     c = failing(res)["gated"]
     assert c.criterion == "SPEC §3.7.7 (OQ-24)" and "Phase 2" in c.detail and "contact@garleak.org" in c.detail
     assert res.files == [] and res.status == "refused"
@@ -105,13 +105,13 @@ def test_gated_categories_are_refused_in_phase_1(arch, kind):
 
 def test_the_gated_switch_opens_them_held_for_a_person(arch):
     arch.set("intake.accept_gated", True)
-    res = run(arch, make_issue("sketch", answers("sketch", category="med.clinical: Clinical research"), number=5))
+    res = run(arch, make_issue("sketch", answers("sketch", category="other.applied: Clinical, legal and financial"), number=5))
     assert res.status == "held" and not res.automerge and any(c.id == "gated" for c in res.flagged)
     assert arch.errors() == [] and arch.load().sketches[1].gated is True
 
 
 def test_agents_never_enter_gated_categories(arch):
     arch.set("intake.accept_gated", True)
-    res = run(arch, make_issue("paper", answers("paper", category="med.clinical: Clinical research"), number=5,
+    res = run(arch, make_issue("paper", answers("paper", category="other.applied: Clinical, legal and financial"), number=5,
                                author="scout"))
     assert failing(res)["category"].criterion == "SPEC §3.4.5"

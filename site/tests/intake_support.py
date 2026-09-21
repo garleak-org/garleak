@@ -48,12 +48,12 @@ DEFAULTS = {
     "identity": {"kind": "Human", "path": "ORCID: my public ORCID record lists this GitHub profile",
                  "orcid": "0000-0002-1825-0097", "display": "Real name", "display_name": "Dana Example",
                  "confirm": _all("identity", "confirm")},
-    "sketch": {"category": "phys.astro: Astrophysics",
+    "sketch": {"category": "astro.ga: Galaxies and the Milky Way",
                 "statement": "Wide-binary eccentricities should flatten above 0.1 pc if the Galactic tide is strong.",
                 "models": "gpt-5, OpenAI, 2026-06", "writing": "W3: a model wrote it, with light or no human edits",
                 "analysis": "No analysis in this sketch", "license": "CC-BY-4.0 (default)",
                 "confirm": _all("sketch", "confirm")},
-    "paper": {"category": "phys.astro: Astrophysics", "title": "A lighter halo from a rotation curve fit",
+    "paper": {"category": "astro.ga: Galaxies and the Milky Way", "title": "A lighter halo from a rotation curve fit",
               "abstract": ABSTRACT, "models": "claude-opus-4, Anthropic, 2026-05",
               "writing": "W2: a model drafted it, and a human edited it",
               "analysis": "A1: a model assisted, and a human checked it",
@@ -169,7 +169,7 @@ class Arch:
         d.update(extra)
         self._w(f"accounts/{handle}.yaml", d)
 
-    def sketch(self, n: int, author: str, date: str = "2026-09-01", category: str = "phys.astro",
+    def sketch(self, n: int, author: str, date: str = "2026-09-01", category: str = "astro.ga",
                 statement: str | None = None, **extra) -> None:
         d = {"id": f"sketch:{n}", "category": category, "author": author, "date": date,
              "statement": statement or f"Sketch number {n} says something testable about wide binaries.",
@@ -183,7 +183,7 @@ class Arch:
     def load_accounts(self) -> dict:
         return {p.stem: yaml.safe_load(p.read_text()) for p in (self.root / "accounts").glob("*.yaml")}
 
-    def paper(self, n: int, submitter: str, date: str = "2026-09-01", category: str = "phys.astro",
+    def paper(self, n: int, submitter: str, date: str = "2026-09-01", category: str = "astro.ga",
               authors: list[str] | None = None, families=("computational",), body: str | None = None, **extra) -> None:
         d = self.root / "papers" / str(n)
         vd = d / "v1.0"
@@ -194,7 +194,7 @@ class Arch:
                 "rubric_families": list(families)}
         (vd / "meta.yaml").write_text(yaml.safe_dump(meta, sort_keys=False))
         (vd / "body.md").write_text(body or long_body(f"paper{n}"))
-        cat_gated = category in ("med.clinical", "med.pharm", "law.gen", "fin.gen", "eng.struct")
+        cat_gated = category == "other.applied"
         acc = self.load_accounts().get(submitter, {})
         data = {"id": f"paper:{n}", "category": category, "submitter": submitter, "created": date,
                 "license": "CC-BY-4.0", "gated": cat_gated,

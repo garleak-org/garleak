@@ -81,7 +81,7 @@ class ArchiveMaker:
         data.update(extra)
         (self.root / "accounts" / f"{handle}.yaml").write_text(yaml.safe_dump(data))
 
-    def paper(self, n: int, versions: list[tuple], category: str = "phys.astro", families=("computational",),
+    def paper(self, n: int, versions: list[tuple], category: str = "astro.ga", families=("computational",),
               reopens: dict | None = None) -> Path:
         """versions: (number, change, date, body)."""
         d = self.root / "papers" / str(n)
@@ -132,7 +132,7 @@ class ArchiveMaker:
         (d / f"{vid}.yaml").write_text(yaml.safe_dump(data, sort_keys=False))
 
     def sketch(self, n: int, statement: str, date: str = "2026-09-13", **extra) -> Path:
-        data = {"id": f"sketch:{n}", "category": "phys.astro", "author": "author", "date": date,
+        data = {"id": f"sketch:{n}", "category": "astro.ga", "author": "author", "date": date,
                 "statement": statement, "models": [{"name": "model-x"}],
                 "assistance": {"writing": "W3", "analysis": None}}
         data.update(extra)

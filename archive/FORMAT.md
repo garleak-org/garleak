@@ -102,7 +102,7 @@ an archive without it (the example archive) has no ledger and no derived loop la
 `visibility_threshold` (integer) sets how many visible records a category needs before
 the home page shows counts instead of an invitation. `fields` is a list of fields, each
 with `code`, `name`, and `categories`. Each category has `code` (`<field>.<name>`, for
-example `phys.astro`), `name`, `description` (what belongs there), and optionally
+example `astro.ga`), `name`, `description` (what belongs there), and optionally
 `gated: true` and its own `visibility_threshold`. Codes are permanent once a record uses
 them. The gated categories are the ones SPEC §9.1.1 lists, and changing them takes an RFC.
 

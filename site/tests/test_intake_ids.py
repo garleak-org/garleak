@@ -38,14 +38,14 @@ def arch(tmp_path):
 
 
 def test_open_pull_requests_reserve_numbers(arch):
-    other = open_pr(50, 7, {"kind": "sketch", "ids": ["sketch:1"], "account": "bob", "field": "phys",
+    other = open_pr(50, 7, {"kind": "sketch", "ids": ["sketch:1"], "account": "bob", "field": "astro",
                             "spend": "1.5", "date": "2026-09-13"})
     res = run(arch, make_issue("sketch", number=8), ctx(open_prs=[other]))
     assert res.ids == ["sketch:2"]
 
 
 def test_an_edited_issue_keeps_its_number(arch):
-    mine = open_pr(51, 8, {"kind": "sketch", "ids": ["sketch:5"], "account": "alice", "field": "phys",
+    mine = open_pr(51, 8, {"kind": "sketch", "ids": ["sketch:5"], "account": "alice", "field": "astro",
                            "spend": "1.5", "date": "2026-09-14"})
     res = run(arch, make_issue("sketch", number=8), ctx(open_prs=[mine]))
     assert res.ids == ["sketch:5"]

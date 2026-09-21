@@ -23,6 +23,9 @@ collaborator, a funder, or a university library.
 - §19. Step 1 records the domain order and the GitHub organization `garleak-org`.
 - §11. The identity question is decided. Phase 1 opens first and the Worker follows.
 
+**Edit on 2026-09-21.** §14. The archive covers astronomy and its subsections, with
+one category for everything else. The wider field tree waits for records.
+
 ---
 
 ## 1. The thesis
@@ -470,11 +473,13 @@ Detail in `BUILD-PLAN.md`, rewritten on 2026-09-14 for the static architecture.
 
 ## 14. Launch
 
-**Seed before opening.** 50 papers and 50 sketches across three fields, verified by hand.
-An archive that launches empty stays empty. Physics, CS, and mathematics first — they
-verify cheaply and semi-mechanically, which gets you a live leaderboard fast. Other
-fields are open from day one but will stay thin, and that's fine. Hide any category below
-a threshold rather than showing an empty shelf.
+**Seed before opening.** 50 papers and 50 sketches, verified by hand. An archive that
+launches empty stays empty. Astronomy only for now, across its subsections (galaxies,
+cosmology, stars, planets, high-energy, instruments and data), because it is the
+maintainer's own field, it verifies cheaply and semi-mechanically, and the people who
+will check the first submissions are in it. One category takes everything else, and the
+tree for other fields is written when enough records arrive to need one. Hide any
+category below a threshold rather than showing an empty shelf.
 
 **Positioning copy.** The instinct to market on "free and easy" is wrong here: arXiv is
 free, every preprint server is free, and leading with it primes people to read the whole

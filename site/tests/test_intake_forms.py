@@ -35,7 +35,7 @@ def test_every_form_round_trips(kind):
 
 def test_typed_values():
     s, _ = build("sketch", answers("sketch"))
-    assert (s.category, s.writing, s.analysis, s.license) == ("phys.astro", "W3", None, "CC-BY-4.0")
+    assert (s.category, s.writing, s.analysis, s.license) == ("astro.ga", "W3", None, "CC-BY-4.0")
     assert s.models == [{"name": "gpt-5", "provider": "OpenAI", "version": "2026-06"}]
     p, _ = build("paper", answers("paper", authors="u/alice\n@Bob"))
     assert p.rubric_families == ["computational"] and p.authors == ["alice", "bob"] and p.analysis == "A1"

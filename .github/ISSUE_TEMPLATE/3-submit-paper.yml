@@ -16,29 +16,13 @@ body:
     attributes:
       label: Category
       options:
-        - "phys.astro: Astrophysics"
-        - "phys.cond: Condensed matter"
-        - "phys.hep: High-energy physics"
-        - "phys.gen: General physics"
-        - "math.nt: Number theory"
-        - "math.co: Combinatorics"
-        - "math.pr: Probability"
-        - "math.an: Analysis"
-        - "cs.ml: Machine learning"
-        - "cs.ds: Algorithms and data structures"
-        - "cs.cl: Computation and language"
-        - "cs.cr: Cryptography and security"
-        - "bio.ge: Genomics"
-        - "bio.eco: Ecology and evolution"
-        - "bio.nc: Neuroscience"
-        - "earth.cl: Climate and atmosphere"
-        - "earth.geo: Geophysics"
-        - "econ.th: Economic theory"
-        - "econ.em: Econometrics"
-        - "hum.hist: History"
-        - "hum.phil: Philosophy"
-        - "hum.ling: Linguistics"
-        - "eng.ee: Electrical engineering"
+        - "astro.ga: Galaxies and the Milky Way"
+        - "astro.co: Cosmology"
+        - "astro.sr: Stars and binaries"
+        - "astro.ep: Planets and exoplanets"
+        - "astro.he: High-energy astrophysics"
+        - "astro.im: Instruments, methods and data"
+        - "other.gen: Everything else"
     validations:
       required: true
   - type: input

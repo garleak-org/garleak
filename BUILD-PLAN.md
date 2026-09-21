@@ -392,9 +392,8 @@ featured papers.
   that admission never means endorsement, and that archiving here is not prior
   publication and does not preclude journal submission. A named responsible person and
   a working takedown path.
-- Seed content. 50 papers and 50 sketches across physics, computer science, and
-  mathematics, verified by hand. Categories below a threshold are hidden rather than
-  shown empty.
+- Seed content. 50 papers and 50 sketches across the astronomy subsections, verified by
+  hand. Categories below a threshold are hidden rather than shown empty.
 
 **Acceptance criteria**
 

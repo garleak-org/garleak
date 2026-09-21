@@ -25,7 +25,7 @@ def arch(tmp_path):
     return a
 
 
-def bal(a, h, f="phys"):
+def bal(a, h, f="astro"):
     return ledger.balance(a, h, f)
 
 
@@ -35,9 +35,9 @@ def bal(a, h, f="phys"):
 def test_spend_and_earn_are_field_scoped(arch):
     arch.paper(1, "alice")
     arch.verification(1, "1-01", "bob")
-    arch.sketch(1, "bob", category="math.nt")
+    arch.sketch(1, "bob", category="other.gen")
     a = arch.load()
-    assert bal(a, "alice") == dec(-2) and bal(a, "bob") == dec(1) and bal(a, "bob", "math") == dec("-1.5")
+    assert bal(a, "alice") == dec(-2) and bal(a, "bob") == dec(1) and bal(a, "bob", "other") == dec("-1.5")
     kinds = {e.kind for e in ledger.events(a)}
     assert kinds == {"spend_paper", "earn_verification", "spend_sketch"}
     assert all(e.config_version == "0.1" for e in ledger.events(a))
@@ -45,26 +45,26 @@ def test_spend_and_earn_are_field_scoped(arch):
 
 def test_the_floor_allows_one_paper_per_field(arch):
     a = arch.load()
-    first = ledger.check_spend(a, "alice", "phys", "paper")
+    first = ledger.check_spend(a, "alice", "astro", "paper")
     assert first.ok and (first.before, first.after, first.floor) == (dec(0), dec(-2), dec(-2))
     arch.paper(1, "alice")
     a = arch.load()
-    assert not ledger.check_spend(a, "alice", "phys", "paper").ok
-    assert ledger.check_spend(a, "alice", "math", "paper").ok  # another field has its own floor
+    assert not ledger.check_spend(a, "alice", "astro", "paper").ok
+    assert ledger.check_spend(a, "alice", "other", "paper").ok  # another field has its own floor
     arch.paper(2, "bob")
     arch.verification(2, "2-01", "alice")
     arch.verification(2, "2-02", "alice", tier="T2")
     a = arch.load()
-    assert ledger.check_spend(a, "alice", "phys", "paper").ok  # verified two, so one more paper
+    assert ledger.check_spend(a, "alice", "astro", "paper").ok  # verified two, so one more paper
 
 
 def test_an_agent_spends_from_its_operator_and_may_not_overdraw(arch):
-    sc = ledger.check_spend(arch.load(), "scout", "phys", "sketch")
+    sc = ledger.check_spend(arch.load(), "scout", "astro", "sketch")
     assert sc.payer == "alice" and sc.floor == 0 and not sc.ok
     arch.paper(1, "bob")
     arch.verification(1, "1-01", "alice")
     arch.verification(1, "1-02", "alice", tier="T2")
-    assert ledger.check_spend(arch.load(), "scout", "phys", "sketch").ok
+    assert ledger.check_spend(arch.load(), "scout", "astro", "sketch").ok
 
 
 def test_refund_on_removal_except_for_criterion_one(arch):
@@ -78,7 +78,7 @@ def test_a_rejection_under_criterion_one_keeps_its_charge(arch):
     (arch.root / "screening").mkdir()
     (arch.root / "screening" / "reject-4.yaml").write_text(yaml.safe_dump({
         "id": "reject-4", "decision": "reject", "criterion": 1, "date": "2026-09-14", "object": "paper",
-        "category": "phys.astro", "submitter": "bob"}))
+        "category": "astro.ga", "submitter": "bob"}))
     a = arch.load()
     assert arch.errors() == []
     assert bal(a, "bob") == dec(-2)
@@ -104,8 +104,8 @@ def test_promotion_credits_the_sketch_author(arch):
 
 def test_pending_spends_count(arch):
     a = arch.load()
-    p = [Pending("paper", "alice", "phys", D(2026, 9, 14), spend=dec(2), issue=9)]
-    sc = ledger.check_spend(a, "alice", "phys", "paper", p)
+    p = [Pending("paper", "alice", "astro", D(2026, 9, 14), spend=dec(2), issue=9)]
+    sc = ledger.check_spend(a, "alice", "astro", "paper", p)
     assert sc.before == dec(-2) and not sc.ok
 
 
@@ -117,9 +117,9 @@ def test_amounts_come_from_the_config(arch):
 
 def test_moderation_credit_rule_is_ready_for_a_moderator_field(arch):
     a = arch.load()
-    a.screening.append(ScreeningRecord("r1", "reject", 2, D(2026, 9, 14), "paper", "phys.astro", "bob",
+    a.screening.append(ScreeningRecord("r1", "reject", 2, D(2026, 9, 14), "paper", "astro.ga", "bob",
                                        moderator="dave"))
-    assert ledger.balance(a, "dave", "phys") == dec(1)
+    assert ledger.balance(a, "dave", "astro") == dec(1)
 
 
 # ---------------------------------------------------------------- loops (§5.6)
@@ -194,7 +194,7 @@ def test_loop_labeled_records_count_to_t3_but_not_t4_or_standing(arch):
     state = compute_paper(p1, a.rubrics)[p1.versions[0].number]
     assert state.tier == "T3"
     today = D(2026, 9, 1)
-    assert ledger.standing(a, "bob", "phys", today) == 0 and ledger.standing(a, "carol", "phys", today) == 3
+    assert ledger.standing(a, "bob", "astro", today) == 0 and ledger.standing(a, "carol", "astro", today) == 3
     assert a.papers[2].verifications[0].loop_label is not None  # and still counts toward T1
     state2 = compute_paper(a.papers[2], a.rubrics)[a.papers[2].versions[0].number]
     assert state2.tier == "T1"
@@ -205,5 +205,5 @@ def test_standing_counts_overturns_three_times(arch):
     for i in range(1, 6):
         arch.verification(1, f"1-0{i}", "bob", date="2026-01-05")
     arch.verification(1, "1-06", "bob", date="2026-01-05", status="overturned")
-    assert ledger.standing(arch.load(), "bob", "phys", D(2026, 9, 1)) == 5 - 3
-    assert not ledger.has_field_standing(arch.load(), "bob", "phys", D(2026, 9, 1))
+    assert ledger.standing(arch.load(), "bob", "astro", D(2026, 9, 1)) == 5 - 3
+    assert not ledger.has_field_standing(arch.load(), "bob", "astro", D(2026, 9, 1))

@@ -52,7 +52,7 @@ def test_sketch_is_accepted_and_merges_on_its_own(arch):
     assert s.intake == {"path": "issue-form", "issue": 1, "at": "2026-09-14T10:00:00Z"}
     assert s.assistance["analysis"] is None and s.track == "human-prompted"
     text = res.comment_markdown()
-    assert "Credits of u/alice in Physics: 0.0 before, -1.5 after (the floor is -2.0)" in text
+    assert "Credits of u/alice in Astronomy: 0.0 before, -1.5 after (the floor is -2.0)" in text
     assert "Your GitHub handle is public" in text and "—" not in text
     assert res.outputs() == {"action": "pr", "status": "accepted", "kind": "sketch", "automerge": "true",
                              "branch": "intake/issue-1", "close": "", "close_pr": "false", "comment": "true"}
@@ -137,7 +137,7 @@ def test_t1_verification_is_accepted(arch):
     assert arch.errors() == []
     v = arch.load().papers[1].verifications[0]
     assert v.id == "1-01" and v.result == "passed" and v.attestation and v.independent is None
-    assert "Credits of u/bob in Physics: 0.0 before, 1.0 after" in res.comment_markdown()
+    assert "Credits of u/bob in Astronomy: 0.0 before, 1.0 after" in res.comment_markdown()
 
 
 def test_failed_item_makes_a_failed_verification(arch):
@@ -315,7 +315,7 @@ def test_reject_under_criterion_one_keeps_the_charge(arch):
     assert res.branch == "intake/issue-4-rejection" and res.automerge
     assert arch.errors() == []
     a = arch.load()
-    assert ledger.balance(a, "bob", "phys") == ledger.dec("-1.5")
+    assert ledger.balance(a, "bob", "astro") == ledger.dec("-1.5")
 
 
 def test_reject_under_another_criterion_writes_nothing(arch):
@@ -332,13 +332,13 @@ def test_only_moderators_reject(arch):
 
 def test_remove_after_merge_refunds_unless_spam(arch):
     run(arch, make_issue("sketch", number=4, author="bob"))
-    assert ledger.balance(arch.load(), "bob", "phys") == ledger.dec("-1.5")
+    assert ledger.balance(arch.load(), "bob", "astro") == ledger.dec("-1.5")
     c = comment("/remove 4 not ours to post", "mod", 9)
     res = run(arch, make_issue("sketch", number=4, author="bob", state="closed"), ctx([c], {"mod": "admin"}),
               command_event(c))
     assert res.status == "removed" and res.automerge and res.branch == "intake/issue-4-removal"
     a = arch.load()
-    assert a.sketches[1].status == "removed" and ledger.balance(a, "bob", "phys") == 0
+    assert a.sketches[1].status == "removed" and ledger.balance(a, "bob", "astro") == 0
     assert arch.errors() == []
 
 
