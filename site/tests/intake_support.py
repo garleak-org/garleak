@@ -134,6 +134,13 @@ class Arch:
     def __init__(self, tmp: Path):
         self.root = tmp / "archive"
         shutil.copytree(REPO / "archive", self.root)
+        # The live archive holds real records now. Tests start from its config and
+        # taxonomy with no records, so they stay independent of what the archive holds.
+        for sub in ("papers", "sketches", "accounts"):
+            d = self.root / sub
+            if d.is_dir():
+                shutil.rmtree(d)
+            d.mkdir()
         cfg = yaml.safe_load((self.root / "archive.yaml").read_text())
         cfg["rubrics"] = str(RUBRICS)
         (self.root / "archive.yaml").write_text(yaml.safe_dump(cfg))

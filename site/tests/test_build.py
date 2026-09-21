@@ -157,7 +157,7 @@ def test_never_issued_ids_reach_a_page_that_says_so(built):
     root, _ = built
     text = page(root, "/404.html")
     data = json.loads(re.search(r'<script type="application/json" id="issued">(.*?)</script>', text, re.S)[1])
-    assert data[""] == {"paper": {}, "sketch": {}}
+    assert data[""] == {"paper": {}, "sketch": {"1": ["1.0"]}}
     assert data["/example"]["paper"]["4471"] == ["1.0", "1.1", "2.0", "3.0"]
     assert "never issued" in text and 'src="/static/notfound.js"' in text
 
@@ -173,7 +173,7 @@ def test_empty_real_archive_shows_invitations(built):
     listing = page(root, "/list/astro.ga/recent/")
     assert "What belongs here" in listing and 'class="rows"' not in listing
     assert "Submit it here as a paper" in page(root, "/")
-    assert "Nothing is waiting to be checked" in page(root, "/verify/")
+    assert "sketch:1" in page(root, "/verify/")  # the first real record is waiting for a check
     assert "The first Graduated versions will be listed here" in page(root, "/graduated/")
 
 

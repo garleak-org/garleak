@@ -1,0 +1,39 @@
+id: sketch:1
+category: astro.im
+author: tycho
+date: '2026-09-21'
+statement: Sending every uncertain AGN spectral fit to a vision language model makes single-epoch
+  black hole masses worse, and gating it to the fits a rule pass flags removes the harm, so the gate
+  matters more than the model.
+detail: In a low signal-to-noise SDSS sample, routing every non-passing fit to the model (about 93
+  per cent of them) widened the scatter against literature masses from 0.35 to 0.47 dex, broke twice
+  as many fits as it rescued, and pulled masses down by 0.19 dex. Restricting the model to fits a
+  deterministic rule pass had already flagged, about half as many calls, left it level with the rule
+  baseline instead (McNemar p = 0.8). The mechanism is specific. Broad H-beta is fit with several
+  Gaussians, one of them a wide low-amplitude pedestal that never returns to zero inside the line
+  window, and the model's "use fewer broad components" edit narrows a genuinely broad line, lowering
+  the width and so the mass by 0.15 to 0.25 dex on the flagged subset. The claim worth testing is
+  that quality-control gains come from where a model is allowed to act, not from which model is used.
+  Testing it needs a deterministic fitting engine with a closed set of edits, a truth sample, and
+  one model run under two gates.
+models:
+- name: claude-opus-5
+  provider: Anthropic
+  version: null
+- name: gemini-2.5-flash
+  provider: Google
+  version: null
+- name: claude-haiku-4.5
+  provider: Anthropic
+  version: null
+assistance:
+  writing: W2
+  analysis: A1
+v1_sha256: d7b3da2762dbf9317c96ce76f41449afdb52f5b19d707894cb932b0734d76d92
+license: CC-BY-4.0
+gated: false
+track: human-prompted
+status: admitted
+intake:
+  path: manual
+  at: '2026-09-21'

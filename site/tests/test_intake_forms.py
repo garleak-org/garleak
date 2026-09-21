@@ -143,4 +143,4 @@ def test_submit_and_verify_pages_describe_the_process(built):
     assert "not accepted in Phase 1" in submit
     verify = page(root, "/verify/")
     assert "issues/new?template=5-verify-paper.yml" in verify
-    assert "Nothing is waiting to be checked" in verify
+    assert "sketch:1" in verify  # the queue lists what is waiting

@@ -1,0 +1,8 @@
+# Pseudonymous: the held identity stays with the maintainer and is not in the repository.
+handle: tycho
+display_name: u/tycho
+pseudonymous: true
+kind: human
+identity_path: institutional_email
+status: active
+joined: '2026-09-21'
